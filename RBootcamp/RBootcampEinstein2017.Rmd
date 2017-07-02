@@ -1,0 +1,84 @@
+---
+title: "R Bootcamp"
+author: "Michoel Snow"
+date: "July 2, 2017"
+fontsize: 30pt
+output:
+  beamer_presentation:
+#    keep_tex: true
+#    toc: true
+    slide_level: 3
+    includes:
+      in_header: beamerstyle.txt
+    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+# The Basics
+## Getting R up and Running
+### Installing R
+If you don't have them already installed you need to download and install R and R studio  
+
+- [Download R](https://cran.r-project.org/)  
+- [R Studio](https://www.rstudio.com/products/rstudio/download/)
+
+### Introduction
+
+- R is an open source programming environment
+- It is most commonly used for statistical computing and graphics
+- The basic functionality of R can be extended with 'packages'
+
+<!-- ### Sheena Easton and Game Theory -->
+
+<!-- Sheena Easton describes the following scenario for her baby: -->
+
+<!-- 1. Takes the morning train -->
+<!-- 2. Works from nine 'til five -->
+<!-- 3. Takes another train home again -->
+<!-- 4. Finds Sheena Easton waiting for him -->
+
+
+<!-- - Akin to Holmes-Moriarty game (see: von Neumann and Morgenstern) -->
+
+
+<!-- ## Never Gonna Give You Up -->
+
+<!-- ### Rick Astley's Re-election Platform -->
+
+<!-- Rick Astley's campaign promises: -->
+
+<!-- - Never gonna give you up -->
+<!-- - Never gonna let you down -->
+<!-- - Never gonna run around and desert you -->
+<!-- - Never gonna make you cry -->
+<!-- - Never gonna say goodbye -->
+<!-- - Never gonna tell a lie and hurt you. -->
+
+<!-- ## R Markdown -->
+
+<!-- This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>. -->
+
+<!-- When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. -->
+
+<!-- ### Slide with Bullets -->
+
+<!-- $X^2$ -->
+
+<!-- - Bullet 1 -->
+<!-- - Bullet 2 -->
+<!-- - Bullet 3 -->
+
+### Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+### Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
