@@ -59,5 +59,23 @@
 \setlength{\emergencystretch}{0em}
 \setlength{\parskip}{0pt}
 
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+\usepackage{tcolorbox}
+\definecolor{mycolor}{rgb}{0.122, 0.435, 0.698}% Rule colour
+\makeatletter
+\newcommand{\cb}[1]{%
+\setbox0=\hbox{#1}%
+\setlength{\@tempdima}{\dimexpr\wd0+5pt}%
+\begin{tcolorbox}[colframe=mycolor,boxrule=0.5pt,arc=4pt,baseline=1mm,right skip =0cm, left skip = 0cm, left=2pt,right=2pt,top=2pt,bottom=2pt,boxsep=0pt,nobeforeafter,width=\@tempdima]
+#1
+\end{tcolorbox}
+}
 \usepackage{scrextend}
-\changefontsizes{12pt}
+\changefontsizes{14pt}
