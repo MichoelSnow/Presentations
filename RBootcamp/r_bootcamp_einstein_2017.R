@@ -1,3 +1,8 @@
+#######################################################
+#######################################################
+#######################################################
+#######################################################
+#######################################################
 # SECTION 1 - THE BASICS
 
 # Mathemtical and Boolean Operations
@@ -52,6 +57,78 @@ y <- x[x%%2==0]
 y[9] <- 10
 
 
-# Installing and Loading packages
+# Built in Functions
+x <-  1:100
+mean(x)
+max(x)
+min(x)
+length(x)
+range(x)
+prod(x)
+var(x)
+log(x)
+sqrt(x)
 
-# SECTION 2 - <- 
+# Installing and Loading packages
+# install.packages(c("nycflights13", "gapminder", "Lahman"))
+install.packages("tidyverse") # only needs to be done once
+library(tidyverse) # needs to be 
+
+# QUESTIONS
+# 1. Create a vector of 2 through 8 squared:
+# 4, 9, 16, 25, 36, 49, 64
+
+# 2. Create a vector of the square roots of the sum of sqaures of every pair of digits of 1 to 100
+# sqrt(1^2+2^2), sqrt(3^2+4^2), sqrt(5^2+6^2), ... , sqrt(99^2+100^2)
+
+# 3. Create a vector of the numbers 1 to 100 not divisible by 3 or 5
+# 1, 2, 4, 7, 8, 11, 13, 14, 16, 17, ... , 97, 98
+
+
+# ANSWERS
+# 1. c(2:8)^2 
+# 1. c(4,9,16,25,36,49,64)
+# 2. sqrt(seq(1,100,2)^2+seq(2,100,2)^2)
+# 3. x <- 1:100
+#    x[x%%3!=0 & x%%5!=0]
+
+#######################################################
+#######################################################
+#######################################################
+#######################################################
+#######################################################
+# SECTION 2 - DATA VISUALISATIONS 
+
+# The Grammar of graphics or ggplot
+# See http://vita.had.co.nz/papers/layered-grammar.pdf for an in-depth discussion
+mpg
+summary(mpg)
+mpg$model
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Working with data
+state <- c("tas", "sa", "qld", "nsw", "nsw", "nt", "wa", "wa",
+           "qld", "vic", "nsw", "vic", "qld", "qld", "sa", "tas",
+           "sa", "nt", "wa", "vic", "qld", "nsw", "nsw", "wa",
+           "sa", "act", "nsw", "vic", "vic", "act")
+statef <- factor(state)
+levels(statef)
+incomes <- c(60, 49, 40, 61, 64, 60, 59, 54, 62, 69, 70, 42, 56,
+             61, 61, 61, 58, 51, 48, 65, 49, 49, 41, 48, 52, 46,
+             59, 46, 58, 43)
+incmeans <- tapply(incomes, statef, mean)
