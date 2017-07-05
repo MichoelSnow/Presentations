@@ -1,0 +1,86 @@
+---
+title: "R Bootcamp Einstein 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting R up and Running
+### Installing R
+
+If you don't have them already installed you need to download and install R and R studio  
+
+- Download R
+    - <https://cran.r-project.org/>  
+- R Studio
+    - <https://www.rstudio.com/products/rstudio/download/>
+
+
+### Introduction to R
+
+- R is an open source programming environment
+- It is most commonly used for statistical computing and graphics
+- The basic functionality of R can be extended with 'packages'
+
+### Introduction to R studio
+
+- R studio is an IDE within which you can write/edit code, run code, display plots/graphics and a whole host of other functions 
+
+![](RStudio-Screenshot.png)
+
+### Getting Started
+
+
+- Go to <https://github.com/mseinstein/> to download the Presentions > RBootCamp > r_bootcamp_einstein_2017.R file   
+- All the code presented here is within that R file
+
+### Running code in R
+
+- To run any line of code use <kbd>CTRL</kbd>+<kbd>Enter</kbd> or <kbd>Cmd</kbd>+<kbd>Enter</kbd> 
+    - R will run the highlighted code OR
+    - R will run the line of code which the cursor is on
+
+### Mathematical and Boolean Operators
+
+```{r, error=TRUE}
+-sqrt(25) + (5+3)/4*7 - 2^2
+5%/%3 # Integer Division
+5%%3 # Modulo (remainder after division)
+5 == 6
+5 != 6
+83 > (25 >= 23)
+5 > 3 & 3 < 2
+5 > 3 | 3 < 2
+```
+
+### Vectors and Sequences
+```{r}
+1:4
+c(5,3,2,1) # Creates a list
+c(12,1:4,6)
+seq(from = 1, t= 10, by = 2) # Creates a vector with the given paramters
+seq(1,10,2) # creates the same vector without naming the paramters
+seq(1,10) # R uses the default values for any empty parameters
+seq(to = 10, by = 2)
+seq(by = 2, to = 10)
+c(seq(1,10,2), 25, 10)
+c(seq(1,10,2), 25, 10) > 12
+c(seq(1,10,2), 25, 10) * 2
+```
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
