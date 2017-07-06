@@ -101,21 +101,42 @@ library(tidyverse) # needs to be
 
 # The Grammar of graphics or ggplot
 # See http://vita.had.co.nz/papers/layered-grammar.pdf for an in-depth discussion
-mpg
-summary(mpg)
+
+
+# Graphics in ggplot are built in layers
+mpg # dataset built in to ggplot
+summary(mpg) 
 mpg$model
+
+# The ggplot command begins a plot to which you can add layers
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy))
 
+ggplot(data=mpg) +
+  geom_smooth(aes(displ, hwy)) + geom_point(aes(displ,hwy))
+
+# by inserting x and y into ggplot all layers will use those parameters unless otherwise specified
+ggplot(mpg, aes(displ,hwy)) + geom_smooth() + geom_point()
+
+ggplot(mpg, aes(displ,hwy)) + geom_smooth() + geom_point() +
+  geom_smooth(aes(displ,cty),color = "red")
 
 
 
+# Note: if you want to plot a variable to a feature like color or size, it must go in 
+#   the aes() term, if you just want to set them at a certain value they go outside the aes
+ggplot(mpg, aes(displ,hwy)) + geom_smooth(color = "green") + geom_point(aes(color=class)) 
 
 
 
+# QUESTIONS
+# 1) Plot hwy vs displ as points where the size of the points is the class variable, 
+#     and all the points are blue triangles
+# 2) 
 
-
-
+# Answers
+# 1) ggplot(mpg, aes(displ,hwy,size=class))  + geom_point(color="blue",shape=17) 
+# 1) ggplot(mpg)  + geom_point(aes(displ,hwy,size=class),color="blue",shape=17) 
 
 
 
