@@ -72,7 +72,7 @@ sqrt(x)
 # Installing and Loading packages
 # install.packages(c("nycflights13", "gapminder", "Lahman"))
 install.packages("tidyverse") # only needs to be done once
-library(tidyverse) # needs to be 
+library(tidyverse) # needs to be loaded every session you want to use it
 
 # QUESTIONS
 # 1. Create a vector of 2 through 8 squared:
@@ -128,15 +128,20 @@ ggplot(mpg, aes(displ,hwy)) + geom_smooth() + geom_point() +
 ggplot(mpg, aes(displ,hwy)) + geom_smooth(color = "green") + geom_point(aes(color=class)) 
 
 
+# You can also split the plot into subplots based on a varible
+ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(.~cyl)
+ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(cyl~.)
+ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_wrap(~cyl)
+ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(cyl~class)
 
-# QUESTIONS
-# 1) Plot hwy vs displ as points where the size of the points is the class variable, 
-#     and all the points are blue triangles
-# 2) 
 
-# Answers
-# 1) ggplot(mpg, aes(displ,hwy,size=class))  + geom_point(color="blue",shape=17) 
-# 1) ggplot(mpg)  + geom_point(aes(displ,hwy,size=class),color="blue",shape=17) 
+
+
+
+
+
+
+
 
 
 
