@@ -24,6 +24,15 @@ If you don't have them already installed you need to download and install R and 
 - It is most commonly used for statistical computing and graphics
 - The basic functionality of R can be extended with 'packages'
 
+### Resources for R
+
+ - R for data science <http://r4ds.had.co.nz> 
+     - Served as inspiration for a lot of this bootcamp
+     - Written by programmers at R Studio
+ - R Programming for Data Science <https://bookdown.org/rdpeng/rprogdatascience/>
+ - R Bootcamp <https://www.jaredknowles.com/r-bootcamp/>
+
+
 ### Introduction to R studio
 
 - R studio is an IDE within which you can write/edit code, run code, display plots/graphics and a whole host of other functions 
@@ -41,106 +50,34 @@ If you don't have them already installed you need to download and install R and 
 - To run any line of code use <kbd>CTRL</kbd>+<kbd>Enter</kbd> or <kbd>Cmd</kbd>+<kbd>Enter</kbd> 
     - R will run the highlighted code OR
     - R will run the line of code which the cursor is on
-
-### Mathematical and Boolean Operators
-
-```{r, error=TRUE}
--sqrt(25) + (5+3)/4*7 - 2^2
-5%/%3 # Integer Division
-5%%3 # Modulo (remainder after division)
-5 == 6
-5 != 6
-83 > (25 >= 23)
-5 > 3 & 3 < 2
-5 > 3 | 3 < 2
-```
-
-### Vectors and Sequences
-```{r}
-1:4
-c(5,3,2,1) # Creates a list
-c(12,1:4,6)
-seq(from = 1, t= 10, by = 2) # Creates a vector with the given paramters
-seq(1,10,2) # creates the same vector without naming the paramters
-seq(1,10) # R uses the default values for any empty parameters
-seq(to = 10, by = 2)
-seq(by = 2, to = 10)
-c(seq(1,10,2), 25, 10)
-c(seq(1,10,2), 25, 10) > 12
-c(seq(1,10,2), 25, 10) * 2
-```
-
-
-### Help function
-`?seq` # opens the Documentation for the function
-
-`??seq` # searches the help documentation for the queried string
-
-### Variables and Assignment
-```{r}
-x = 5+3
-(x = 5+3)
-x <- 5+3
-(x <- 5+3)
-y <- x
-y
-x <- 5+3 > 2
-x
-x <- seq(172,23,-13)
-x
-```
-
-### Indexing - R starts at 1
-```{r}
-x <- seq(172,23,-13)
-x[1]    
-x[c(1,3)] 
-x[2:4] 
-x[4:2] 
-x[]
-x[-1]
-x[-c(1,3)]
-x[x%%2==0]
-y <- x[x%%2==0]
-y[9] <- 10
-y
-```
-
-### Built in Functions
-```{r}
-x <-  1:20
-mean(x)
-max(x)
-min(x)
-length(x)
-range(x)
-prod(x)
-var(x)
-log(x)
-sqrt(x)
-```
+    
 
 ### Installing and Loading packages
-`install.packages("tidyverse")` # only needs to be done once
+ - The power of R can be extended with packages
+ - Tidyverse is a collection of R packages that share common philosophies and are designed to work together
+     - This is the main package we will be using 
+     
+`install.packages("tidyverse")` # only needs to be done once per machine
 
-`library(tidyverse)` # needs to be loaded every session you want to use it
+`library(tidyverse)` # needs to be loaded every session you want to use it (usually everytime you open R studio)
+
+### Key Symbols
+
+- < - 
+    - Assignment operator, e.g. x <- 5
+    - The equals sign, =, will work as a substitution in most but not all cases
+- `#`
+    - Denotes a comment
+    - All text following the `#` will be ignored
+- `?`function_name 
+    - Opens the Documentation for the function
+- `??`term
+    - Searches the help documentation for the queried string
 
 
-## QUESTIONS
-1. Create a vector of 2 through 8 squared:  
-4, 9, 16, 25, 36, 49, 64
-
-2. Create a vector of the square roots of the sum of sqaures of every pair of digits of 1 to 100:  
-sqrt(1^2 + 2^2), sqrt(3^2 + 4^2), sqrt(5^2 + 6^2), ... , sqrt(99^2 + 100^2)
-
-3. Create a vector of the numbers 1 to 100 not divisible by 3 or 5:  
-1, 2, 4, 7, 8, 11, 13, 14, 16, 17, ... , 97, 98
-
-
-# SECTION 2 - Data Visualisations 
-
-### The Grammar of graphics or ggplot
-See http://vita.had.co.nz/papers/layered-grammar.pdf for an in-depth discussion
+# SECTION 2 - Data Visualisations with ggplot2
+ - ggplot2 is a plotting system for R, based on the grammar of graphics
+ - See http://vita.had.co.nz/papers/layered-grammar.pdf for an in-depth discussion
 
 `library(tidyverse)`
 
@@ -155,27 +92,27 @@ summary(mpg)
 mpg$drv
 ```
 
-The ggplot command begins a plot to which you can add layers
-```{r message=FALSE}
+- The ggplot command begins a plot to which you can add layers
+```{r, message=FALSE}
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy))
-ggplot(mpg) +
-  geom_smooth(aes(displ, hwy)) + geom_point(aes(displ,hwy))
+ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy)) + geom_point(mapping = aes(x = displ, y = hwy))
 ```
 
 
 By inserting x and y into ggplot all layers will use those parameters unless otherwise specified
 ```{r message=FALSE}
-ggplot(mpg, aes(displ,hwy)) + geom_smooth() + geom_point()
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + geom_smooth() + geom_point()
 
-ggplot(mpg, aes(displ,hwy)) + geom_smooth() + geom_point() +
-  geom_smooth(aes(displ,cty),color = "red")
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + geom_smooth() + geom_point() +
+  geom_smooth(mapping = aes(x = displ,y = cty),color = "red")
 ```
 
 
 Note: if you want to plot a variable to a feature like color or size, it must go in the aes() term, if you just want to set them at a certain value they go outside the aes
 ```{r message=FALSE} 
-ggplot(mpg, aes(displ,hwy)) + geom_smooth(color = "green") + geom_point(aes(color=class)) 
+ggplot(mpg, aes(displ,hwy)) + geom_smooth(color = "green") + geom_point(aes(color=class),size=2) 
 ```
 
 You can also split the plot into subplots based on a varible using `facet`
@@ -205,13 +142,14 @@ ggplot(mpg,aes(displ,hwy,color=drv)) +
 This time we will be using the `diamonds` dataset
 
 ```{r}
+summary(diamonds)
 ggplot(diamonds,aes(cut)) + geom_bar()
 ggplot(diamonds,aes(price)) + geom_histogram(bins=100)
 ```
 
 Bar charts, histograms and the other plots in the one variable section of the ggplot2 cheat sheet bin your data based on a single variable 
 
-You can determine the computed variables of a grpahic by using the help function:
+You can determine the computed variables of a graphic by using the help function:
 
 * Computed variables  
     + count  
@@ -222,5 +160,168 @@ You can determine the computed variables of a grpahic by using the help function
 ```{r}
 ggplot(diamonds) + geom_bar(aes(x=cut,y=..prop..,group=1))
 ```
+
+### Position adjustments
+
+```{r}
+ggplot(diamonds) + geom_bar(aes(x = color, fill = cut), position = "dodge")
+ggplot(diamonds) + geom_bar(aes(x = color, fill = cut), position = "fill")
+ggplot(diamonds) + geom_bar(aes(x = color, color = cut), position = "stack",fill=NA)
+```
+
+
+
+## Spend some time playing with ggplot
+- See <http://ggplot2.tidyverse.org/reference/> for a full list of functions in ggplot
+- Here are a list of the datasets built into ggplot
+    - diamonds
+        - Prices of 50,000 round cut diamonds
+    - economics
+        - US economic time series
+    - faithfuld
+        - 2d density estimate of Old Faithful data
+    - midwest
+        - Midwest demographics
+    - mpg
+        - Fuel economy data from 1999 and 2008 for 38 popular models of car
+    - msleep
+        - An updated and expanded version of the mammals sleep dataset
+    - presidential
+        - Terms of 11 presidents from Eisenhower to Obama
+    - seals
+        - Vector field of seal movements
+    - txhousing
+        - Housing sales in TX
+    - luv_colours
+        - colors() in Luv space
+
+
+
+    
+    
+# SECTION 2 - Data Manipulation    
+
+### Mathematical and Boolean Operators
+
+```{r, error=TRUE}
+-sqrt(25) + (5+3)/4*7 - 2^2
+5%/%3 # Integer Division
+5%%3 # Modulo (remainder after division)
+5 == 6
+5 != 6
+83 > (25 >= 23)
+5 > 3 & 3 < 2
+5 > 3 | 3 < 2
+```
+
+
+### Vectors and Sequences
+```{r}
+1:4
+c(5,3,2,1) # Creates a vector via concaternation (hence the c)
+c(12,1:4,6)
+seq(from = 1, t= 10, by = 2) # Creates a vector with the given paramters
+seq(1,10,2) # creates the same vector without naming the paramters
+seq(1,10) # R uses the default values for any empty parameters
+seq(to = 10, by = 2)
+seq(by = 2, to = 10)
+c(seq(1,10,2), 25, 10)
+c(seq(1,10,2), 25, 10) > 12
+c(seq(1,10,2), 25, 10) * 2
+```
+
+
+
+
+### Variables and Assignment
+```{r}
+x = 5+3
+(x = 5+3)
+x <- 5+3
+(x <- 5+3)
+y <- x
+y
+x <- 5+3 > 2
+x
+x <- seq(172,23,-13)
+x
+```
+
+### Indexing
+#### R starts at 1
+```{r}
+x <- seq(172,23,-13)
+x[1]    
+x[c(1,3)] 
+x[2:4] 
+x[4:2] 
+x[]
+x[-1]
+x[-c(1,3)]
+x[x%%2==0]
+y <- x[x%%2==0]
+y[9] <- 10
+y
+```
+
+### Built in Functions
+```{r}
+x <-  1:20
+mean(x)
+max(x)
+min(x)
+length(x)
+range(x)
+prod(x)
+var(x)
+log(x)
+sqrt(x)
+```
+
+
+
+
+### Exercises
+1. Create a vector of 2 through 8 squared:  
+4, 9, 16, 25, 36, 49, 64
+
+2. Create a vector of the square roots of the sum of sqaures of every pair of digits of 1 to 100:  
+sqrt(1^2 + 2^2), sqrt(3^2 + 4^2), sqrt(5^2 + 6^2), ... , sqrt(99^2 + 100^2)
+
+3. Create a vector of the numbers 1 to 100 not divisible by 3 or 5:  
+1, 2, 4, 7, 8, 11, 13, 14, 16, 17, ... , 97, 98
+
+
+
+
+# SECTION 3 -         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
