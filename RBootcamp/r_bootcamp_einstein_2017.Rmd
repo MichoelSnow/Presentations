@@ -463,6 +463,32 @@ flights[c("dep_time","tailnum","air_time","time_hour")]
 ```
 
 
+### dplyr and the 5 + 1 verbs of data manipulation
+
+- dplyr is one of the packages in tidyverse which provides a consistent set of data manipulation verbs.
+
+
+1. filter
+    - Select based on values
+2. arrange
+    - reorder
+3. select & rename
+    - select based on names
+4. mutate & transmute
+    - add new variables that are functions of existing variables
+5. summarise
+    - condense multiple values to a single value
+1. group by
+    - perform any operation by group
+
+
+### filter
+
+
+![](filter.gif)  
+
+
+
 # SECTION 3 -         
 
 
