@@ -503,7 +503,7 @@ flights[c("dep_time","tailnum","air_time","time_hour")]
 
 ![](filter.gif)  
 
-
+![](http://i.imgur.com/tl91hI5.gifv)
 
 # SECTION 3 -         
 

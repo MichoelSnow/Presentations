@@ -1,0 +1,41 @@
+/* .reveal div{
+overflow-y: auto !important;
+overflow-x: hidden !important;
+height: 700px;
+} */
+
+.scrollable {
+overflow-y: auto !important;
+overflow-x: hidden !important;
+height: 700px;
+}
+
+
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+
+/* .reveal body {
+  margin: 0 0 20px 0;
+  color: #eee8d5;
+  font-family: "League Gothic", Impact, sans-serif;
+  line-height: 0.9em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-shadow: none; }
+   */
+  
+.reveal {
+  font-family: $mainFont;
+  font-size: $mainFontSize;
+  font-weight: normal;
+  color: $mainColor;
+}
+
+.reveal ul li{
+  font-size:30px;
+  margin: 10px 0;
+}
+
