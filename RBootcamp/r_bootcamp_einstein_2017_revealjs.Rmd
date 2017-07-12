@@ -9,6 +9,7 @@ output:
     transition: concave
     css: r_bootcamp_einstein_2017_revealjs.css
     highlight: tango
+    fig_height: 4
 ---
 
 ## SECTION 1 - The Basics
@@ -149,8 +150,8 @@ ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(cyl~class)
 
 
 ## Playtme {.scrollable}
-try to make some of the following plots:
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=4}
+Try to make some of the following plots:
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2}
 ggplot(mpg)  + geom_point(aes(displ,hwy,size=class),color="blue",shape=17) 
 
 ggplot(mpg) + 
