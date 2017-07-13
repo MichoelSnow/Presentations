@@ -9,7 +9,11 @@ output:
     transition: concave
     css: r_bootcamp_einstein_2017_revealjs.css
     highlight: tango
-    fig_height: 4
+    fig_height: 5
+    reveal_options:
+      width: '100%'
+      height: '100%'
+      margin: 0.1
 ---
 
 ## SECTION 1 - The Basics
@@ -18,9 +22,9 @@ output:
 If you don't have them already installed you need to download and install R and R studio  
 
 - Download R
-- <https://cran.r-project.org/>  
+    - <https://cran.r-project.org/>  
 - R Studio
-- <https://www.rstudio.com/products/rstudio/download/>
+    - <https://www.rstudio.com/products/rstudio/download/>
 
 
 ## Introduction to R
@@ -32,8 +36,8 @@ If you don't have them already installed you need to download and install R and 
 ## Resources for R
 
 - R for data science <http://r4ds.had.co.nz> 
-- Served as inspiration for a lot of this bootcamp
-- Written by programmers at R Studio
+    - Served as inspiration for a lot of this bootcamp
+    - Written by programmers at R Studio
 - R Programming for Data Science <https://bookdown.org/rdpeng/rprogdatascience/>
 - R Bootcamp <https://www.jaredknowles.com/r-bootcamp/>
 
@@ -56,31 +60,31 @@ If you don't have them already installed you need to download and install R and 
 
 
 - To run any line of code use <kbd>CTRL</kbd>+<kbd>Enter</kbd> or <kbd>Cmd</kbd>+<kbd>Enter</kbd> 
-- R will run the highlighted code OR
-- R will run the line of code which the cursor is on
+    - R will run the highlighted code OR
+    - R will run the line of code which the cursor is on
 
 
 ## Installing and Loading packages
 - The power of R can be extended with packages
 - Tidyverse is a collection of R packages that share common philosophies and are designed to work together
-- This is the main package we will be using 
+    - This is the main package we will be using 
 - You install a package with the `install.packages("Pkg Name")`, e.g., `install.packages("tidyverse")`      
-- Only needs to be done once per machine
+    - Only needs to be done once per machine
 - To load a package call the `library` function, e.g., `library(tidyverse)`
-- Needs to be loaded every session you want to use it (usually everytime you open R studio)
+    - Needs to be loaded every session you want to use it (usually everytime you open R studio)
 
 ## Key Symbols
 
 - < - 
-- Assignment operator, e.g. x <- 5
-- The equals sign, =, will work as a substitution in most but not all cases
+    - Assignment operator, e.g. x <- 5
+    - The equals sign, =, will work as a substitution in most but not all cases
 - `#`
-- Denotes a comment
-- All text following the `#` will be ignored
+    - Denotes a comment
+    - All text following the `#` will be ignored
 - `?`function_name 
-- Opens the Documentation for the function
+    - Opens the Documentation for the function
 - `??`term
-- Searches the help documentation for the queried string
+    - Searches the help documentation for the queried string
 
 
 ## SECTION 2 - Data Visualisations 
@@ -150,29 +154,375 @@ ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(cyl~class)
 ```
 
 
-## Playtme {.scrollable}
-Try to make some of the following plots:
-```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2}
+## Playtime {.scrollable}
+Try to make some of the following plots:  
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2.5}
 ggplot(mpg)  + geom_point(aes(displ,hwy,size=class),color="blue",shape=17) 
+```
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2.5}
 ggplot(mpg) + 
 geom_smooth(aes(displ,hwy, linetype = drv))
+```
 
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2.5}
 ggplot(mpg,aes(displ,hwy,color=drv)) + 
 geom_smooth(se=FALSE,show.legend = FALSE) +
 geom_point(size=2,show.legend = FALSE)
+```
 
+
+## Graphics and Statistical Transformations {.scrollable}
+
+This time we will be using the `diamonds` dataset
+
+```{r}
+summary(diamonds)
+ggplot(diamonds,aes(cut)) + geom_bar()
+ggplot(diamonds,aes(price)) + geom_histogram(bins=100)
+```
+
+## Computed Variables {.scrollable} 
+
+- Bar charts, histograms and the other plots in the one variable section of the ggplot2 cheat sheet bin your data based on a single variable 
+- You can determine the computed variables of a graphic by using the help function:
+    - Computed variables  
+        - count  
+            * Number of points in bin
+        - prop  
+            * Groupwise proportion
+        
+```{r}
+ggplot(diamonds) + geom_bar(aes(x=cut,y=..prop..,group=1))
+```
+
+## Position adjustments {.scrollable}
+
+```{r}
+ggplot(diamonds) + geom_bar(aes(x = color, fill = cut), position = "dodge")
+ggplot(diamonds) + geom_bar(aes(x = color, fill = cut), position = "fill")
+ggplot(diamonds) + geom_bar(aes(x = color, color = cut), position = "stack",fill=NA)
+```
+
+
+## Example Plots {.scrollable}
+plots from <http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html>
+```{r, warning=FALSE}
+ggplot(midwest, aes(x=area, y=poptotal)) + 
+  geom_point(aes(col=state, size=popdensity)) + 
+  geom_smooth(method="loess", se=F) + xlim(c(0, 0.1)) + ylim(c(0, 500000)) + 
+  labs(subtitle="Area Vs Population", y="Population", x="Area", title="Scatterplot", caption = "Source: midwest")
+
+
+mtcars$`car name` <- rownames(mtcars)  # create new column for car names
+mtcars$mpg_z <- round((mtcars$mpg - mean(mtcars$mpg))/sd(mtcars$mpg), 2)  # compute normalized mpg
+mtcars$mpg_type <- ifelse(mtcars$mpg_z < 0, "below", "above")  # above / below avg flag
+mtcars <- mtcars[order(mtcars$mpg_z), ]  # sort
+mtcars$`car name` <- factor(mtcars$`car name`, levels = mtcars$`car name`)  # convert to factor to retain sorted order in plot.
+
+ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) + 
+  geom_bar(stat='identity', aes(fill=mpg_type), width=.5)  +
+  scale_fill_manual(name="Mileage", 
+                    labels = c("Above Average", "Below Average"), 
+                    values = c("above"="#00ba38", "below"="#f8766d")) + 
+  labs(subtitle="Normalised mileage from 'mtcars'", title= "Diverging Bars") + 
+  coord_flip()
+
+
+
+# prep data
+df <- read.csv("https://raw.githubusercontent.com/selva86/datasets/master/gdppercap.csv")
+colnames(df) <- c("continent", "1952", "1957")
+left_label <- paste(df$continent, round(df$`1952`),sep=", ")
+right_label <- paste(df$continent, round(df$`1957`),sep=", ")
+df$class <- ifelse((df$`1957` - df$`1952`) < 0, "red", "green")
+
+ggplot(df) + geom_segment(aes(x=1, xend=2, y=`1952`, yend=`1957`, col=class), size=.75, show.legend=F) + 
+  geom_vline(xintercept=1, linetype="dashed", size=.1) + 
+  geom_vline(xintercept=2, linetype="dashed", size=.1) +
+  scale_color_manual(labels = c("Up", "Down"), 
+                     values = c("green"="#00ba38", "red"="#f8766d")) +  # color of lines
+  labs(x="", y="Mean GdpPerCap") +  # Axis labels
+  xlim(.5, 2.5) + ylim(0,(1.1*(max(df$`1952`, df$`1957`)))) + # X and Y axis limits
+  geom_text(label=left_label, y=df$`1952`, x=rep(1, NROW(df)), hjust=1.1, size=3.5) + 
+  geom_text(label=right_label, y=df$`1957`, x=rep(2, NROW(df)), hjust=-0.1, size=3.5) + 
+  geom_text(label="Time 1", x=1, y=1.1*(max(df$`1952`, df$`1957`)), hjust=1.2, size=5) +  # title
+  geom_text(label="Time 2", x=2, y=1.1*(max(df$`1952`, df$`1957`)), hjust=-0.1, size=5) + # title
+  theme(panel.background = element_blank(),panel.grid = element_blank(),axis.ticks = element_blank(),
+          axis.text.x = element_blank(),panel.border = element_blank(),plot.margin = unit(c(1,2,1,2), "cm"))
+
+
+ggplot(mpg, aes(cty)) + 
+  geom_density(aes(fill=factor(cyl)), alpha=0.8) + 
+  labs(title="Density plot", 
+       subtitle="City Mileage Grouped by Number of cylinders",
+       caption="Source: mpg",
+       x="City Mileage",
+       fill="# Cylinders")
+
+
+ggplot(mpg, aes(class, cty)) +
+  geom_violin() + 
+  labs(title="Violin plot", 
+       subtitle="City Mileage vs Class of vehicle",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+
+
+theme_set(theme_classic())
+df <- as.data.frame(table(mpg$class))
+colnames(df) <- c("class", "freq")
+ggplot(df, aes(x = "", y=freq, fill = factor(class))) + 
+  geom_bar(width = 1, stat = "identity") +
+  theme(axis.line = element_blank(), 
+        plot.title = element_text(hjust=0.5)) + 
+  labs(fill="class", 
+       x=NULL, 
+       y=NULL, 
+       title="Pie Chart of class", 
+       caption="Source: mpg") +
+  coord_polar(theta = "y", start=0)
+
+
+EncSz  <-  25
+SynPermCon  <-  0.5
+PtPrcnt <- 0.75
+SPSmpSz <- round(EncSz^2*PtPrcnt) 
+ENC <- rep(.3,EncSz^2)
+ENC[c(19:83,200:250,353:420,497:585)] <- 1
+SPEncBoxes <- tibble(x = rep(c(1:EncSz),EncSz), y = sort(rep(c(1:EncSz),EncSz)))
+j <- rep(NA,EncSz^2)
+j[sample(EncSz^2,SPSmpSz)] <- rnorm(SPSmpSz,mean=.9*SynPermCon,sd=SynPermCon/5)
+j2 <- rep(NA,EncSz^2)
+j2[j>0.5] <- 1
+j2[j>0.5 & ENC ==1] <- 2
+j2[is.na(j)] <- NA
+EncAct <- rep(0.1,EncSz^2)
+EncAct[j>SynPermCon] <- 1
+j <- cut(j,breaks = c(-Inf,seq(0.4,0.6,0.025),Inf))
+BlnkGrph = theme(axis.line=element_blank(), axis.text.x=element_blank(), axis.text.y=element_blank(), axis.ticks=element_blank(), axis.title.x=element_blank(),
+                 axis.title.y=element_blank(), legend.position="none", panel.background=element_blank(), panel.border=element_blank(), panel.grid.major=element_blank(),
+                 panel.grid.minor=element_blank(), plot.background=element_blank(),plot.margin=grid::unit(c(0,0,0,0), "mm"))
+SPEncBoxes %>% ggplot(aes(x,y,fill = factor(round(ENC)))) + 
+  geom_tile(color = "gray",show.legend=FALSE) + BlnkGrph + coord_fixed() + 
+  geom_point(aes(x,y, color = factor(j2)),shape = 16,na.rm=TRUE, size = 3) +
+  scale_fill_manual(values = c("white","blue")) + scale_shape_identity() +
+  scale_color_manual(values = c("black","green"))
+SPEncBoxes %>% ggplot(aes(x,y,fill = j, color = EncAct)) + 
+  geom_tile(show.legend=FALSE, size = 0.2,alpha=EncAct) + BlnkGrph + coord_fixed() + 
+  scale_color_gradient(low="gray",high ="black") +
+  scale_fill_manual(values = c("red","red","red","red","orangered", "orange","yellow","lightgreen","green1","green1"),na.value="white")
+
+```
+
+## Spend some time playing with ggplot {.scrollable}
+- See <http://ggplot2.tidyverse.org/reference/> for a full list of functions in ggplot
+- Here are a list of the datasets built into ggplot (use ?"dataset name" to find out more about the individual datasets)
+    - diamonds
+        - Prices of 50,000 round cut diamonds
+    - economics
+        - US economic time series
+    - faithfuld
+        - 2d density estimate of Old Faithful data
+    - midwest
+        - Midwest demographics
+    - mpg
+        - Fuel economy data from 1999 and 2008 for 38 popular models of car
+    - msleep
+        - An updated and expanded version of the mammals sleep dataset
+    - presidential
+        - Terms of 11 presidents from Eisenhower to Obama
+    - seals
+        - Vector field of seal movements
+    - txhousing
+        - Housing sales in TX
+    - luv_colours
+        - colors() in Luv space
+
+
+
+## SECTION 2 - Data Manipulation    
+
+
+## Mathematical and Boolean Operators {.scrollable}
+
+```{r, error=TRUE}
+-sqrt(25) + (5+3)/4*7 - 2^2
+5%/%3 # Integer Division
+5%%3 # Modulo (remainder after division)
+5 == 6
+5 != 6
+83 > (25 >= 23)
+5 > 3 & 3 < 2
+5 > 3 | 3 < 2
+```
+
+
+## Vectors and Sequences {.scrollable}
+```{r}
+1:4
+c(5,3,2,1) # Creates a vector via concatenation (hence the c)
+c(12,1:4,6)
+seq(from = 1, t= 10, by = 2) # Creates a vector with the given paramters
+seq(1,10,2) # creates the same vector without naming the paramters
+seq(1,10) # R uses the default values for any empty parameters
+seq(to = 10, by = 2)
+seq(by = 2, to = 10)
+c(seq(1,10,2), 25, 10)
+c(seq(1,10,2), 25, 10) > 12
+c(seq(1,10,2), 25, 10) * 2
 ```
 
 
 
 
+## Variables and Assignment {.scrollable}
+```{r}
+x = 5+3
+(x = 5+3)
+x <- 5+3
+(x <- 5+3)
+y <- x
+y
+x <- 5+3 > 2
+x
+x <- seq(172,23,-13)
+x
+```
+
+## Indexing {.scrollable}
+R starts at 1
+```{r}
+x <- seq(172,23,-13)
+x[1]    
+x[c(1,3)] 
+x[2:4] 
+x[4:2] 
+x[]
+x[-1]
+x[-c(1,3)]
+x[x%%2==0]
+y <- x[x%%2==0]
+y[9] <- 10
+y
+```
+
+## Built in Functions {.scrollable}
+```{r}
+x <-  1:20
+mean(x)
+max(x)
+min(x)
+length(x)
+range(x)
+prod(x)
+var(x)
+log(x)
+sqrt(x)
+```
 
 
 
 
+## Exercises
+1. Create a vector of 2 through 8 squared:  
+    - 4, 9, 16, 25, 36, 49, 64
+
+2. Create a vector of the square roots of the sum of sqaures of every pair of digits of 1 to 100:  
+    - sqrt(1^2 + 2^2), sqrt(3^2 + 4^2), sqrt(5^2 + 6^2), ... , sqrt(99^2 + 100^2)
+
+3. Create a vector of the numbers 1 to 100 not divisible by 3 or 5:  
+     - 1, 2, 4, 7, 8, 11, 13, 14, 16, 17, ... , 97, 98
+
+##  Trouble with Tibbles {.scrollable}
 
 
+```{r, out.width = "700px",echo=FALSE}
+knitr::include_graphics("tribbles_gif.gif")
+```
+
+## Tibbles {.scrollable}
+
+- Tibbles are a type of data frame (way of representing data) that are lazy (they don't change variable names or types) and surly (e.g., they complain when a variable does not exist)  
+- Tibbles differ from traidtional data frames in two key ways, printing and subsetting
+
+
+```{r}
+iris
+as_tibble(iris) # shows only a few rows as well as the type of data in each row
+
+```
+
+## Tibbles - Partial Matching {.scrollable}
+
+```{r}
+iris$Spec
+```
+
+```{r}
+as_tibble(iris)$Spec
+```
+
+## Tibbles - Subsetting {.scrollable}
+
+```{r}
+iris[1]
+iris[,1]
+as_tibble(iris)[1] 
+as_tibble(iris)[,1]
+as_tibble(iris)[[1]]
+```
+
+## Flights dataset {.scrollable}
+
+On-time data for all flights that departed NYC (i.e. JFK, LGA or EWR) in 2013
+Install the nycflights13 package, `install.packages("nycflights13")`,  and load its library, `library(nycflights13)`.
+  
+
+```{r, warning=FALSE}
+library(nycflights13)
+flights 
+summary(flights)
+```
+
+## Data Types {.scrollable}
+
+- `int` integers
+- `dbl` doubles or real numbers
+- `chr` character vectors (strings)
+- `dttm` date-time
+- `date` date
+- `lgl` logical (TRUE or FALSE)
+- `fctr` factors (catgeorical variables with fixed possible values, e.g., dropdown list)
+
+```{r}
+flights[c("dep_time","tailnum","air_time","time_hour")]
+```
+
+
+## dplyr and the 5 + 1 verbs of data manipulation {.scrollable}
+
+dplyr is one of the packages in tidyverse which provides a consistent set of data manipulation verbs.  
+
+<div style="text-align: left">
+
+1. filter
+    - Select based on values
+2. arrange
+    - reorder
+3. select & rename
+    - select based on names
+4. mutate & transmute
+    - add new variables that are functions of existing variables
+5. summarise
+    - condense multiple values to a single value
+1. group by
+    - perform any operation by group
+
+</div>
+
+## filter
 
 
 
