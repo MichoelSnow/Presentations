@@ -435,6 +435,44 @@ sqrt(x)
 3. Create a vector of the numbers 1 to 100 not divisible by 3 or 5:  
      - 1, 2, 4, 7, 8, 11, 13, 14, 16, 17, ... , 97, 98
 
+## Data frames  {.scrollable}
+
+When you have data consisting of multiple observations of multiple variables, i.e., a data set, this is most conveniently stored as a dataframe
+
+```{r}
+iris # Famous iris data set which gives the measurements for 50 flowers from each of 3 species of iris
+summary(iris) # Very useful function, which gives summaries of each variable
+```
+     
+     
+## Matching {.scrollable}
+
+- You can call a single variable fo a dataframe using any of the following formats 
+    - `dataset$variablename`
+    - `dataset['variablename']`
+    - `dataset[variable column position]`
+
+```{r}
+names(iris)
+iris$Sepal.Length
+iris['Sepal.Length']
+iris[1]
+```
+
+
+## Indexing {.scrollable}
+- To call specific elements from the data set you can use either
+    - Variable indexing using the `$` identifier, then using brackets after the variable name to indicate specific position(s)      
+    - Two element indexing, where the first element is the row and the second element is the column (name or position)
+
+```{r}
+iris$Sepal.Length[25:30]
+iris[25:30,'Sepal.Length']
+iris[25:30,1]
+iris[c(25:30,17,1),c(1,4)]
+```
+
+
 ##  Trouble with Tibbles {.scrollable}
 
 
@@ -444,15 +482,20 @@ knitr::include_graphics("tribbles_gif.gif")
 
 ## Tibbles {.scrollable}
 
-- Tibbles are a type of data frame (way of representing data) that are lazy (they don't change variable names or types) and surly (e.g., they complain when a variable does not exist)  
-- Tibbles differ from traidtional data frames in two key ways, printing and subsetting
+- While the dataframes built into R are very useful, they are lacking in certain features
+- Tibbles are a type of data frame that are lazy (they don't change variable names or types) and surly (e.g., they complain when a variable does not exist)  
+- Tibbles differ from traditional data frames in two key ways, printing and subsetting
 
 
 ```{r}
-iris
+iris 
 as_tibble(iris) # shows only a few rows as well as the type of data in each row
 
 ```
+
+
+  
+
 
 ## Tibbles - Partial Matching {.scrollable}
 
@@ -472,32 +515,6 @@ iris[,1]
 as_tibble(iris)[1] 
 as_tibble(iris)[,1]
 as_tibble(iris)[[1]]
-```
-
-## Flights dataset {.scrollable}
-
-On-time data for all flights that departed NYC (i.e. JFK, LGA or EWR) in 2013
-Install the nycflights13 package, `install.packages("nycflights13")`,  and load its library, `library(nycflights13)`.
-  
-
-```{r, warning=FALSE}
-library(nycflights13)
-flights 
-summary(flights)
-```
-
-## Data Types {.scrollable}
-
-- `int` integers
-- `dbl` doubles or real numbers
-- `chr` character vectors (strings)
-- `dttm` date-time
-- `date` date
-- `lgl` logical (TRUE or FALSE)
-- `fctr` factors (catgeorical variables with fixed possible values, e.g., dropdown list)
-
-```{r}
-flights[c("dep_time","tailnum","air_time","time_hour")]
 ```
 
 
@@ -522,11 +539,59 @@ dplyr is one of the packages in tidyverse which provides a consistent set of dat
 
 </div>
 
-## filter
+## dplyr syntax
+
+- The structure of the verbs is the same regardless of which one you use
+    - verb(data frame, variable1/argument1, variable2/argument2, ...)
+    - The result is a new data frame
+```{r}
+filter(iris,Sepal.Length>4, Petal.Width==0.1) # Note that the variable names do not have quotes, '', around them
+```
 
 
 
 
+## Flights dataset {.scrollable}
+
+- On-time data for all flights that departed NYC (i.e. JFK, LGA or EWR) in 2013  
+- Install the nycflights13 package, `install.packages("nycflights13")`,  and load its library, `library(nycflights13)`.
+  
+
+```{r, warning=FALSE}
+library(nycflights13)
+flights 
+summary(flights)
+```
+
+## Data Types {.scrollable}
+
+- `int` integers
+- `dbl` doubles or real numbers
+- `chr` character vectors (strings)
+- `dttm` date-time
+- `date` date
+- `lgl` logical (TRUE or FALSE)
+- `fctr` factors (catgeorical variables with fixed possible values, e.g., dropdown list)
+- `list` like a vector but can contain different types of elements
+
+```{r}
+flights[c("dep_time","tailnum","air_time","time_hour")]
+```
+
+
+
+
+## filter {.scrollable}
+
+Find all flights which went from JFK to Fort Lauderdale in the first week of January
+```{r}
+filter(flights, origin == 'JFK', dest == 'FLL', month==1, day <=7) # 
+filter(flights, (origin == 'JFK' | dest == 'FLL'), month==1, day <=7) # , is the same as AND and | is the same as OR
+```
+
+## arrange {.scrollable}
+
+Sort the flights based on the amount of time they spent in the air
 
 
 
