@@ -534,7 +534,7 @@ dplyr is one of the packages in tidyverse which provides a consistent set of dat
     - add new variables that are functions of existing variables
 5. summarise
     - condense multiple values to a single value
-1. group by
+6. group by
     - perform any operation by group
 
 </div>
@@ -589,9 +589,96 @@ filter(flights, origin == 'JFK', dest == 'FLL', month==1, day <=7) #
 filter(flights, (origin == 'JFK' | dest == 'FLL'), month==1, day <=7) # , is the same as AND and | is the same as OR
 ```
 
+
+Find all flights going to Fort Lauderdale, Atlanta or O'Hare
+```{r}
+filter(flights, dest == "FLL" | dest == "ATL" | dest == "ORD")
+filter(flights, dest %in% c("FLL", "ATL","ORD")) # use %in% to search for multiple values in a single variable
+```
+
+Find all flights that have values for their departure delays
+```{r}
+filter(flights, is.na(dep_delay)) # show all the rows with NA (missing values)
+filter(flights, !is.na(dep_delay)) # show only the rows without missing values
+```
+
+
 ## arrange {.scrollable}
 
-Sort the flights based on the amount of time they spent in the air
+Sort the flights based on their scheduled departure time
+
+```{r}
+arrange(flights,sched_dep_time)
+```
+
+Sort the flights based on their scheduled departure time, and break ties using their actual departure time
+
+```{r}
+arrange(flights,sched_dep_time,dep_time)
+```
+
+Sort the flights by those scheduled to depart latest, and break ties in that group by those who left earliest
+
+```{r}
+arrange(flights,desc(sched_dep_time),dep_time) 
+```
+
+I forgot about flights which were delayed so left the next morning, and since dep_time is day agnostic, this does not give me the data I am looking for.  I can try and figure out which flights left that day and which left the next or just use a different variable as my metric of the late evening flights which left earliest.
+```{r}
+arrange(flights,desc(sched_dep_time),dep_delay) 
+```
 
 
+## select
 
+```{r, out.width = "700px",echo=FALSE}
+knitr::include_graphics("select.gif")
+```
+
+
+## select & rename {.scrollable}
+
+Select the year, month, day, dep_times, and sched_dep_time columns
+
+```{r}
+select(flights,year,month,day,dep_time,sched_dep_time)
+select(flights,year:sched_dep_time)
+select(flights,1:5)
+select(flights,-(dep_delay:time_hour)) # more useful when removing only a few columns
+```
+
+`rename` lets you change the name of a variable while still keeping the full data set
+
+```{r}
+rename(flights, sun_cycles = year)
+flights # Note that we are not assigning any of these outputs, so if you call the original dataset, it hasn't changed
+```
+
+The `everything()` helper lets you use `select` to rearrange the order of the variables
+
+```{r}
+select(flights, distance, air_time, everything())
+```
+
+
+## mutate & transmute {.scrollable}
+
+`mutate` adds new variables, while `transmute` drops existing variables
+
+```{r}
+flights_sml <- select(flights, dep_time,arr_time, air_time, distance) # create a subset of the full dataset so that you can see new variables being added
+flights_sml
+mutate(flights_sml, avg_speed = distance/air_time, dep_hr = dep_time %/% 100, dep_min = dep_time %% 100)
+transmute(flights_sml, avg_speed = distance/air_time, dep_hr = dep_time %/% 100, dep_min = dep_time %% 100)
+```
+
+- There are lots of useful functions which can be applied within mutate/transmute, use `?mutate` for the full suggested list 
+    - `lead()` and `lag()` find the next and previous values in a vector, respectively.  
+    - `cumsum()`, `cummean()`, and others (see help doc) take running sums, means and other properties
+
+```{r}
+# How much time is there between each flight and the next?
+mutate(flights_sml,dep_time_offset = lag(dep_time), dep_time_lag = dep_time - lag(dep_time))
+mutate(flights_sml,dep_time_offset = lead(dep_time), dep_time_lead = lead(dep_time) - dep_time)
+mutate(flights_sml, total_dist = cumsum(distance))
+```

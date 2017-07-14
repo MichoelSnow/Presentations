@@ -78,6 +78,18 @@ height: 100%;
   margin: 10px 0;
 }
 
+.reveal ol li{
+  font-size:30px;
+  margin: 10px 0;
+}
+.reveal ol{
+  padding: 10px;
+}
+
+.reveal ul{
+  padding: 10px;
+}
+
 .reveal header{
   position: absolute !important;
 }
