@@ -15,6 +15,10 @@ output:
       height: '100%'
       margin: 0.1
 ---
+```{r global_options, include=FALSE}
+options(width = 999)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=130),width=130,tidy=TRUE)
+```
 
 ## SECTION 1 - The Basics
 ## Installing R
@@ -582,22 +586,26 @@ flights[c("dep_time","tailnum","air_time","time_hour")]
 
 
 ## filter {.scrollable}
+use `filter()` to find rows/cases where conditions are true
 
-Find all flights which went from JFK to Fort Lauderdale in the first week of January
+
 ```{r}
+# Find all flights which went from JFK to Fort Lauderdale in the first week of January
 filter(flights, origin == 'JFK', dest == 'FLL', month==1, day <=7) # 
 filter(flights, (origin == 'JFK' | dest == 'FLL'), month==1, day <=7) # , is the same as AND and | is the same as OR
 ```
 
 
-Find all flights going to Fort Lauderdale, Atlanta or O'Hare
+
 ```{r}
+# Find all flights going to Fort Lauderdale, Atlanta or O'Hare
 filter(flights, dest == "FLL" | dest == "ATL" | dest == "ORD")
 filter(flights, dest %in% c("FLL", "ATL","ORD")) # use %in% to search for multiple values in a single variable
 ```
 
-Find all flights that have values for their departure delays
+
 ```{r}
+# Find all flights that have values for their departure delays
 filter(flights, is.na(dep_delay)) # show all the rows with NA (missing values)
 filter(flights, !is.na(dep_delay)) # show only the rows without missing values
 ```
@@ -605,42 +613,36 @@ filter(flights, !is.na(dep_delay)) # show only the rows without missing values
 
 ## arrange {.scrollable}
 
-Sort the flights based on their scheduled departure time
+use `arrange()` to sort the data based on one or more variables
 
 ```{r}
+# Sort the flights based on their scheduled departure time
 arrange(flights,sched_dep_time)
-```
-
-Sort the flights based on their scheduled departure time, and break ties using their actual departure time
-
-```{r}
+# Sort the flights based on their scheduled departure time, and break ties using their actual departure time
 arrange(flights,sched_dep_time,dep_time)
-```
-
-Sort the flights by those scheduled to depart latest, and break ties in that group by those who left earliest
-
-```{r}
+# Sort the flights by those scheduled to depart latest, and break ties in that group by those who left earliest
 arrange(flights,desc(sched_dep_time),dep_time) 
 ```
 
-I forgot about flights which were delayed so left the next morning, and since dep_time is day agnostic, this does not give me the data I am looking for.  I can try and figure out which flights left that day and which left the next or just use a different variable as my metric of the late evening flights which left earliest.
+
+- The problems is I forgot about flights which were delayed so left the next morning
+- Since dep_time is day agnostic, this does not give me the data I am looking for  
+- I can try and figure out which flights left that day and which left the next or just use a different variable as my metric of the late evening flights which left earliest.
 ```{r}
 arrange(flights,desc(sched_dep_time),dep_delay) 
 ```
 
 
-## select
 
-```{r, out.width = "700px",echo=FALSE}
-knitr::include_graphics("select.gif")
-```
+
 
 
 ## select & rename {.scrollable}
 
-Select the year, month, day, dep_times, and sched_dep_time columns
+use `select()` and `rename()` to pick variables based on their names 
 
 ```{r}
+# Select the year, month, day, dep_times, and sched_dep_time columns
 select(flights,year,month,day,dep_time,sched_dep_time)
 select(flights,year:sched_dep_time)
 select(flights,1:5)
@@ -666,7 +668,8 @@ select(flights, distance, air_time, everything())
 `mutate` adds new variables, while `transmute` drops existing variables
 
 ```{r}
-flights_sml <- select(flights, dep_time,arr_time, air_time, distance) # create a subset of the full dataset so that you can see new variables being added
+# create a subset of the full dataset so that you can see new variables being added
+flights_sml <- select(flights, dep_time,arr_time, air_time, distance) 
 flights_sml
 mutate(flights_sml, avg_speed = distance/air_time, dep_hr = dep_time %/% 100, dep_min = dep_time %% 100)
 transmute(flights_sml, avg_speed = distance/air_time, dep_hr = dep_time %/% 100, dep_min = dep_time %% 100)
@@ -682,3 +685,112 @@ mutate(flights_sml,dep_time_offset = lag(dep_time), dep_time_lag = dep_time - la
 mutate(flights_sml,dep_time_offset = lead(dep_time), dep_time_lead = lead(dep_time) - dep_time)
 mutate(flights_sml, total_dist = cumsum(distance))
 ```
+
+
+## Summarise & Group by {.scrollable}
+
+Summarise reduces multiple values to a single summary metric
+
+```{r}
+summarise(flights, delay = mean(dep_delay))
+```
+- Why does this give us `NA`?
+- In R, missing values are represented by the symbol `NA` (not available)
+    - This is not to be confused with `NaN` (not a number), which refers to impossible values, e.g., dividing by zero
+- When you try to do any operation that includes `NA` values, the output will always be `NA`
+    - Think of `NA`'s as being any possible value, as a result any summary metric will result in an unknown quantity as the uknown `NA` value could have significantly impacted the results
+- To solve this problem most R functions have the option to ignore `NA` value
+    - Usually it is of the form `na.rm=TRUE`
+```{r}
+summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
+```
+- By itself `summarise` isn't that useful as we rarely want to reduce all our data down to a single metric
+- `summarise` is much more useful when combined with the other expressions
+    - For example, determining the average departure delay of all flights in January
+```{r}
+JanDelay <- filter(flights,month==1)
+summarise(JanDelay,delay = mean(dep_delay,na.rm = TRUE))
+```
+
+- However, the real power of `summarise` is seen when coupled with `group_by`
+- `group_by` takes an existing tibble and converts it into a grouped tibble where operations are performed "by group"
+    - by itself `group_by` does not change how the data looks, instead it changes how it interacts with the other verbs, most notably `summarise`
+
+```{r}
+flights_month <- group_by(flights,month)
+flights_month
+summarise(flights_month,delay=mean(dep_delay,na.rm = TRUE),count = n()) 
+```
+
+Also it's good practice when grouping to add a counts column using `n()`
+```{r}
+summarise(flights_month,delay=mean(dep_delay,na.rm = TRUE),count = n()) 
+```
+
+
+## Pipes {.scrollable}
+
+
+```{r, out.width = "700px",echo=FALSE}
+knitr::include_graphics("MagrittePipe.jpg")
+```
+
+
+## Pipes
+
+Often you will need to string multiple actions together which can get somewhat messy
+
+```{r}
+# On average which hour of the day has the most delayed american airline flights 
+flights_mut <- mutate(flights, hr = sched_dep_time%/% 100)
+flights_filt <- filter(flights_mut, carrier == 'AA', complete.cases(flights_mut))
+flights_sel <- select(flights_filt, dep_time, hr, sched_dep_time, dep_delay)
+flights_sel # print out to confirm that you are selecting what you intend
+flights_gb <- group_by(flights_sel,hr)
+flights_sum <- summarise(flights_gb, mean_delay = mean(dep_delay),count = n())
+flights_arr <- arrange(flights_sum, desc(mean_delay))
+print(flights_arr,n=24)
+```
+
+The pipes `%>%` or <kbd>CTRL</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> (from the magrittr package which is included in tidyverse) allows you to do the same set of actions in a much simpler manner
+
+```{r}
+flights %>% 
+  mutate(hr = sched_dep_time%/% 100) %>% 
+  filter(carrier == 'AA', complete.cases(flights_mut)) %>% 
+  select(dep_time, hr, sched_dep_time, dep_delay) %>% 
+  group_by(hr) %>% 
+  summarise(mean_delay = mean(dep_delay),count = n()) %>% 
+  arrange(desc(mean_delay))
+```
+
+- Pipes can be thought of as the phrase "and then", so the above code would be read as:
+    1. Take flights and then
+    2. mutate it and then
+    3. filter it and then 
+    4. select it and then ...
+- Pipes are useful when  
+    - There is only a single input and you don't need to combine inputs
+    - You only want a single ouptut and don't care about the outputs from the intermediate steps
+- But remember that without an assignment, the output is not saved to a variable
+
+
+## Exercises {.scrollable}
+
+- Using the babynames dataset from the babynames package:
+    1. How popular was your name in the US in the year you were born
+    2. Which are the overall most popular girl and boy baby names as measured by count? How many times more popular were they then the next most popular names?
+    3. Which 5 years had the most babies named "Michael"? How about the greatest proportion of babies named "Michael"?
+    4. Since 1990 how many girls have been named "Michael"
+    5. Which name had the biggest increase in consecutive years and in what years was it?
+    
+    
+
+<!-- starwars (in dplyr)-->
+<!-- usdanutrients good for joins -->
+
+## playtime
+
+The `fivethirtyeight` package has lots of fun datasets.  To see the motivation behind the package's creation as well as a description of each of the different datasets use `vignette("fivethirtyeight", package = "fivethirtyeight")`
+
+

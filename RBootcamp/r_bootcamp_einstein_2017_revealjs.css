@@ -24,6 +24,7 @@ height: 100%;
 ::-webkit-scrollbar
 {
 	width: 3px;
+	height: 6px;
 /* 	background-color: #F5F5F5; */
 	background-color: #add9e4 ;
 }
@@ -38,6 +39,8 @@ height: 100%;
 									   color-stop(0.72, rgb(73,125,189)),
 									   color-stop(0.86, rgb(28,58,148)));
 }
+
+
 
 /* ::-webkit-scrollbar-track-piece:start {
     background: transparent url('images/backgrounds/scrollbar.png') repeat-y !important;
