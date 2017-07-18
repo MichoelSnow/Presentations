@@ -17,7 +17,7 @@ output:
 ---
 ```{r global_options, include=FALSE}
 options(width = 120)
-knitr::opts_chunk$set(tidy.opts=list(width.cutoff=130),width=130,tidy=TRUE)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=120),width=120,tidy=TRUE)
 ```
 
 ## SECTION 1 - The Basics
@@ -131,20 +131,23 @@ ggplot(data = mpg) +
 ## Variable propagation {.scrollable}
 
 By inserting x and y into ggplot, all layers will use those parameters unless otherwise specified
-```{r message=FALSE}
+```{r message=FALSE, tidy=FALSE}
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_smooth() + geom_point()
+  geom_smooth() + 
+  geom_point()
 
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_smooth() + geom_point() +
+  geom_smooth() + 
+  geom_point() +
   geom_smooth(mapping = aes(x = displ,y = cty),color = "red")
 ```
 
 ## Features vs Variables {.scrollable}
 
 Note: if you want to plot a variable to a feature like color or size, it must go in the aes() term, if you just want to set them at a certain value they go outside the aes
-```{r message=FALSE} 
-ggplot(mpg, aes(displ,hwy)) + geom_smooth(color = "green") + 
+```{r message=FALSE, tidy=FALSE} 
+ggplot(mpg, aes(displ,hwy)) + 
+  geom_smooth(color = "green") + 
   geom_point(aes(color=class),size=2)
 ```
 
@@ -715,7 +718,7 @@ summarise(jan_delay,delay = mean(dep_delay,na.rm = TRUE))
 
 - However, the real power of `summarise` is seen when coupled with `group_by`
 - `group_by` takes an existing tibble and converts it into a grouped tibble where operations are performed "by group"
-    - by itself `group_by` does not change how the data looks, instead it changes how it interacts with the other verbs, most notably `summarise`
+    - By itself `group_by` does not change how the data looks, instead it changes how it interacts with the other verbs, most notably `summarise`
 
 ```{r}
 flights_month <- group_by(flights,month)
@@ -737,7 +740,7 @@ knitr::include_graphics("MagrittePipe.jpg")
 ```
 
 
-## Pipes
+## Pipes {.scrollable}
 
 Often you will need to string multiple actions together which can get somewhat messy
 
@@ -755,7 +758,7 @@ print(flights_arr,n=24)
 
 The pipes `%>%` or <kbd>CTRL</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> (from the magrittr package which is included in tidyverse) allows you to do the same set of actions in a much simpler manner
 
-```{r}
+```{r, tidy=FALSE}
 flights %>% 
   mutate(hr = sched_dep_time%/% 100) %>% 
   filter(carrier == 'AA', complete.cases(flights_mut)) %>% 
@@ -766,7 +769,7 @@ flights %>%
 ```
 
 - Pipes can be thought of as the phrase "and then", so the above code would be read as:
-    1. Take flights and then
+    1. Take the input flights and then
     2. mutate it and then
     3. filter it and then 
     4. select it and then ...
@@ -776,22 +779,32 @@ flights %>%
 - But remember that without an assignment, the output is not saved to a variable
 
 
-## Exercises {.scrollable}
+## Exercises & playtime {.scrollable}
 
 - Using the babynames dataset from the babynames package:
-    1. How popular was your name in the US in the year you were born
-    2. Which are the overall most popular girl and boy baby names as measured by count? How many times more popular were they then the next most popular names?
-    3. Which 5 years had the most babies named "Michael"? How about the greatest proportion of babies named "Michael"?
-    4. Since 1990 how many girls have been named "Michael"
-    5. Which name had the biggest increase in consecutive years and in what years was it?
+    1. How popular was your name in the US in the year you were born, i.e. how many other babies were given the same name?
+    <!-- filter(babynames, name=="Michael", year == 1986) -->  
+    2. Which are the overall most popular girl and boy baby names as measured by count? How many times more popular are they then the next most popular names?
+    <!-- popular_f <- babynames %>% filter(sex=="F") %>% group_by(name) %>% summarise(total=sum(n)) %>% arrange(desc(total)) -->
+    <!-- popular_f[1,2]/popular_f[2,2] -->
+    <!-- popular_m <- babynames %>% filter(sex=="M") %>% group_by(name) %>% summarise(total=sum(n)) %>% arrange(desc(total)) -->
+    <!-- popular_m[1,2]/popular_m[2,2] -->
+    3. Since 1990 how many girls have been named "Michael"
+    <!-- babynames %>% filter(year >= 1990, name == "Michael", sex == "F") %>% summarise(sum(n)) # 2961 -->
+    4. What was the 8th most popular year for the name "Michael" as measured by counts?  
+    <!-- Ct_mic <- babynames %>% filter(name=="Michael") %>% group_by(year) %>% summarise(total=sum(n)) %>% arrange(desc(total)) -->
+    <!-- Ct_mic[8,1] # 1969 -->
+    5. Which girl's name had the biggest increase in consecutive years, in what years was it, and why?
+    <!-- babynames %>% filter(sex=="F") %>% arrange(year) %>% group_by(name) %>% mutate(change = lead(n) - n) %>% arrange(desc(change)) #Linda 1946 to 1947 probably due to the song Linda -->
     
+The `fivethirtyeight` package has lots of fun datasets.  To see the motivation behind the package's creation as well as a description of each of the different datasets use `vignette("fivethirtyeight", package = "fivethirtyeight")`    
     
 
 <!-- starwars (in dplyr)-->
 <!-- usdanutrients good for joins -->
 
-## playtime
 
-The `fivethirtyeight` package has lots of fun datasets.  To see the motivation behind the package's creation as well as a description of each of the different datasets use `vignette("fivethirtyeight", package = "fivethirtyeight")`
+
+
 
 
