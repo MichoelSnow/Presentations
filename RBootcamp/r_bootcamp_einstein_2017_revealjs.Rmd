@@ -16,7 +16,7 @@ output:
       margin: 0.1
 ---
 ```{r global_options, include=FALSE}
-options(width = 999)
+options(width = 120)
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=130),width=130,tidy=TRUE)
 ```
 
@@ -107,9 +107,10 @@ If you don't have them already installed you need to download and install R and 
 library(tidyverse)
 ```
 
-ggplot dataset of fuel economy data from 1999 and 2008 for 38 popular models of car
+
 
 ```{r}
+# mpg is a ggplot dataset of fuel economy data from 1999 and 2008 for 38 popular models of car
 mpg
 summary(mpg) 
 mpg$drv
@@ -121,10 +122,10 @@ mpg$drv
 The ggplot command begins a plot to which you can add layers
 ```{r, message=FALSE}
 ggplot(data = mpg) + 
-geom_point(mapping = aes(x = displ, y = hwy))
-ggplot(data = mpg) +
-geom_smooth(mapping = aes(x = displ, y = hwy)) + 
-geom_point(mapping = aes(x = displ, y = hwy))
+  geom_point(mapping = aes(x = displ, y = hwy))
+  ggplot(data = mpg) +
+  geom_smooth(mapping = aes(x = displ, y = hwy)) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
 ```
 
 ## Variable propagation {.scrollable}
@@ -132,11 +133,11 @@ geom_point(mapping = aes(x = displ, y = hwy))
 By inserting x and y into ggplot, all layers will use those parameters unless otherwise specified
 ```{r message=FALSE}
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-geom_smooth() + geom_point()
+  geom_smooth() + geom_point()
 
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-geom_smooth() + geom_point() +
-geom_smooth(mapping = aes(x = displ,y = cty),color = "red")
+  geom_smooth() + geom_point() +
+  geom_smooth(mapping = aes(x = displ,y = cty),color = "red")
 ```
 
 ## Features vs Variables {.scrollable}
@@ -144,7 +145,7 @@ geom_smooth(mapping = aes(x = displ,y = cty),color = "red")
 Note: if you want to plot a variable to a feature like color or size, it must go in the aes() term, if you just want to set them at a certain value they go outside the aes
 ```{r message=FALSE} 
 ggplot(mpg, aes(displ,hwy)) + geom_smooth(color = "green") + 
-geom_point(aes(color=class),size=2) 
+  geom_point(aes(color=class),size=2)
 ```
 
 ## Facets {.scrollable}
@@ -158,7 +159,7 @@ ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(cyl~class)
 ```
 
 
-## Playtime {.scrollable}
+## Exercises {.scrollable}
 Try to make some of the following plots:  
 ```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.height=2.5}
 ggplot(mpg)  + geom_point(aes(displ,hwy,size=class),color="blue",shape=17) 
@@ -346,7 +347,7 @@ SPEncBoxes %>% ggplot(aes(x,y,fill = j, color = EncAct)) +
 
 
 
-## SECTION 2 - Data Manipulation    
+## SECTION 3 - Data Manipulation    
 
 
 ## Mathematical and Boolean Operators {.scrollable}
@@ -591,7 +592,7 @@ use `filter()` to find rows/cases where conditions are true
 
 ```{r}
 # Find all flights which went from JFK to Fort Lauderdale in the first week of January
-filter(flights, origin == 'JFK', dest == 'FLL', month==1, day <=7) # 
+filter(flights, origin == 'JFK', dest == 'FLL', month==1, day <=7)  
 filter(flights, (origin == 'JFK' | dest == 'FLL'), month==1, day <=7) # , is the same as AND and | is the same as OR
 ```
 
@@ -708,8 +709,8 @@ summarise(flights, delay = mean(dep_delay, na.rm = TRUE))
 - `summarise` is much more useful when combined with the other expressions
     - For example, determining the average departure delay of all flights in January
 ```{r}
-JanDelay <- filter(flights,month==1)
-summarise(JanDelay,delay = mean(dep_delay,na.rm = TRUE))
+jan_delay <- filter(flights,month==1)
+summarise(jan_delay,delay = mean(dep_delay,na.rm = TRUE))
 ```
 
 - However, the real power of `summarise` is seen when coupled with `group_by`
@@ -719,7 +720,7 @@ summarise(JanDelay,delay = mean(dep_delay,na.rm = TRUE))
 ```{r}
 flights_month <- group_by(flights,month)
 flights_month
-summarise(flights_month,delay=mean(dep_delay,na.rm = TRUE),count = n()) 
+summarise(flights_month,delay=mean(dep_delay,na.rm = TRUE)) 
 ```
 
 Also it's good practice when grouping to add a counts column using `n()`
