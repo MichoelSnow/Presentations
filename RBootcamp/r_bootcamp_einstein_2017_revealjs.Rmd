@@ -90,6 +90,11 @@ If you don't have them already installed you need to download and install R and 
 - `??`term
     - Searches the help documentation for the queried string
 
+## Structure of This Presentation
+
+1. Visualization of Data
+2. Manipulation of Data
+3. Importing/cleaning of Data
 
 ## SECTION 2 - Data Visualisations 
 
@@ -384,13 +389,20 @@ c(seq(1,10,2), 25, 10) * 2
 
 
 
-
 ## Variables and Assignment {.scrollable}
 ```{r}
 x = 5+3
 (x = 5+3)
 x <- 5+3
 (x <- 5+3)
+```
+
+- Terminology
+    - The term on the left hand side is referred to as an object
+    - The term on the right hand side is the object's value 
+    - The `<-` is the assignment operator
+
+```{r}
 y <- x
 y
 x <- 5+3 > 2
@@ -400,7 +412,9 @@ x
 ```
 
 ## Indexing {.scrollable}
-R starts at 1
+- Indexing is locating values by their index/indices within an N dimensional object
+- Unlike some other programming languages R starts at 1
+- Note that indexing uses [], while functions, like `seq`, use ()
 ```{r}
 x <- seq(172,23,-13)
 x[1]    
@@ -417,6 +431,7 @@ y
 ```
 
 ## Built in Functions {.scrollable}
+
 ```{r}
 x <-  1:20
 mean(x)
@@ -430,8 +445,17 @@ log(x)
 sqrt(x)
 ```
 
+Note that many functions in R have default values for some of their parameters and you should always try to be aware of them even if you don't want to change them
 
+```{r}
+rnorm(10)
+```
 
+`rnorm` randomly generates values from a normal distribution, but a normal distribution requires a mean and a standard deviation. If you type `?rnorm` you will see the full documentation but for our purposes the important part is  
+
+> rnorm(n, mean = 0, sd = 1)  
+
+By default, the `rnorm` function assumes a mean of 0 and a standard deviation of 1.  You can change those values easily, but only if you are aware of them.
 
 ## Exercises
 1. Create a vector of 2 through 8 squared:  
@@ -798,7 +822,22 @@ flights %>%
     <!-- babynames %>% filter(sex=="F") %>% arrange(year) %>% group_by(name) %>% mutate(change = lead(n) - n) %>% arrange(desc(change)) #Linda 1946 to 1947 probably due to the song Linda -->
     
 The `fivethirtyeight` package has lots of fun datasets.  To see the motivation behind the package's creation as well as a description of each of the different datasets use `vignette("fivethirtyeight", package = "fivethirtyeight")`    
-    
+
+
+## Combining Data Manipulation and Visualization
+
+1. Plot the popularity of the boy's name Brittany since 1950.
+<!-- bb_mic <- filter(babynames,name=="Brittany",sex=="F",year > 1950) -->
+<!-- bb_mic %>% ggplot(aes(year,n)) + geom_line(color="red",size = 2) -->
+2. Using the 5 most popular girl's name from 2015 (based on counts), plot their counts over all the years recorded, using different color for each name. Now plot the same names using the prop value instead.
+<!-- bb_pop <- babynames %>% filter(year==2015,sex=="F") %>% arrange(desc(n))  -->
+<!-- bb_pop_y <- babynames %>% filter(name %in% c(bb_pop$name[1:5]),sex=="F") -->
+<!-- bb_pop_y %>% ggplot() + geom_line(aes(x=year , y=n, color=name)) -->
+<!-- bb_pop_y %>% ggplot() + geom_line(aes(x=year , y=prop, color=name)) -->
+3. Plot the number of names which have a significant share of the total names, i.e., > 1%, over all years recorded
+<!-- bb_ct <- babynames %>% filter(prop > .01) %>% group_by(year) %>% summarise(total = sum(prop), ct = n()) -->
+<!-- bb_ct %>% ggplot(aes(year,ct)) + geom_line() -->
+
 
 <!-- starwars (in dplyr)-->
 <!-- usdanutrients good for joins -->

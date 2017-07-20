@@ -535,14 +535,21 @@ flights %>%
 
 
 
+bb_pop <- babynames %>% filter(year==2015,sex=="F") %>% arrange(desc(n)) 
+bb_pop_y <- babynames %>% filter(name %in% c(bb_pop$name[1:5]),sex=="F")
+bb_pop_y %>% ggplot() + geom_line(aes(x=year , y=prop, color=name))
 
+ 
+bb_pop_1880 <- babynames %>% filter(year==1880,sex=="F") %>% arrange(desc(n))  
+bb_pop_y <- babynames %>% filter(name %in% c(bb_pop_2015$name[1:5],bb_pop_1880$name[1:5]),sex=="F") 
+bb_pop_y %>% ggplot() + geom_line(aes(x=year , y=n, color=name))
 
+bb_ct <- babynames %>% filter(prop > .01) %>% group_by(year) %>% summarise(total = sum(prop), ct = n())
+bb_ct %>% ggplot(aes(year,ct)) + geom_line()
 
+babynames %>% group_by(year,sex) %>% 
 
-
-
-
-
+babynames
 
 
 
