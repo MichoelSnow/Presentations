@@ -824,7 +824,7 @@ flights %>%
 The `fivethirtyeight` package has lots of fun datasets.  To see the motivation behind the package's creation as well as a description of each of the different datasets use `vignette("fivethirtyeight", package = "fivethirtyeight")`    
 
 
-## Combining Data Manipulation and Visualization
+## Combining Data Manipulation and Visualization 
 
 1. Plot the popularity of the boy's name Brittany since 1950.
 <!-- bb_mic <- filter(babynames,name=="Brittany",sex=="F",year > 1950) -->
@@ -843,7 +843,111 @@ The `fivethirtyeight` package has lots of fun datasets.  To see the motivation b
 <!-- usdanutrients good for joins -->
 
 
+## sECTION 3 - Data Importing/Cleaning
 
+## Found vs Generated Data {.scrollable}
+
+- Most of the time in your research you will be using data that you or someone you know generated
+    - This will often result in tidy and clean data or if not at least someone you can complain to about why the data is so messy
+- But what about when you have to use 3rd party data, e.g., weather information
+    - First you have to find the data (a topic we will not be covering)
+    - Then you have to import the data
+    - Then you have to clean and tidy the data
+- Dataset formats
+    - Columns are variables separated by a delimeter, such as a comma (.csv), semicolon (.csv2), tab (.tsv)
+    - Rows are entries and their values form the index column of the data
+        - Usually the values in the first row are the names of the columns
+
+```{r}        
+# Trip Duration,Start Time,Stop Time,Start Station ID,Start Station Name 
+
+# 1893,2017-03-01 00:00:32,2017-03-01 00:32:06,2009,Catherine St & Monroe St  
+
+# 223,2017-03-01 00:01:09,2017-03-01 00:04:53,127,Barrow St & Hudson St  
+
+# 1665,2017-03-01 00:01:27,2017-03-01 00:29:12,174,E 25 St & 1 Ave  
+
+# 100,2017-03-01 00:01:29,2017-03-01 00:03:10,316,Fulton St & William St  
+
+# 1229,2017-03-01 00:01:33,2017-03-01 00:22:02,536,1 Ave & E 30 St  
+
+# 613,2017-03-01 00:01:57,2017-03-01 00:12:11,259,South St & Whitehall St  
+
+# 157,2017-03-01 00:02:12,2017-03-01 00:04:49,3329,Degraw St & Smith St  
+```    
+
+## Citibike Dataset {.scrollable}
+
+- Download the citibike_data directory from the same site where you folder where you downloaded the R file
+    - The RBootcamp folder in <https://github.com/mseinstein/Presentations> 
+- This dataset is publicly available online from citibike and contains every ride for an entire month
+- R has a built in function for reading csv files `read.csv()` which reads the data into a dataframe, but instead we will be using the tidyverse package readr, which uses the slightly different `read_csv()`
+    - Feel free to compare the documentation for the two functions if you want to know how they differ
+    - Since the `read_csv` function is powerful and versatile it's good to look at its default options before using it
+```{r, tidy=FALSE}
+# read_csv(file, col_names = TRUE, col_types = NULL,
+#   locale = default_locale(), na = c("", "NA"), quoted_na = TRUE,
+#   quote = "\"", comment = "", trim_ws = TRUE, skip = 0, n_max = Inf,
+#   guess_max = min(1000, n_max), progress = show_progress())    
+```
+    
+- For the file variable use the full path ('E:\\full\\path\\to\\file.csv')
+   - Note that you can easily change the working directory but that is outside the scope of this bootcamp
+
+```{r}
+read_csv('E:/GitHub/Presentations/RBootcamp/citibike_data/201701-citibike-tripdata.csv')
+```
+
+You can see that R solved the problem of spaces in the column names by putting \` around them (note this is a backtick not a single quote), but this makes it annoying to refer to these variables.  Instead we can use a snake case version of the column names as an input into `read_csv`
+
+```{r}
+column_names <- c('trip_duration','start_time', 'stop_time', 'start_id', 'start_name', 'start_lat',  'start_long', 'end_id', 'end_name', 'end_lat', 'end_long', 'bike_id', 'user_type', 'birth_year', 'gender')
+read_csv('E:/GitHub/Presentations/RBootcamp/citibike_data/201701-citibike-tripdata.csv',col_names = column_names)
+```
+
+The problem is that when you provide the column names, `read_csv` treats the first row as a regular row of entries, so if we want to use our own column names we need to skip that row
+
+```{r}
+citi_bike <- read_csv('E:/GitHub/Presentations/RBootcamp/citibike_data/201701-citibike-tripdata.csv',col_names = column_names, skip=1)
+citi_bike
+```
+
+## Parsing {.scrollable}
+
+- Parsing , in reference to `read_csv` and similar functions, is the method of analyzing elements of a vector to determine the type of information within that vector 
+- By default, `read_csv` uses the first 1000 rows or the entire dataset, whichever is smaller, to parse each column
+- Usually it does a very good job and most of the time you have to change data types because you want a specific data type, not because of an error within the parser
+
+```{r, echo=FALSE}
+options(width = 999)
+```
+
+```{r}
+# Let's look again at our dataset and see if all our datatypes make sense
+citi_bike
+```
+
+```{r, echo=FALSE}
+options(width = 120)
+```
+
+```{r}
+summary(citi_bike)
+```
+
+- Double and integers are very useful for continuous values, but when you have a limited number of discrete values (and where the orders of the valuesare typically irrelevant), the factor type is often more useful
+    - Factors are useful when you have a categorical variable (think of it like a dropdown menu)
+    - Factor values are always converted to characters
+    - The `level()` function list all the possible options of the factor variable
+- There are two ways to convert a csv tibble column into a factor
+    - When you initially read the file you can specify the type for each column (useful when changing most of the columns) using the `col_factor()` function
+    - After reading the file you can convert the specified columns to factors using the `as.factor()` function
+```{r}
+# In the citi_bike case start_id, end_id, user_type and gender are all variables which should be factors
+citi_bike_fac <- citi_bike %>% mutate(start_id = as.factor(start_id), end_id = as.factor(end_id), user_type = as.factor(user_type), gender = as.factor(gender)) 
+citi_bike_fac
+levels(citi_bike_fac$gender)
+```
 
 
 

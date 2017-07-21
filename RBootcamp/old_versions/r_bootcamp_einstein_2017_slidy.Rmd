@@ -1,0 +1,43 @@
+---
+title: "R Bootcamp Einstein 2017"
+author: Michoel Snow
+date: August 8-9, 2017
+output: 
+  slidy_presentation:
+    css: r_bootcamp_einstein_2017_slidy.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# The Basics
+## Installing R
+
+If you don't have them already installed you need to download and install R and R studio  
+
+- Download R
+    - <https://cran.r-project.org/>  
+- R Studio
+    - <https://www.rstudio.com/products/rstudio/download/>
+
+
+## Introduction to R
+
+- R is an open source programming environment
+- It is most commonly used for statistical computing and graphics
+- The basic functionality of R can be extended with 'packages'
+
+## Resources for R
+
+ - R for data science <http://r4ds.had.co.nz> 
+     - Served as inspiration for a lot of this bootcamp
+     - Written by programmers at R Studio
+ - R Programming for Data Science <https://bookdown.org/rdpeng/rprogdatascience/>
+ - R Bootcamp <https://www.jaredknowles.com/r-bootcamp/>
+
+
+## Introduction to R studio
+
+- R studio is an IDE within which you can write/edit code, run code, display plots/graphics and a whole host of other functions 
+
+![](RStudio-Screenshot.png)

@@ -1,0 +1,81 @@
+\mode<presentation>
+
+%\useoutertheme{split}
+\useoutertheme{infolines}
+\useinnertheme{rounded}
+
+\usecolortheme{whale}
+%\usecolortheme{seahorse}
+\usecolortheme{orchid}
+
+%\setbeamerfont{block title}{size={}}
+\usefonttheme{structurebold}
+
+
+\mode
+<all>
+
+
+
+% \usepackage{graphicx}
+% \usepackage{rotating}
+% %\setbeamertemplate{caption}[numbered]
+
+% \usepackage{hyperref}
+% \usepackage{caption}
+% \usepackage[normalem]{ulem}
+% %\mode<presentation>
+
+% \usepackage{wasysym}
+% \usepackage{amsmath}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{}
+% \institute{Department of Political Science}
+% \setbeamertemplate{title page}[empty]
+
+% \setbeamerfont{subtitle}{size=\small}
+
+% \setbeamercovered{transparent}
+
+% \definecolor{clemsonpurple}{HTML}{522D80}
+% \definecolor{clemsonorange}{HTML}{F66733}
+
+% \setbeamercolor{frametitle}{fg=clemsonpurple,bg=white}
+% \setbeamercolor{title}{fg=clemsonpurple,bg=white}
+% \setbeamercolor{local structure}{fg=clemsonpurple}
+% \setbeamercolor{section in toc}{fg=clemsonpurple,bg=white}
+% % \setbeamercolor{subsection in toc}{fg=clemsonorange,bg=white}
+
+% \setbeamercolor{item projected}{fg=clemsonpurple,bg=white}
+% \setbeamertemplate{itemize item}{\color{clemsonpurple}$\bullet$}
+% \setbeamertemplate{itemize subitem}{\color{clemsonpurple}\scriptsize{$\bullet$}}
+% \let\Tiny=\tiny
+
+\AtBeginPart{}
+\AtBeginSection{}
+\AtBeginSubsection{}
+\AtBeginSubsubsection{}
+\setlength{\emergencystretch}{0em}
+\setlength{\parskip}{0pt}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+\usepackage{tcolorbox}
+\definecolor{mycolor}{rgb}{0.122, 0.435, 0.698}% Rule colour
+\makeatletter
+\newcommand{\cb}[1]{%
+\setbox0=\hbox{#1}%
+\setlength{\@tempdima}{\dimexpr\wd0+5pt}%
+\begin{tcolorbox}[colframe=mycolor,boxrule=0.5pt,arc=4pt,baseline=1mm,right skip =0cm, left skip = 0cm, left=2pt,right=2pt,top=2pt,bottom=2pt,boxsep=0pt,nobeforeafter,width=\@tempdima]
+#1
+\end{tcolorbox}
+}
+\usepackage{scrextend}
+\changefontsizes{12pt}
