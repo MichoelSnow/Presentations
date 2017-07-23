@@ -895,20 +895,20 @@ The `fivethirtyeight` package has lots of fun datasets.  To see the motivation b
    - Note that you can easily change the working directory but that is outside the scope of this bootcamp
 
 ```{r}
-read_csv('E:/GitHub/Presentations/RBootcamp/citibike_data/201701-citibike-tripdata.csv')
+read_csv('./citibike_data/201701-citibike-tripdata.csv')
 ```
 
 You can see that R solved the problem of spaces in the column names by putting \` around them (note this is a backtick not a single quote), but this makes it annoying to refer to these variables.  Instead we can use a snake case version of the column names as an input into `read_csv`
 
 ```{r}
 column_names <- c('trip_duration','start_time', 'stop_time', 'start_id', 'start_name', 'start_lat',  'start_long', 'end_id', 'end_name', 'end_lat', 'end_long', 'bike_id', 'user_type', 'birth_year', 'gender')
-read_csv('E:/GitHub/Presentations/RBootcamp/citibike_data/201701-citibike-tripdata.csv',col_names = column_names)
+read_csv('./citibike_data/201701-citibike-tripdata.csv',col_names = column_names)
 ```
 
 The problem is that when you provide the column names, `read_csv` treats the first row as a regular row of entries, so if we want to use our own column names we need to skip that row
 
 ```{r}
-citi_bike <- read_csv('E:/GitHub/Presentations/RBootcamp/citibike_data/201701-citibike-tripdata.csv',col_names = column_names, skip=1)
+citi_bike <- read_csv('./citibike_data/201701-citibike-tripdata.csv',col_names = column_names, skip=1)
 citi_bike
 ```
 
