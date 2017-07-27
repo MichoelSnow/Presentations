@@ -1,6 +1,6 @@
 --- 
-title: "A Minimal Book Example"
-author: "Yihui Xie"
+title: "Statistics, Models and Machine Learning: Using R and Python"
+author: "Michoel Snow"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
@@ -16,7 +16,10 @@ description: "This is a minimal example of using the bookdown package to write a
 
 Should I be using linear regression, logistics regression, SVM, neural networks or one of at least a dozen other statistical/machine learning algorithms when trying to model my data?  This is the fundamental question which has driven the authorship of this book.  The problem is that the answer to that question for the most part is always the same, it depends.  The answer depends not only on the data itself, but also why you are modeling in the first place, i.e., what question are you trying to answer with your model, as well as a whole host of other factors.  The purpose of this book is to help you identify the important factors for choosing a model,  given those factors which model(s) you should choose and why, and then finally how to implement that model in R or python.
 
-# Prerequisites
+## How to read this book {-}
+
+This book is broken up by model, ordered by computational complexity.  Every chapter begins with a series of dataset visualizations and associated questions which are best answered through the models described in that chapter.  Each chapter is intended to be modular and for the most part, you can read any of the chapters in any order.  When multiple models utilize statistics or statistical techniques, the technique will be discussed the first time it is mentioned and all later mentions will refer the reader to where in the book they can find an explanation of that technique. 
+
 
 This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
 

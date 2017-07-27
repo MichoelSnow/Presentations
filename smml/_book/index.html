@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>A Minimal Book Example</title>
+  <title>Statistics, Models and Machine Learning: Using R and Python</title>
   <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook.">
   <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
 
-  <meta property="og:title" content="A Minimal Book Example" />
+  <meta property="og:title" content="Statistics, Models and Machine Learning: Using R and Python" />
   <meta property="og:type" content="book" />
   
   
@@ -17,12 +17,12 @@
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="A Minimal Book Example" />
+  <meta name="twitter:title" content="Statistics, Models and Machine Learning: Using R and Python" />
   
   <meta name="twitter:description" content="This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook." />
   
 
-<meta name="author" content="Yihui Xie">
+<meta name="author" content="Michoel Snow">
 
 
 <meta name="date" content="2017-07-26">
@@ -33,7 +33,7 @@
   
   
 
-<link rel="next" href="prerequisites.html">
+<link rel="next" href="regress.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -99,10 +99,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a></li>
-<li class="chapter" data-level="1" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>1</b> Prerequisites</a></li>
-<li class="chapter" data-level="2" data-path="regress.html"><a href="regress.html"><i class="fa fa-check"></i><b>2</b> Regression</a></li>
-<li class="chapter" data-level="3" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>3</b> Literature</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Introduction</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-read-this-book"><i class="fa fa-check"></i>How to read this book</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="regress.html"><a href="regress.html"><i class="fa fa-check"></i><b>1</b> Regression</a></li>
+<li class="chapter" data-level="2" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>2</b> Literature</a></li>
 </ul>
 
       </nav>
@@ -112,7 +113,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A Minimal Book Example</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Statistics, Models and Machine Learning: Using R and Python</a>
           </h1>
         </div>
 
@@ -121,13 +122,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">A Minimal Book Example</h1>
-<h4 class="author"><em>Yihui Xie</em></h4>
+<h1 class="title">Statistics, Models and Machine Learning: Using R and Python</h1>
+<h4 class="author"><em>Michoel Snow</em></h4>
 <h4 class="date"><em>2017-07-26</em></h4>
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
 <p>Should I be using linear regression, logistics regression, SVM, neural networks or one of at least a dozen other statistical/machine learning algorithms when trying to model my data? This is the fundamental question which has driven the authorship of this book. The problem is that the answer to that question for the most part is always the same, it depends. The answer depends not only on the data itself, but also why you are modeling in the first place, i.e., what question are you trying to answer with your model, as well as a whole host of other factors. The purpose of this book is to help you identify the important factors for choosing a model, given those factors which model(s) you should choose and why, and then finally how to implement that model in R or python.</p>
+<div id="how-to-read-this-book" class="section level2 unnumbered">
+<h2>How to read this book</h2>
+<p>This book is broken up by model, ordered by computational complexity. Every chapter begins with a series of dataset visualizations and associated questions which are best answered through the models described in that chapter. Each chapter is intended to be modular and for the most part, you can read any of the chapters in any order. When multiple models utilize statistics or statistical techniques, the technique will be discussed the first time it is mentioned and all later mentions will refer the reader to where in the book they can find an explanation of that technique.</p>
+<p>This is a <em>sample</em> book written in <strong>Markdown</strong>. You can use anything that Pandoc’s Markdown supports, e.g., a math equation <span class="math inline">\(a^2 + b^2 = c^2\)</span>.</p>
+<p>For now, you have to install the development versions of <strong>bookdown</strong> from Github:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;rstudio/bookdown&quot;</span>)</code></pre></div>
+<p>Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading <code>#</code>.</p>
+<p>To compile this example to PDF, you need to install XeLaTeX.</p>
+
+</div>
 </div>
             </section>
 
@@ -135,7 +146,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
         </div>
       </div>
 
-<a href="prerequisites.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="regress.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
