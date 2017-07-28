@@ -1,6 +1,51 @@
-# Regression {#regress}
+# Linear Regression {#lin_reg}
 
-In this chapter I will be covering 
+Almst all supervised models relate one or more input variables, $X_1,X_2, \ldots , X_p$, to an output variable, $Y$.  The general equation for a supervised model takes the form $$Y = f(X)$$. The simplest method with which to combine the inputs $X$ is through a linear combination, namely addition.  When dealing with a numerical output, we'll deal with a different type of output in chapter **NEED CHAPTER NAME**, this problem is termed regression.   Before tackling the general form of the model let's take a look at the example where there is only a single input variable, termed simple linear regression. Plotted in the figure below are 5 random temperature values read from a celsius thermometer on the X axis and from a farenheit thermometer on the Y axis.  
+
+
+
+```{r TmpPnt, fig.align='center',  echo=FALSE,message=FALSE}
+library(tidyverse)
+cel <-  sample(seq(-50,100),15) +rnorm(15)*15
+frn <- 9/5*cel + 32 
+frn2 <- frn + rnorm(length(cel))*15
+tmp <- tibble(cel,frn,frn2)
+gplot <- ggplot(tmp,aes(cel,frn2))  + geom_point() + labs(x="Temp (C)", y= "Temp (F)")
+gplot
+```
+
+There is an obvious a linear relationship between the values on the X and Y axes, i.e., as the temperature in Celsius increases the temperature in Farenheit increases a proportional amount, and if you remember the formula to convert between the two is $F = \dfrac{9}{5}\cdot C + 32$.  Converting this formulation into our nomenclature we almost get the general formula for simple linear regression $$Y \approx a_0 + a_1 \cdot X_1$$ I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.  This is very easy to see if I overlay on top of the previous plot a line generated from the equation $F = \dfrac{9}{5}\cdot C + 32$.
+
+```{r TmpLin, fig.align='center',  echo=FALSE,message=FALSE}
+
+gplot + geom_line(aes(cel,frn)) + geom_segment(aes(x=cel,xend=cel,y=frn2,yend=frn), color='red')
+```
+
+The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  I can rewrite the general formula for linear regression and this time include a term, $\epsilon$ by standard notation, to represent the error.  $\epsilon$ is a variable with the same number of values as $X$ and $Y$, as seen in the table below
+
+```{r, echo=FALSE}
+knitr::kable(tmp)
+```
+
+
+
+\begin{equation} 
+  Y = a_0 + a_1 \cdot X_1 + \epsilon
+  (\#eq:SimpLinReg)
+\end{equation} 
+
+Unlike our previous equation this time our equation \@ref(eq:SimpLinReg) has an equals sign is the general formula for simple linear regression.  When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form
+
+\begin{equation} 
+  Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon
+  (\#eq:LinReg)
+\end{equation} 
+
+Hence, models which take the form  are termed linear regression. Just as in simple linear regression, the $a$'s in front of the input variables control the slope of the line, $a_0$ controls the intercept of the line, and $\epsilon$ is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.
+
+
+
+
 
 You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
 

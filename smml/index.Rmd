@@ -8,8 +8,8 @@ documentclass: book
 # bibliography: [book.bib, packages.bib]
 biblio-style: apalike2
 link-citations: yes
-github-repo: rstudio/bookdown-demo
-description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
+# github-repo: rstudio/bookdown-demo
+# description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
 ---
 
 # Introduction {-}
@@ -19,6 +19,23 @@ Should I be using linear regression, logistics regression, SVM, neural networks 
 ## How to read this book {-}
 
 This book is broken up by model, ordered by computational complexity.  Every chapter begins with a series of dataset visualizations and associated questions which are best answered through the models described in that chapter.  Each chapter is intended to be modular and for the most part, you can read any of the chapters in any order.  When multiple models utilize statistics or statistical techniques, the technique will be discussed the first time it is mentioned and all later mentions will refer the reader to where in the book they can find an explanation of that technique. 
+
+## Notation and nomeclature used in this book {-}
+
+We are all aware of the need for precision in mathematics and computation so as not to create unintentional errors, but I feel the same is true for language, especially in the description of mathematics and computation.  For that reason I will strive to be consistent in my use of terminology, use the simplest possible accurate term and use as few terms as possible.  For the sake of those who read other books on the subject, whenever a new term is introduced I will try to give all other commonly used names for that term.   I will also bold a term whenever I give its definition.  Note that when these rules disagree with standard agreed upon nomenclature, I will defer to the standard nomenclature, but will then explicitly define the terms to avoid confusion.
+
+Mathematical modeling lies at the heart of statistical learning, machine learning and any other name dreamt up by a marketing department.  So instead of trying to define where one field ends and the other begins, or which technique is machine learning and which is statistics I am simply going to use the term model.  In this book any relationship between variables is a **model**.  A **variable**, also referred to as a scalar, is a symbol such as $X$ or  $Y$ which contains one or more known or unknown values.  I will use the symbol by itself when referring to all values associated with that symbol.  I will be using capital letters to refer to variable.  Individual values of a variable known as **observations**, but also referred to as samples, will be written using a lettered subscript, e.g., $X_i$.  An  is a series of values associated with paired variables.  Unlike variables which are one or more unknowns, **values** are unknowns which always only take on a single value and will be represented with a lowercase letter, e.g., $a$.  Values which are associated with variables will share their subscripts, e.g., a value, $b$, associated with variable $X_i$, will be referenced as $b_i$. 
+
+A **function** is a rule for taking an input and returning an output and is represented with a lower case letter followed by a pair of parentheses surrounding the input, e.g., $f(input)$.  Variables which are part of a function's input are not suprisingly input variables, these are also referred to as indepedent variables, predictors or features.  Similarly variables in the output will be termed output variables, but are also called dependent variables or responses. Using the model of a straight line, whose equation is $$Y = mX + b$$ I can rewrite this as a function of the variable $X$ as $$ f(X) = mX + b$$ where $f(X) = Y$.
+
+
+
+## Supervised vs Unsupervised Models {-}
+
+There are many ways to subdivide the various mathematical models, but for the topics covered within this book the dichotomy is made between supervised and unsupervised models.  In Supervised models the data usually consists of observations where for every observation there is a paired input and output.  In supervised modeling you are often given a training dataset which consists of entries for both the inputs and the outputs, as well as a test dataset, which only contains inputs from which you must predict outputs. The goal in supervised modeling is to create a function which accurately transforms the inputs into the outputs. In general the output only consists of a single variable but the input can consist of one or more variables.  The standard nomenclature is to use one symbol for the output and one symbol for the input.  When there are multiple variables in the input I will use a numbered subscript, such as $X_7$ to distinguish the different input variables.  
+
+In unsupervised learning the data is unlabeled, i.e., it is not split into inputs and outputs and the goal is to learn some desired feature about the data.  A classic problem in unsupervised learning, is clustering, wherein the goal is to split the data into groups such that data within each group is more similar to each other than to data in other groups.
+
 
 
 This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
