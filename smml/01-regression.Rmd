@@ -1,47 +1,100 @@
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+```
+
+
 # Linear Regression {#lin_reg}
 
-Almst all supervised models relate one or more input variables, $X_1,X_2, \ldots , X_p$, to an output variable, $Y$.  The general equation for a supervised model takes the form $$Y = f(X)$$. The simplest method with which to combine the inputs $X$ is through a linear combination, namely addition.  When dealing with a numerical output, we'll deal with a different type of output in chapter **NEED CHAPTER NAME**, this problem is termed regression.   Before tackling the general form of the model let's take a look at the example where there is only a single input variable, termed simple linear regression. Plotted in the figure below are 5 random temperature values read from a celsius thermometer on the X axis and from a farenheit thermometer on the Y axis.  
+## Overview
+
+Almst all supervised models relate one or more input variables, $X_1,X_2, \ldots , X_p$, to an output variable, $Y$.  The general equation for a supervised model takes the form $$Y = f(X)$$. The simplest method with which to combine the inputs $X$ is through a linear combination, namely addition.  When dealing with a numerical output, we'll deal with a different type of output in chapter **NEED CHAPTER NAME**, this problem is termed regression, hence the name linear regression.   Before tackling the general form of the model let's take a look at the example where there is only a single input variable, termed simple linear regression. Plotted in the figure below are 15 random temperature values read from an accurate celsius thermometer on the X axis and from a slightly less accurate farenheit thermometer on the Y axis.  
 
 
 
 ```{r TmpPnt, fig.align='center',  echo=FALSE,message=FALSE}
 library(tidyverse)
-cel <-  sample(seq(-50,100),15) +rnorm(15)*15
+cel <-  sort(sample(seq(-50,100),15))
 frn <- 9/5*cel + 32 
 frn2 <- frn + rnorm(length(cel))*15
-tmp <- tibble(cel,frn,frn2)
+err <- round(frn2-frn,1)
+tmp <- tibble(cel,frn,frn2,err)
 gplot <- ggplot(tmp,aes(cel,frn2))  + geom_point() + labs(x="Temp (C)", y= "Temp (F)")
 gplot
 ```
 
-There is an obvious a linear relationship between the values on the X and Y axes, i.e., as the temperature in Celsius increases the temperature in Farenheit increases a proportional amount, and if you remember the formula to convert between the two is $F = \dfrac{9}{5}\cdot C + 32$.  Converting this formulation into our nomenclature we almost get the general formula for simple linear regression $$Y \approx a_0 + a_1 \cdot X_1$$ I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.  This is very easy to see if I overlay on top of the previous plot a line generated from the equation $F = \dfrac{9}{5}\cdot C + 32$.
+There is an obvious a linear relationship between the values on the X and Y axes, i.e., as the temperature in Celsius increases the temperature in Farenheit increases a proportional amount, and if you remember the formula to convert between the two is $F = \dfrac{9}{5}\cdot C + 32$.  Converting this formulation into our nomenclature gives the formula for simple linear regression
+
+\begin{equation} 
+  Y = a_0 + a_1 \cdot X_1
+  (\#eq:SimpLinReg)
+\end{equation}
+
+Where $Y$ is the output variable, $X$ is input variable and $a_0$ and $a_1$ are the coefficients. However, this equation is not actually correct, as the Farneheit value are not precisely equation to $\dfrac{9}{5}$ times the Celsius vcalues plus 32. This is very easy to see if I overlay a line generated from the equation $F = \dfrac{9}{5}\cdot C + 32$ on top of the previous plot.
+
+
 
 ```{r TmpLin, fig.align='center',  echo=FALSE,message=FALSE}
 
 gplot + geom_line(aes(cel,frn)) + geom_segment(aes(x=cel,xend=cel,y=frn2,yend=frn), color='red')
 ```
 
-The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  I can rewrite the general formula for linear regression and this time include a term, $\epsilon$ by standard notation, to represent the error.  $\epsilon$ is a variable with the same number of values as $X$ and $Y$, as seen in the table below
+ 
 
-```{r, echo=FALSE}
-knitr::kable(tmp)
-```
-
-
+The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  So I can rewrite Equation \@ref(eq:SimpLinReg) in one of two ways to be accurate.  The first is to include an error term, $\epsilon$ by standard notation, whose values are the lengths of the individual red lines.  
 
 \begin{equation} 
   Y = a_0 + a_1 \cdot X_1 + \epsilon
-  (\#eq:SimpLinReg)
+  (\#eq:SimpLinRegErr)
 \end{equation} 
+
+$\epsilon$ is a variable with the same number of values as $X$ and $Y$, as seen in the table below
+
+```{r, echo=FALSE}
+library(knitr)
+# kable(tmp[,c('cel','frn','err')],col.names = c('Celsius', 'Farenheit', 'Error'),align='lll', booktabs = TRUE)
+kable(head(tmp),col.names = c('Celsius', 'Farenheit (actual)', 'Farenheit (recorded)', 'Error'),align='lll', digits=1)
+```
+
+
+The other way or rewriting Equation \@ref(eq:SimpLinReg) is by admitting that the output variable, as well as the coefficients are just estimates of their true values, which I can represent by giving them tiny hats.
+
+\begin{equation} 
+  \hat{Y} = \hat{a}_0 + \hat{a}_1 \cdot X_1
+  (\#eq:SimpLinRegHat)
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+the difference between So to be more precise, I can rewrite  to include the fact that the output values, which in this case is the temperature in Farenheit, is actually an estimate of 
+
+
+I can rewrite the general formula for linear regression and this time include a term, $\epsilon$ by standard notation, to represent the error. 
+
+which is almost get the general formula for simple linear regression.  I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.  
+
+as applied to our data is not completely which is almost get the general formula for simple linear regression.  I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.
+
 
 Unlike our previous equation this time our equation \@ref(eq:SimpLinReg) has an equals sign is the general formula for simple linear regression.  When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form
 
 \begin{equation} 
-  Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon
+  Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon = a_0 + \sum\limits_{i=1}^p(a_i\cdot X_i) + \epsilon
   (\#eq:LinReg)
 \end{equation} 
 
-Hence, models which take the form  are termed linear regression. Just as in simple linear regression, the $a$'s in front of the input variables control the slope of the line, $a_0$ controls the intercept of the line, and $\epsilon$ is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.
+Just as in simple linear regression, the $a$'s in front of the input variables control the slope of the line, $a_0$ controls the intercept of the line.  Taken together the $a$'s are referred to as the coefficients. $\epsilon$ is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.
 
 
 
