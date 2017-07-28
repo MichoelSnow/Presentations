@@ -102,6 +102,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> bibliography: [book.bib, packages.bib]</a></li>
 <li class="chapter" data-level="2" data-path="lin-reg.html"><a href="lin-reg.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
 <li class="chapter" data-level="2.1" data-path="lin-reg.html"><a href="lin-reg.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="lin-reg.html"><a href="lin-reg.html#coefficient-calculation"><i class="fa fa-check"></i><b>2.2</b> Coefficient Calculation</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="lin-reg.html"><a href="lin-reg.html#least-sqaures"><i class="fa fa-check"></i><b>2.2.1</b> Least Sqaures</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="lin-reg.html"><a href="lin-reg.html#variable-parameters"><i class="fa fa-check"></i><b>2.3</b> Variable parameters</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>3</b> Literature</a></li>
 </ul>
@@ -151,40 +155,40 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">-8</td>
-<td align="left">17.6</td>
-<td align="left">24.8</td>
-<td align="left">7.2</td>
+<td align="left">-29</td>
+<td align="left">-20.2</td>
+<td align="left">-6.0</td>
+<td align="left">14.2</td>
 </tr>
 <tr class="even">
-<td align="left">-4</td>
-<td align="left">24.8</td>
-<td align="left">22.4</td>
-<td align="left">-2.4</td>
+<td align="left">-13</td>
+<td align="left">8.6</td>
+<td align="left">12.5</td>
+<td align="left">3.9</td>
 </tr>
 <tr class="odd">
-<td align="left">4</td>
-<td align="left">39.2</td>
-<td align="left">30.4</td>
-<td align="left">-8.8</td>
+<td align="left">-12</td>
+<td align="left">10.4</td>
+<td align="left">29.2</td>
+<td align="left">18.8</td>
 </tr>
 <tr class="even">
-<td align="left">9</td>
-<td align="left">48.2</td>
-<td align="left">63.8</td>
-<td align="left">15.6</td>
+<td align="left">6</td>
+<td align="left">42.8</td>
+<td align="left">59.0</td>
+<td align="left">16.2</td>
 </tr>
 <tr class="odd">
-<td align="left">13</td>
-<td align="left">55.4</td>
-<td align="left">67.2</td>
-<td align="left">11.8</td>
+<td align="left">11</td>
+<td align="left">51.8</td>
+<td align="left">34.0</td>
+<td align="left">-17.8</td>
 </tr>
 <tr class="even">
-<td align="left">17</td>
-<td align="left">62.6</td>
-<td align="left">75.9</td>
-<td align="left">13.3</td>
+<td align="left">20</td>
+<td align="left">68.0</td>
+<td align="left">84.4</td>
+<td align="left">16.4</td>
 </tr>
 </tbody>
 </table>
@@ -193,16 +197,33 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   \hat{Y} = \hat{a}_0 + \hat{a}_1 \cdot X_1
   \tag{2.3}
 \end{equation}\]</span>
-<p>the difference between So to be more precise, I can rewrite to include the fact that the output values, which in this case is the temperature in Farenheit, is actually an estimate of</p>
-<p>I can rewrite the general formula for linear regression and this time include a term, <span class="math inline">\(\epsilon\)</span> by standard notation, to represent the error.</p>
-<p>which is almost get the general formula for simple linear regression. I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.</p>
-<p>as applied to our data is not completely which is almost get the general formula for simple linear regression. I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.</p>
-<p>Unlike our previous equation this time our equation <a href="lin-reg.html#eq:SimpLinReg">(2.1)</a> has an equals sign is the general formula for simple linear regression. When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form</p>
+<p>When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form</p>
 <span class="math display" id="eq:LinReg">\[\begin{equation} 
   Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon = a_0 + \sum\limits_{i=1}^p(a_i\cdot X_i) + \epsilon
   \tag{2.4}
 \end{equation}\]</span>
 <p>Just as in simple linear regression, the <span class="math inline">\(a\)</span>’s in front of the input variables control the slope of the line, <span class="math inline">\(a_0\)</span> controls the intercept of the line. Taken together the <span class="math inline">\(a\)</span>’s are referred to as the coefficients. <span class="math inline">\(\epsilon\)</span> is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.</p>
+<p>Going back to our original simple linear regression problem involving temperature measurments. Since we know that the relationship between the input and output variables is not strictly goverened by the equation <span class="math inline">\(F = \dfrac{9}{5}\cdot C + 32\)</span>, we need a method of determining the coefficients which actually govern the relationship between our given input and outputs.</p>
+</div>
+<div id="coefficient-calculation" class="section level2">
+<h2><span class="header-section-number">2.2</span> Coefficient Calculation</h2>
+<div id="least-sqaures" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Least Sqaures</h3>
+<p>The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation <a href="lin-reg.html#eq:SimpLinReg">(2.1)</a>. What makes this process least squares is that you calculate the difference using the sum of the squared differences, termed the residual sum of sqaures (RSS). Formally the residual sum of squares for the general form of linear regression in equation <a href="lin-reg.html#eq:LinReg">(2.4)</a> can be written as :</p>
+<span class="math display" id="eq:RSS">\[\begin{equation}
+  RSS(a) = \sum\limits_{i=1}^N\left(Y_i - \left[a_0 + \sum\limits_{j=1}^p a_j\cdot X_{i,j} \right]\right)  
+  \tag{2.5}
+\end{equation}\]</span>
+</div>
+</div>
+<div id="variable-parameters" class="section level2">
+<h2><span class="header-section-number">2.3</span> Variable parameters</h2>
+<p>The values of the input and output parameters in a linear regression model are as follows. - Input Values can be any of the following - numerical values, also referred to as quantitative values - Dummy va</p>
+<p>the difference between So to be more precise, I can rewrite to include the fact that the output values, which in this case is the temperature in Farenheit, is actually an estimate of</p>
+<p>I can rewrite the general formula for linear regression and this time include a term, <span class="math inline">\(\epsilon\)</span> by standard notation, to represent the error.</p>
+<p>which is almost get the general formula for simple linear regression. I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.</p>
+<p>as applied to our data is not completely which is almost get the general formula for simple linear regression. I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.</p>
+<p>Unlike our previous equation this time our equation <a href="lin-reg.html#eq:SimpLinReg">(2.1)</a> has an equals sign is the general formula for simple linear regression.</p>
 <p>You can label chapter and section titles using <code>{#label}</code> after them, e.g., we can reference Chapter <a href="#intro"><strong>??</strong></a>. If you do not manually label them, there will be automatic labels anyway, e.g., Chapter <a href="#methods"><strong>??</strong></a>.</p>
 <p>Figures and tables with captions will be placed in <code>figure</code> and <code>table</code> environments, respectively.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))

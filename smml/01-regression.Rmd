@@ -63,8 +63,39 @@ The other way or rewriting Equation \@ref(eq:SimpLinReg) is by admitting that th
   (\#eq:SimpLinRegHat)
 \end{equation}
 
+When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form
+
+\begin{equation} 
+  Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon = a_0 + \sum\limits_{i=1}^p(a_i\cdot X_i) + \epsilon
+  (\#eq:LinReg)
+\end{equation} 
+
+Just as in simple linear regression, the $a$'s in front of the input variables control the slope of the line, $a_0$ controls the intercept of the line.  Taken together the $a$'s are referred to as the coefficients. $\epsilon$ is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.
 
 
+Going back to our original simple linear regression problem involving temperature measurments.  Since we know that the relationship between the input and output variables is not strictly goverened by the equation $F = \dfrac{9}{5}\cdot C + 32$, we need a method of determining the coefficients which actually govern the relationship between our given input and outputs.
+
+## Coefficient Calculation
+
+### Least Sqaures
+
+The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation \@ref(eq:SimpLinReg).  What makes this process least squares is that you calculate the difference using the sum of the squared differences, termed the residual sum of sqaures (RSS).  Formally the residual sum of squares for the general form of linear regression in equation \@ref(eq:LinReg) can be written as :
+
+\begin{equation}
+  RSS(a) = \sum\limits_{i=1}^N\left(Y_i - \left[a_0 + \sum\limits_{j=1}^p a_j\cdot X_{i,j} \right]\right)  
+  (\#eq:RSS)
+\end{equation}
+
+
+
+
+
+## Variable parameters
+
+The values of the input and output parameters in a linear regression model are as follows.
+- Input Values can be any of the following
+    - numerical values, also referred to as quantitative values
+    - Dummy va
 
 
 
@@ -87,14 +118,7 @@ which is almost get the general formula for simple linear regression.  I am writ
 as applied to our data is not completely which is almost get the general formula for simple linear regression.  I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.
 
 
-Unlike our previous equation this time our equation \@ref(eq:SimpLinReg) has an equals sign is the general formula for simple linear regression.  When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form
-
-\begin{equation} 
-  Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon = a_0 + \sum\limits_{i=1}^p(a_i\cdot X_i) + \epsilon
-  (\#eq:LinReg)
-\end{equation} 
-
-Just as in simple linear regression, the $a$'s in front of the input variables control the slope of the line, $a_0$ controls the intercept of the line.  Taken together the $a$'s are referred to as the coefficients. $\epsilon$ is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.
+Unlike our previous equation this time our equation \@ref(eq:SimpLinReg) has an equals sign is the general formula for simple linear regression.  
 
 
 
