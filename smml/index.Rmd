@@ -1,5 +1,5 @@
 --- 
-title: "Statistics, Models and Machine Learning: Using R and Python"
+title: "Statistics, Models and Machine Learning"
 author: "Michoel Snow"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -36,19 +36,57 @@ There are many ways to subdivide the various mathematical models, but for the to
 
 In unsupervised learning the data is unlabeled, i.e., it is not split into inputs and outputs and the goal is to learn some desired feature about the data.  A classic problem in unsupervised learning, is clustering, wherein the goal is to split the data into groups such that data within each group is more similar to each other than to data in other groups.
 
+### Solving Supervised Models {-}
+
+In general, the goal of supervised models is to design a function which can predict a desired output variable $Y$, given a set of input variables $X$.   To this end you are often given two datasets.  The first dataset consists of inputs and their associated outputs, referred to as the **training data**.  This training data is used to build the supervised model.  This model is then used to make predictions given the second dataset, which is usually composed solely of never before seen inputs, called the **test data**.  
+
+The model built from the training data takes the general form of:
+
+\begin{equation}
+  Y = f(X) + \epsilon
+  (\#eq:SupMod)
+\end{equation}
 
 
-This is a _sample_ book written in **Markdown**. You can use anything that Pandoc's Markdown supports, e.g., a math equation $a^2 + b^2 = c^2$.
+In this formulation the output variable $Y$ is a function of some fixed, but unknown function of $X$, written as $f(X)$.  $\epsilon$ represents the inherent independent random error present in the data, which is unaccountable by the model.   This error is the result of the natural variation that exists within the world and is represented in almost all datasets.  For example here is a plot of height as a function of age from the NHANES dataset.
 
-For now, you have to install the development versions of **bookdown** from Github:
+```{r, echo=FALSE, warning=FALSE}
+library(NHANES)
+NH_smp <- NHANES[sample(nrow(NHANES),500),]
+Age <- NH_smp$Age
+Height <- NH_smp$Height
+fit <- lm((Height)~ Age)
 
-```{r eval=FALSE}
-devtools::install_github("rstudio/bookdown")
+fit.pred <- (predict(fit,data.frame(Age=min(Age):max(Age))))
+NH_2 <- tibble(Age=min(Age):max(Age),Height=fit.pred )
+NH_smp %>% ggplot(aes(Age,Height)) + geom_jitter() +geom_line(data=NH_2,aes(Age,Height))
 ```
 
-Remember each Rmd file contains one and only one chapter, and a chapter is defined by the first-level heading `#`.
 
-To compile this example to PDF, you need to install XeLaTeX.
+
+
+
+The implied assumption of this formulation is that the output can be perfectly predicted by the uknown function as applied to the inputs.  However, due to a variety of factors there will almost always be some degree of error in the modelmost data gathered in the real world can not be perfectly fit to any model there is almost always some degree of error in most models and almost no function is perfectly accurate.  So for almost any dataset the best  fomulation is that it assumes a perfect model with no accounting for variation or error, and almost any model .  To understand why this is a problem here is 
+
+```{r}
+library(ElemStatLearn)
+library(tidyverse)
+mrk <- as_tibble(marketing)
+mrk <- mrk %>% mutate(Inc = 10000 + (Income-1)*5000)
+mrk$Inc[mrk$Income==6] <- 40000
+mrk$Inc[mrk$Income==7] <- 50000
+mrk$Inc[mrk$Income==8] <- 75000
+mrk$Inc[mrk$Income==9] <- 90000
+mrk %>% ggplot(aes(Edu,Income)) + geom_point()
+```
+
+
+
+
+
+
+
+
 
 ```{r include=FALSE}
 # automatically create a bib database for R packages

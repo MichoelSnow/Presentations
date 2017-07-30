@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Statistics, Models and Machine Learning: Using R and Python</title>
-  <meta name="description" content="Statistics, Models and Machine Learning: Using R and Python">
+  <title>Statistics, Models and Machine Learning</title>
+  <meta name="description" content="Statistics, Models and Machine Learning">
   <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
 
-  <meta property="og:title" content="Statistics, Models and Machine Learning: Using R and Python" />
+  <meta property="og:title" content="Statistics, Models and Machine Learning" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Statistics, Models and Machine Learning: Using R and Python" />
+  <meta name="twitter:title" content="Statistics, Models and Machine Learning" />
   
   
   
@@ -25,7 +25,7 @@
 <meta name="author" content="Michoel Snow">
 
 
-<meta name="date" content="2017-07-27">
+<meta name="date" content="2017-07-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -115,7 +115,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Statistics, Models and Machine Learning: Using R and Python</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Statistics, Models and Machine Learning</a>
           </h1>
         </div>
 
@@ -124,9 +124,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">Statistics, Models and Machine Learning: Using R and Python</h1>
+<h1 class="title">Statistics, Models and Machine Learning</h1>
 <h4 class="author"><em>Michoel Snow</em></h4>
-<h4 class="date"><em>2017-07-27</em></h4>
+<h4 class="date"><em>2017-07-30</em></h4>
 </div>
 <div id="introduction" class="section level1 unnumbered">
 <h1>Introduction</h1>
@@ -138,7 +138,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="notation-and-nomeclature-used-in-this-book" class="section level2 unnumbered">
 <h2>Notation and nomeclature used in this book</h2>
 <p>We are all aware of the need for precision in mathematics and computation so as not to create unintentional errors, but I feel the same is true for language, especially in the description of mathematics and computation. For that reason I will strive to be consistent in my use of terminology, use the simplest possible accurate term and use as few terms as possible. For the sake of those who read other books on the subject, whenever a new term is introduced I will try to give all other commonly used names for that term. I will also bold a term whenever I give its definition. Note that when these rules disagree with standard agreed upon nomenclature, I will defer to the standard nomenclature, but will then explicitly define the terms to avoid confusion.</p>
-<p>Mathematical modeling lies at the heart of statistical learning, machine learning and any other name dreamt up by a marketing department. So instead of trying to define where one field ends and the other begins, or which technique is machine learning and which is statistics I am simply going to use the term model. In this book any relationship between variables is a <strong>model</strong>. A <strong>variable</strong>, also referred to as a scalar, is a symbol such as <span class="math inline">\(X\)</span> or <span class="math inline">\(Y\)</span> which contains one or more known or unknown values. I will use the symbol by itself when referring to all values associated with that symbol. I will be using capital letters to refer to variable. Individual values of a variable known as <strong>observations</strong>, but also referred to as samples, will be written using a lettered subscript, e.g., <span class="math inline">\(X_i\)</span>. An is a series of values associated with paired variables. Unlike variables which are one or more unknowns, <strong>values</strong> are unknowns which always only take on a single value and will be represented with a lowercase letter, e.g., <span class="math inline">\(a\)</span>. Values which are associated with variables will share their subscripts, e.g., a value, <span class="math inline">\(b\)</span>, associated with variable <span class="math inline">\(X_i\)</span>, will be referenced as <span class="math inline">\(b_i\)</span>.</p>
+<p>Mathematical modeling lies at the heart of statistical learning, machine learning and any other name dreamt up by a marketing department. So instead of trying to define where one field ends and the other begins, or which technique is machine learning and which is statistics I am simply going to use the term model. In this book any relationship between variables is a <strong>model</strong>. A <strong>variable</strong>, also referred to as a scalar, is a symbol such as <span class="math inline">\(X\)</span> or <span class="math inline">\(Y\)</span> which contains one or more known or unknown values. I will use the symbol by itself when referring to all values associated with that symbol. I will be using capital letters to refer to variable. Individual values of a variable known as <strong>observations</strong>, but also referred to as samples, will be written using a lettered subscript, e.g., <span class="math inline">\(X_i\)</span>. An is a series of values associated with paired variables. Unlike variables which are one or more unknowns, <strong>values</strong> are unknowns which always only take on a single value and will be represented with a lowercase letter, e.g., <span class="math inline">\(a\)</span>. Values which are associated with variables will share their subscripts, e.g., a value, <span class="math inline">\(b\)</span>, associated with variable <span class="math inline">\(X_i\)</span>, will be referenced as <span class="math inline">\(b_i\)</span>. A value associated with a specific variable is referred to as its <strong>coefficient</strong>.</p>
 <p>A <strong>function</strong> is a rule for taking an input and returning an output and is represented with a lower case letter followed by a pair of parentheses surrounding the input, e.g., <span class="math inline">\(f(input)\)</span>. Variables which are part of a function’s input are not suprisingly input variables, these are also referred to as indepedent variables, predictors or features. Similarly variables in the output will be termed output variables, but are also called dependent variables or responses. Using the model of a straight line, whose equation is <span class="math display">\[Y = mX + b\]</span> I can rewrite this as a function of the variable <span class="math inline">\(X\)</span> as <span class="math display">\[ f(X) = mX + b\]</span> where <span class="math inline">\(f(X) = Y\)</span>.</p>
 </div>
 <div id="supervised-vs-unsupervised-models" class="section level2 unnumbered">
