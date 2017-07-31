@@ -79,7 +79,21 @@ Going back to our original simple linear regression problem involving temperatur
 
 ### Least Sqaures
 
-The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation \@ref(eq:SimpLinReg).  What makes this process least squares is that you calculate the difference using the sum of the squared differences, termed the residual sum of sqaures (RSS).  Formally the residual sum of squares for the general form of linear regression in equation \@ref(eq:LinReg) can be written as :
+The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation \@ref(eq:SimpLinReg).  This difference between the calculated output variable, $\hat{Y}$, and the actual output variable, $Y$, is called the **residual** which is represented by the symbol $e$. 
+
+\begin{equation}
+  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
+  (\#eq:resid)
+\end{equation}
+
+Each observation has its own residual, wherein the residual $e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i = \hat{a}_{0,i} + \hat{a}_{1,i}\cdot X_i$.  Remember that the $i$th input variable $X_i$ does not get a hat, becuase it is the actual input variable and not an estimate of the input variable.  So for a series of observations the total residual is 
+
+\begin{equation}
+  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
+  (\#eq:resid)
+\end{equation}
+
+What makes this process least squares is that you calculate the difference using the sum of the squared differences, termed the residual sum of sqaures (RSS).  Formally the residual sum of squares for the general form of linear regression in equation \@ref(eq:LinReg) can be written as :
 
 \begin{equation}
   RSS(a) = \sum\limits_{i=1}^N\left(Y_i - \left[a_0 + \sum\limits_{j=1}^p a_j\cdot X_{i,j} \right]\right)  

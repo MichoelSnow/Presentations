@@ -1,7 +1,7 @@
 --- 
 title: "Statistics, Models and Machine Learning"
 author: "Michoel Snow"
-date: "`r Sys.Date()`"
+# date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
@@ -12,55 +12,90 @@ link-citations: yes
 # description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
 ---
 
-# Introduction {-}
+# Introduction
 
 Should I be using linear regression, logistics regression, SVM, neural networks or one of at least a dozen other statistical/machine learning algorithms when trying to model my data?  This is the fundamental question which has driven the authorship of this book.  The problem is that the answer to that question for the most part is always the same, it depends.  The answer depends not only on the data itself, but also why you are modeling in the first place, i.e., what question are you trying to answer with your model, as well as a whole host of other factors.  The purpose of this book is to help you identify the important factors for choosing a model,  given those factors which model(s) you should choose and why, and then finally how to implement that model in R or python.
 
-## How to read this book {-}
+## How to read this book 
 
 This book is broken up by model, ordered by computational complexity.  Every chapter begins with a series of dataset visualizations and associated questions which are best answered through the models described in that chapter.  Each chapter is intended to be modular and for the most part, you can read any of the chapters in any order.  When multiple models utilize statistics or statistical techniques, the technique will be discussed the first time it is mentioned and all later mentions will refer the reader to where in the book they can find an explanation of that technique. 
 
-## Notation and nomeclature used in this book {-}
+## Notation and nomeclature used in this book
 
 We are all aware of the need for precision in mathematics and computation so as not to create unintentional errors, but I feel the same is true for language, especially in the description of mathematics and computation.  For that reason I will strive to be consistent in my use of terminology, use the simplest possible accurate term and use as few terms as possible.  For the sake of those who read other books on the subject, whenever a new term is introduced I will try to give all other commonly used names for that term.   I will also bold a term whenever I give its definition.  Note that when these rules disagree with standard agreed upon nomenclature, I will defer to the standard nomenclature, but will then explicitly define the terms to avoid confusion.
 
-Mathematical modeling lies at the heart of statistical learning, machine learning and any other name dreamt up by a marketing department.  So instead of trying to define where one field ends and the other begins, or which technique is machine learning and which is statistics I am simply going to use the term model.  In this book any relationship between variables is a **model**.  A **variable**, also referred to as a scalar, is a symbol such as $X$ or  $Y$ which contains one or more known or unknown values.  I will use the symbol by itself when referring to all values associated with that symbol.  I will be using capital letters to refer to variable.  Individual values of a variable known as **observations**, but also referred to as samples, will be written using a lettered subscript, e.g., $X_i$.  An  is a series of values associated with paired variables.  Unlike variables which are one or more unknowns, **values** are unknowns which always only take on a single value and will be represented with a lowercase letter, e.g., $a$.  Values which are associated with variables will share their subscripts, e.g., a value, $b$, associated with variable $X_i$, will be referenced as $b_i$. A value associated with a specific variable is referred to as its **coefficient**.
+Mathematical modeling lies at the heart of statistical learning, machine learning and any other name dreamt up by a marketing department.  So instead of trying to define where one field ends and the other begins, or which technique is machine learning and which is statistics I am simply going to use the term model.  In this book any relationship between variables is a **model**.  A **variable** is a symbol which contains one or more known or unknown values.  When the variable can contain any number of subset variables I will use the bold typeface and capital letters to represent it, such as $\mathbf{X}$ or $\mathbf{Y}$.  Variables which contain no subset variables will be written using the regular typeface and capital letters, such as $X$ or $Y$.  Individual values of a variable known as **observations**, also referred to as samples, will be written using a regular typeface and lowercase letters, such as $x$ or $y$.  Indvidual observations for multiple variable will be written using the bold typeface and lowercase letters, such as $\mathbf{X}$ or $\mathbf{y}$.  Numbered subscripts will refer to a specific subset or observation and lettered subscripts will be used for generic subsets or observations. When referring to both individual observations and subset variables, the first subscript is the observation and the second is the variable. The generic total number of observations is $n$ and the generic total number of variables is $p$.
+
+THis will make more sense when put together in an example.  Let us say I am building a model which takes as its first four inputs the GPA, major, minor and high school of every student in Cornell's graduating class of 1900.  $\mathbf{X}$ refers to the set of all input variables. $X_1$ refers to the GPA of all students and $X_2$ refers to their major.  $\mathbf{x}_1$ refers to all the inputs for the first student and $\mathbf{x}_i$ refers to the set of inputs for some generic $i$th student.  $x_{3,1}$ refers to the GPA for the third student.  You can also think of this as a table where the rows are the observations and the columns are the subset variables.  In matrix format this would look like:
+
+$$\mathbf{X} = 
+\left(X_1\; X_2\; X_3\; \ldots \; X_p\right)=
+\left(\begin{array} {c}
+\mathbf{x}_1 \\
+\mathbf{x}_2 \\
+\mathbf{x}_3 \\
+\vdots \\
+\mathbf{x}_n
+\end{array}\right) = 
+\left(\begin{array}
+{rrr}
+x_{1,1} & x_{1,2} & x_{1,3} & \ldots & x_{1,p}\\
+x_{2,1} & x_{2,2} & x_{2,3} & \ldots & x_{2,p}\\
+x_{3,1} & x_{3,2} & x_{3,3} & \ldots & x_{3,p}\\
+\vdots & \vdots & \vdots & \ddots & \vdots\\
+x_{n,1} & x_{n,2} & x_{n,3} & \ldots & x_{n,p}\\
+\end{array}\right)$$
+
+
+Unlike variables which are one or more unknowns, **values** are unknowns which always only take on a single value and will be represented with a lowercase letter, e.g., $a$.  Values which are associated with variables will share their subscripts, e.g., a value, $b$, associated with variable $X_i$, will be referenced as $b_i$. A value associated with a specific variable is referred to as its **coefficient**.
 
 A **function** is a rule for taking an input and returning an output and is represented with a lower case letter followed by a pair of parentheses surrounding the input, e.g., $f(input)$.  Variables which are part of a function's input are not suprisingly input variables, these are also referred to as indepedent variables, predictors or features.  Similarly variables in the output will be termed output variables, but are also called dependent variables or responses. Using the model of a straight line, whose equation is $$Y = mX + b$$ I can rewrite this as a function of the variable $X$ as $$ f(X) = mX + b$$ where $f(X) = Y$.
 
+When building models often times we are only estimating the value of a coefficient or variable and don't know its actual value. To distinguish **estimates** of variables and coefficients from their true counterparts, we put tiny hats on them, e.g., $\hat{\mathbf{Y}}$, $\hat{x}_{i,j}$ or $\hat{a}_0$.
 
 
-## Supervised vs Unsupervised Models {-}
 
-There are many ways to subdivide the various mathematical models, but for the topics covered within this book the dichotomy is made between supervised and unsupervised models.  In Supervised models the data usually consists of observations where for every observation there is a paired input and output.  In supervised modeling you are often given a training dataset which consists of entries for both the inputs and the outputs, as well as a test dataset, which only contains inputs from which you must predict outputs. The goal in supervised modeling is to create a function which accurately transforms the inputs into the outputs. In general the output only consists of a single variable but the input can consist of one or more variables.  The standard nomenclature is to use one symbol for the output and one symbol for the input.  When there are multiple variables in the input I will use a numbered subscript, such as $X_7$ to distinguish the different input variables.  
+## Supervised vs Unsupervised Models
+
+There are many ways to subdivide the various mathematical models, but for the topics covered within this book the dichotomy is made between supervised and unsupervised models.  In Supervised models the data usually consists of observations where for every observation there is a paired input and output.  In supervised modeling you are often given a training dataset which consists of entries for both the inputs and the outputs, as well as a test dataset, which only contains inputs from which you must predict outputs. The goal in supervised modeling is to create a function which accurately transforms the inputs into the outputs. In general the output only consists of a single variable but the input can consist of one or more variables.  The standard nomenclature is to use one symbol for the output and one symbol for the input.   
 
 In unsupervised learning the data is unlabeled, i.e., it is not split into inputs and outputs and the goal is to learn some desired feature about the data.  A classic problem in unsupervised learning, is clustering, wherein the goal is to split the data into groups such that data within each group is more similar to each other than to data in other groups.
 
-### Solving Supervised Models {-}
+### Solving Supervised Models
 
-In general, the goal of supervised models is to design a function which can predict a desired output variable $Y$, given a set of input variables $X$.   To this end you are often given two datasets.  The first dataset consists of inputs and their associated outputs, referred to as the **training data**.  This training data is used to build the supervised model.  This model is then used to make predictions given the second dataset, which is usually composed solely of never before seen inputs, called the **test data**.  
+In general, the goal of supervised models is to design a function which can predict a desired output variable $\mathbf{Y}$, given a set of input variables $\mathbf{X}$.   To this end you are often given two datasets.  The first dataset consists of inputs and their associated outputs, referred to as the **training data**.  This training data is used to build the supervised model.  This model is then used to make predictions given the second dataset, which is usually composed solely of never before seen inputs, called the **test data**.  
 
-The model built from the training data takes the general form of:
+There is an assumption that there is some relationship between $\mathbf{X}$ and $\mathbf{Y}$ such that the output variable $\mathbf{Y}$ is a function of some fixed, but unknown function of $\mathbf{X}$, written as $f(\mathbf{X})$: 
 
 \begin{equation}
-  Y = f(X) + \epsilon
+  \mathbf{Y} = f(\mathbf{X}) + \epsilon
   (\#eq:SupMod)
 \end{equation}
 
 
-In this formulation the output variable $Y$ is a function of some fixed, but unknown function of $X$, written as $f(X)$.  $\epsilon$ represents the inherent independent random error present in the data, which is unaccountable by the model.   This error is the result of the natural variation that exists within the world and is represented in almost all datasets.  For example here is a plot of height as a function of age from the NHANES dataset.
+$\epsilon$ represents the inherent independent random error present in the world, which has a mean of zero.  However, the problem is that while we assume this relationship exists, we do not know what the function $f(\mathbf{X})$ is.  To that end, supervised models seek to estimate this function using the training data.  Using the estimate of the function we are able to make predictions of the output values given the input values in the test data.
 
-```{r, echo=FALSE, warning=FALSE}
-library(NHANES)
-NH_smp <- NHANES[sample(nrow(NHANES),500),]
-Age <- NH_smp$Age
-Height <- NH_smp$Height
-fit <- lm((Height)~ Age)
+\begin{equation}
+  \hat{\mathbf{Y}} = \hat{f}(\mathbf{X})
+  (\#eq:SupModEst)
+\end{equation}
 
-fit.pred <- (predict(fit,data.frame(Age=min(Age):max(Age))))
-NH_2 <- tibble(Age=min(Age):max(Age),Height=fit.pred )
-NH_smp %>% ggplot(aes(Age,Height)) + geom_jitter() +geom_line(data=NH_2,aes(Age,Height))
-```
+Note that both the function and the output variable are indicated as estimates (through their tiny hats), but the input variable is not indicated as an estimate.  This is because we know what the true inputs are we just don't know what the function that relates the inputs to the outputs truly is and following from that we do not know what the output truly is for any given input, hence the tiny hats. 
+
+** START FROM HERE**
+However, note that unlike equation \@ref(eq:SupMod) When estimating the function $f()$, there are two types of errors to consider
+
+<!-- ```{r, echo=FALSE, warning=FALSE} -->
+<!-- library(NHANES) -->
+<!-- NH_smp <- NHANES[sample(nrow(NHANES),500),] -->
+<!-- Age <- NH_smp$Age -->
+<!-- Height <- NH_smp$Height -->
+<!-- fit <- lm((Height)~ Age) -->
+
+<!-- fit.pred <- (predict(fit,data.frame(Age=min(Age):max(Age)))) -->
+<!-- NH_2 <- tibble(Age=min(Age):max(Age),Height=fit.pred ) -->
+<!-- NH_smp %>% ggplot(aes(Age,Height)) + geom_jitter() +geom_line(data=NH_2,aes(Age,Height)) -->
+<!-- ``` -->
 
 
 
@@ -68,17 +103,17 @@ NH_smp %>% ggplot(aes(Age,Height)) + geom_jitter() +geom_line(data=NH_2,aes(Age,
 
 The implied assumption of this formulation is that the output can be perfectly predicted by the uknown function as applied to the inputs.  However, due to a variety of factors there will almost always be some degree of error in the modelmost data gathered in the real world can not be perfectly fit to any model there is almost always some degree of error in most models and almost no function is perfectly accurate.  So for almost any dataset the best  fomulation is that it assumes a perfect model with no accounting for variation or error, and almost any model .  To understand why this is a problem here is 
 
-```{r}
-library(ElemStatLearn)
-library(tidyverse)
-mrk <- as_tibble(marketing)
-mrk <- mrk %>% mutate(Inc = 10000 + (Income-1)*5000)
-mrk$Inc[mrk$Income==6] <- 40000
-mrk$Inc[mrk$Income==7] <- 50000
-mrk$Inc[mrk$Income==8] <- 75000
-mrk$Inc[mrk$Income==9] <- 90000
-mrk %>% ggplot(aes(Edu,Income)) + geom_point()
-```
+<!-- ```{r} -->
+<!-- library(ElemStatLearn) -->
+<!-- library(tidyverse) -->
+<!-- mrk <- as_tibble(marketing) -->
+<!-- mrk <- mrk %>% mutate(Inc = 10000 + (Income-1)*5000) -->
+<!-- mrk$Inc[mrk$Income==6] <- 40000 -->
+<!-- mrk$Inc[mrk$Income==7] <- 50000 -->
+<!-- mrk$Inc[mrk$Income==8] <- 75000 -->
+<!-- mrk$Inc[mrk$Income==9] <- 90000 -->
+<!-- mrk %>% ggplot(aes(Edu,Income)) + geom_point() -->
+<!-- ``` -->
 
 
 
