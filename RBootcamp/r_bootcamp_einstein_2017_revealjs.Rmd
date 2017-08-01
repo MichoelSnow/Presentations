@@ -88,7 +88,7 @@ If you don't have them already installed you need to download and install R and 
 
 ## Objectives of this Bootcamp {.scrollable}
 
-By the end of these two sessions, students should be able to  
+By the end of this bootcamp, students should be able to  
 
 1. Identify projects and tasks suitable to R
 2. Use Rstudio as a frontend for R programming
@@ -161,7 +161,17 @@ knitr::include_graphics(aa$img)
 
 `library(tidyverse)`
 
+## Data visualization Cheat Sheet {.scrollable}
+
+- R studio provides helpful cheat sheets which you can bring up from the Help toolbar
+- Open the Data visualization for ggplot2 cheat sheet
+
+![](./images/cheatsheet.png)
+
+
 ## Graphics in ggplot are built in layers {.scrollable}
+
+Use the data visualization cheatsheet in the RStudio Help menu as a reference
 
 ```{r, echo=FALSE}
 mpg_class <- mpg %>% group_by(class) %>% summarise(hwy_mean = mean(hwy), cty_mean=mean(cty))
@@ -205,10 +215,11 @@ mpg$drv
 ## ggplot command {.scrollable}
 
 The ggplot command begins a plot to which you can add layers
-```{r, message=FALSE}
+```{r, message=FALSE, tidy=FALSE}
+ggplot(data = mpg)
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy))
-  ggplot(data = mpg) +
+ggplot(data = mpg) +
   geom_smooth(mapping = aes(x = displ, y = hwy)) + 
   geom_point(mapping = aes(x = displ, y = hwy))
 ```
@@ -239,11 +250,19 @@ ggplot(mpg, aes(displ,hwy)) +
 ## Facets {.scrollable}
 
 You can also split the plot into subplots based on a varible using `facet`
-```{r}
-ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(.~cyl)
-ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(cyl~.)
-ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_wrap(~cyl)
-ggplot(mpg, aes(displ,hwy))  + geom_point() + facet_grid(cyl~class)
+```{r, tidy=FALSE}
+ggplot(mpg, aes(displ,hwy))  + 
+  geom_point() + 
+  facet_grid(.~cyl)
+ggplot(mpg, aes(displ,hwy))  + 
+  geom_point() + 
+  facet_grid(cyl~.)
+ggplot(mpg, aes(displ,hwy))  + 
+  geom_point() + 
+  facet_wrap(~cyl)
+ggplot(mpg, aes(displ,hwy))  + 
+  geom_point() + 
+  facet_grid(cyl~class)
 ```
 
 
@@ -270,6 +289,7 @@ geom_point(size=2,show.legend = FALSE)
 This time we will be using the `diamonds` dataset
 
 ```{r}
+diamonds
 summary(diamonds)
 ggplot(diamonds,aes(cut)) + geom_bar()
 ggplot(diamonds,aes(price)) + geom_histogram(bins=100)
@@ -286,6 +306,7 @@ ggplot(diamonds,aes(price)) + geom_histogram(bins=100)
             * Groupwise proportion
         
 ```{r}
+ggplot(diamonds) + geom_bar(aes(x=cut,y=..count..,group=1))
 ggplot(diamonds) + geom_bar(aes(x=cut,y=..prop..,group=1))
 ```
 
@@ -408,6 +429,33 @@ SPEncBoxes %>% ggplot(aes(x,y,fill = j, color = EncAct)) +
   scale_fill_manual(values = c("red","red","red","red","orangered", "orange","yellow","lightgreen","green1","green1"),na.value="white")
 
 ```
+
+## Saving plots {.scrollable}
+
+- `ggsave(filename)` allows you to save plots
+- It guesses the filetype based on the extension used in the `filename` parameter
+    - You can manually set the extension using the `device` parameter
+    - options are: 'eps', 'ps', 'tex', 'pdf', 'jpeg/jpg', 'tiff', 'png', 'bmp', 'svg', 'wmf' (windows only)
+- By default it saves the last plot displayed unless you change the `plot` parameter
+
+```{r, tidy=FALSE, messages=FALSE}
+ggplot(mpg,aes(x=hwy,y=cty)) + 
+  geom_blank() +
+  geom_abline() +
+  geom_jitter(aes(color=class)) +
+  geom_point(data=mpg_class,aes(x=hwy_mean,y=cty_mean,fill=class),color="black",size=5,shape=22,show.legend = FALSE) 
+ggsave("./images/cars.jpg")
+knitr::include_graphics("./images/cars.jpg")
+ggsave("./images/cars_halfscale.jpg",scale=0.5)
+knitr::include_graphics("./images/cars_halfscale.jpg")
+ggsave("./images/cars_w10h10.jpg",width=10,height=10)
+knitr::include_graphics("./images/cars_w10h10.jpg")
+ggsave("./images/cars_w10h10in.jpg",width=10,height=10,units="in")
+knitr::include_graphics("./images/cars_w10h10in.jpg")
+ggsave("./images/cars_w10h10cm.jpg",width=10,height=10,units="cm")
+knitr::include_graphics("./images/cars_w10h10cm.jpg")
+```
+
 
 ## Spend some time playing with ggplot {.scrollable}
 - See <http://ggplot2.tidyverse.org/reference/> for a full list of functions in ggplot
@@ -589,7 +637,7 @@ iris[c(25:30,17,1),c(1,4)]
 
 
 ```{r, out.width = "700px",echo=FALSE}
-knitr::include_graphics("tribbles_gif.gif")
+knitr::include_graphics("./images/tribbles_gif.gif")
 ```
 
 ## Tibbles {.scrollable}
@@ -923,7 +971,7 @@ The `fivethirtyeight` package has lots of fun datasets.  To see the motivation b
 <!-- usdanutrients good for joins -->
 
 
-## sECTION 3 - Data Importing/Cleaning
+## sECTION 4 - Importing Data
 
 ## Found vs Generated Data {.scrollable}
 
@@ -932,43 +980,36 @@ The `fivethirtyeight` package has lots of fun datasets.  To see the motivation b
 - But what about when you have to use 3rd party data, e.g., weather information
     - First you have to find the data (a topic we will not be covering)
     - Then you have to import the data
-    - Then you have to clean and tidy the data
+    - Then you have to clean and tidy the data (not covered today)
 - Dataset formats
     - Columns are variables separated by a delimeter, such as a comma (.csv), semicolon (.csv2), tab (.tsv)
     - Rows are entries and their values form the index column of the data
         - Usually the values in the first row are the names of the columns
 
-```{r}        
+```{r, tidy=FALSE}        
 # Trip Duration,Start Time,Stop Time,Start Station ID,Start Station Name 
-
 # 1893,2017-03-01 00:00:32,2017-03-01 00:32:06,2009,Catherine St & Monroe St  
-
 # 223,2017-03-01 00:01:09,2017-03-01 00:04:53,127,Barrow St & Hudson St  
-
 # 1665,2017-03-01 00:01:27,2017-03-01 00:29:12,174,E 25 St & 1 Ave  
-
 # 100,2017-03-01 00:01:29,2017-03-01 00:03:10,316,Fulton St & William St  
-
 # 1229,2017-03-01 00:01:33,2017-03-01 00:22:02,536,1 Ave & E 30 St  
-
 # 613,2017-03-01 00:01:57,2017-03-01 00:12:11,259,South St & Whitehall St  
-
 # 157,2017-03-01 00:02:12,2017-03-01 00:04:49,3329,Degraw St & Smith St  
 ```    
 
 ## Citibike Dataset {.scrollable}
 
-- Download the citibike_data directory from the same site where you folder where you downloaded the R file
+- Download and extract the citibike zip files from the citibike_data directory where you downloaded the R file
     - The RBootcamp folder in <https://github.com/mseinstein/Presentations> 
 - This dataset is publicly available online from citibike and contains every ride for an entire month
 - R has a built in function for reading csv files `read.csv()` which reads the data into a dataframe, but instead we will be using the tidyverse package readr, which uses the slightly different `read_csv()`
     - Feel free to compare the documentation for the two functions if you want to know how they differ
     - Since the `read_csv` function is powerful and versatile it's good to look at its default options before using it
-```{r, tidy=FALSE}
-# read_csv(file, col_names = TRUE, col_types = NULL,
-#   locale = default_locale(), na = c("", "NA"), quoted_na = TRUE,
-#   quote = "\"", comment = "", trim_ws = TRUE, skip = 0, n_max = Inf,
-#   guess_max = min(1000, n_max), progress = show_progress())    
+```{r, tidy=FALSE,eval=FALSE}
+read_csv(file, col_names = TRUE, col_types = NULL,
+  locale = default_locale(), na = c("", "NA"), quoted_na = TRUE,
+  quote = "\"", comment = "", trim_ws = TRUE, skip = 0, n_max = Inf,
+  guess_max = min(1000, n_max), progress = show_progress())
 ```
     
 - For the file variable use the full path ('E:\\full\\path\\to\\file.csv')

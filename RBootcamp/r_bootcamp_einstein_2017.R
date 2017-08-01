@@ -519,7 +519,7 @@ flights %>%
   arrange(desc(mean_delay))
 
   
-  ### - Pipes can be thought of as the phrase "and then", so the above code would be read as:
+### - Pipes can be thought of as the phrase "and then", so the above code would be read as:
 ###     1. Take flights and then
 ###     2. mutate it and then
 ###     3. filter it and then 
@@ -534,34 +534,65 @@ flights %>%
 ## Exercises 
 
 
+### Using the babynames dataset from the babynames package:
+#### 1. How popular was your name in the US in the year you were born, i.e. how many other babies were given the same name?
+#### 2. Which are the overall most popular girl and boy baby names as measured by count? How many times more popular are they then the next most popular names?
+#### 3. Since 1990 how many girls have been named "Michael"
+#### 4. What was the 8th most popular year for the name "Michael" as measured by counts?  
+#### 5. Which girl's name had the biggest increase in consecutive years, in what years was it, and why?
 
-bb_pop <- babynames %>% filter(year==2015,sex=="F") %>% arrange(desc(n)) 
-bb_pop_y <- babynames %>% filter(name %in% c(bb_pop$name[1:5]),sex=="F")
-bb_pop_y %>% ggplot() + geom_line(aes(x=year , y=prop, color=name))
 
- 
-bb_pop_1880 <- babynames %>% filter(year==1880,sex=="F") %>% arrange(desc(n))  
-bb_pop_y <- babynames %>% filter(name %in% c(bb_pop_2015$name[1:5],bb_pop_1880$name[1:5]),sex=="F") 
-bb_pop_y %>% ggplot() + geom_line(aes(x=year , y=n, color=name))
+## Combining Data Manipulation and Visualization 
 
-bb_ct <- babynames %>% filter(prop > .01) %>% group_by(year) %>% summarise(total = sum(prop), ct = n())
-bb_ct %>% ggplot(aes(year,ct)) + geom_line()
-
-babynames %>% group_by(year,sex) %>% 
-
-babynames
+#### 1. Plot the popularity of the boy's name Brittany since 1950.
+#### 2. Using the 5 most popular girl's name from 2015 (based on counts), plot their counts over all the years recorded, using different color for each name. Now plot the same names using the prop value instead.
+#### 3. Plot the number of names which have a significant share of the total names, i.e., > 1%, over all years recorded
 
 
 
 
+#######################################################
+#######################################################
+#######################################################
+#######################################################
+#######################################################
+# SECTION 4 - Data Visualisations 
+
+## Found vs Generated Data 
+###   Most of the time in your research you will be using data that you or someone you know generated
+###     This will often result in tidy and clean data or if not at least someone you can complain to about why the data is so messy
+###   But what about when you have to use 3rd party data, e.g., weather information
+###     First you have to find the data (a topic we will not be covering)
+###     Then you have to import the data
+###     Then you have to clean and tidy the data (not covered today)
+###   Dataset formats
+###     Columns are variables separated by a delimeter, such as a comma (.csv), semicolon (.csv2), tab (.tsv)
+###     Rows are entries and their values form the index column of the data
+###     Usually the values in the first row are the names of the columns
+
+## Example csv file
+### Trip Duration,Start Time,Stop Time,Start Station ID,Start Station Name 
+### 1893,2017-03-01 00:00:32,2017-03-01 00:32:06,2009,Catherine St & Monroe St  
+### 223,2017-03-01 00:01:09,2017-03-01 00:04:53,127,Barrow St & Hudson St  
+### 1665,2017-03-01 00:01:27,2017-03-01 00:29:12,174,E 25 St & 1 Ave  
+### 100,2017-03-01 00:01:29,2017-03-01 00:03:10,316,Fulton St & William St  
+### 1229,2017-03-01 00:01:33,2017-03-01 00:22:02,536,1 Ave & E 30 St  
+### 613,2017-03-01 00:01:57,2017-03-01 00:12:11,259,South St & Whitehall St  
+### 157,2017-03-01 00:02:12,2017-03-01 00:04:49,3329,Degraw St & Smith St  
 
 
+## Citibike Dataset
+### Download and extract the citibike zip files from the citibike_data directory where you downloaded the R file
+###   The RBootcamp folder in <https://github.com/mseinstein/Presentations> 
+### This dataset is publicly available online from citibike and contains every ride for an entire month
+### R has a built in function for reading csv files `read.csv()` which reads the data into a dataframe, but instead we will be using the tidyverse package readr, which uses the slightly different `read_csv()`
+###   Feel free to compare the documentation for the two functions if you want to know how they differ
+###   Since the `read_csv` function is powerful and versatile it's good to look at its default options before using it
 
-
-
-
-
-
+## Import the data
+citibike <- read_csv('./citibike_data/201701-citibike-tripdata.csv') # Make sure to change the directory to match where you extracted the file
+citibiki_nrw <- citibike %>% select(-c(`Start Station Latitude`,`Start Station Longitude`,`End Station Latitude`,`End Station Longitude`))
+write_csv(citibiki_nrw,"test.csv")
 
 
 
