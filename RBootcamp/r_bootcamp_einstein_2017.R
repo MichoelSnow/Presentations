@@ -582,7 +582,7 @@ flights %>%
 
 
 ## Citibike Dataset
-### Download and extract the citibike zip files from the citibike_data directory where you downloaded the R file
+### Download the citibike csv files from the citibike_data directory where you downloaded the R file
 ###   The RBootcamp folder in <https://github.com/mseinstein/Presentations> 
 ### This dataset is publicly available online from citibike and contains every ride for an entire month
 ### R has a built in function for reading csv files `read.csv()` which reads the data into a dataframe, but instead we will be using the tidyverse package readr, which uses the slightly different `read_csv()`
