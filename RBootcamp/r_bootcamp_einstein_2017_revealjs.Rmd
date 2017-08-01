@@ -140,7 +140,7 @@ By the end of this bootcamp, students should be able to
 - `??`term
     - Searches the help documentation for the queried string
 
-## Brief Aside 1 {.scrollable}
+## Brief Aside {.scrollable}
 
 RXKCD  
 
@@ -997,11 +997,9 @@ The `fivethirtyeight` package has lots of fun datasets.  To see the motivation b
 # 157,2017-03-01 00:02:12,2017-03-01 00:04:49,3329,Degraw St & Smith St  
 ```    
 
-## Citibike Dataset {.scrollable}
 
-- Download the citibike csv files from the citibike_data directory where you downloaded the R file
-    - The RBootcamp folder in <https://github.com/mseinstein/Presentations> 
-- This dataset is publicly available online from citibike and contains every ride for an entire month
+## Reading csv Files {.scrollable}
+
 - R has a built in function for reading csv files `read.csv()` which reads the data into a dataframe, but instead we will be using the tidyverse package readr, which uses the slightly different `read_csv()`
     - Feel free to compare the documentation for the two functions if you want to know how they differ
     - Since the `read_csv` function is powerful and versatile it's good to look at its default options before using it
@@ -1011,10 +1009,62 @@ read_csv(file, col_names = TRUE, col_types = NULL,
   quote = "\"", comment = "", trim_ws = TRUE, skip = 0, n_max = Inf,
   guess_max = min(1000, n_max), progress = show_progress())
 ```
-    
-- For the file variable use the full path ('E:\\full\\path\\to\\file.csv')
-   - Note that you can easily change the working directory but that is outside the scope of this bootcamp
 
+- file
+    - use the full path ('E:\\full\\path\\to\\file.csv')
+   - Note that you can easily change the working directory but that is outside the scope of this bootcamp
+- col_names
+    - Either TRUE, FALSE or a character vector of column names.
+        - If TRUE, the first row of the input will be used as the column names, and will not be included in the data frame
+        - If FALSE, column names will be generated automatically: X1, X2, X3 etc.
+        - If col_names is a character vector, the values will be used as the names of the columns, and the first row of the input will be read into the first row of the output data frame.
+- col_types
+    - NULL, a cols() specification, or a string
+        - If NULL, all column types will be imputed from the first 1000 rows on the input
+        - If a column specification created by cols(), it must contain one column specification for each column.
+        - Alternatively, you can use a compact string representation where each character represents one column: c = character, i = integer, n = number, d = double, l = logical, D = date, T = date time, t = time, ? = guess
+- na
+    - Character vector of strings to use for missing values
+- skip
+    - Number of lines to skip before reading data.
+- n_max
+    - Maximum number of records to read.
+- guess_max
+    - Maximum number of records to use for guessing column types.
+
+## Writing csv files {.scrollable}
+
+- Similar to the `read_csv()` function there is a `write_csv()` function which writes csv to some designated path
+- The parameters for this function are much simpler
+
+```{r, eval=FALSE}
+write_csv(x, path, na = "NA", append = FALSE, col_names = !append)
+```
+
+- x	
+    - A data frame to write to disk
+- path	
+    - Path or connection to write to.
+- na	
+    - String used for missing values. Defaults to NA. Missing values will never be quoted; strings with the same value as na will always be quoted.
+- append	
+    - If FALSE, will overwrite existing file. If TRUE, will append to existing file. In both cases, if file does not exist a new file is created.
+- col_names	
+    - Write columns names at the top of the file?
+
+```{r, eval = FALSE}
+write_csv(citibike, "./citibike_data/output_name.csv")
+```
+
+
+## Citibike Dataset {.scrollable}
+
+- Download the citibike csv files from the citibike_data directory where you downloaded the R file
+    - The RBootcamp folder in <https://github.com/mseinstein/Presentations> 
+- This is a slightly modified version of the dataset which is publicly available online from citibike and contains every ride for an entire month
+
+    
+    
 ```{r}
 read_csv('./citibike_data/201701-citibike-tripdata.csv')
 ```
@@ -1022,7 +1072,7 @@ read_csv('./citibike_data/201701-citibike-tripdata.csv')
 You can see that R solved the problem of spaces in the column names by putting \` around them (note this is a backtick not a single quote), but this makes it annoying to refer to these variables.  Instead we can use a snake case version of the column names as an input into `read_csv`
 
 ```{r}
-column_names <- c('trip_duration','start_time', 'stop_time', 'start_id', 'start_name', 'start_lat',  'start_long', 'end_id', 'end_name', 'end_lat', 'end_long', 'bike_id', 'user_type', 'birth_year', 'gender')
+column_names <- c('trip_duration','start_time', 'stop_time', 'start_id', 'start_name', 'end_id', 'end_name', 'bike_id', 'user_type', 'birth_year', 'gender')
 read_csv('./citibike_data/201701-citibike-tripdata.csv',col_names = column_names)
 ```
 
@@ -1032,6 +1082,9 @@ The problem is that when you provide the column names, `read_csv` treats the fir
 citi_bike <- read_csv('./citibike_data/201701-citibike-tripdata.csv',col_names = column_names, skip=1)
 citi_bike
 ```
+
+
+
 
 ## Parsing {.scrollable}
 
@@ -1070,5 +1123,7 @@ citi_bike_fac
 levels(citi_bike_fac$gender)
 ```
 
-
+- Other data types have their own version of `col_factor()` and `as.factor()`
+    - `col_logical()`, `col_integer()`, `col_double()`, `col_character()`
+    - `as.logical()`, `as.integer()`, `as.double()`, `as.character()`
 
