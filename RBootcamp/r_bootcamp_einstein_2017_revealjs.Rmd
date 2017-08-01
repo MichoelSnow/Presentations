@@ -1,7 +1,7 @@
 ---
 title: "R Bootcamp Einstein 2017"
 author: Michoel Snow
-date: August 8-9, 2017
+date: August 8 & 10, 2017
 output: 
   revealjs::revealjs_presentation:
     center: FALSE
@@ -15,9 +15,13 @@ output:
       height: '100%'
       margin: 0.1
 ---
-```{r global_options, include=FALSE}
+```{r global_options, include=FALSE, warning=FALSE}
 options(width = 120)
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=120),width=120,tidy=TRUE)
+```
+
+```{r, echo=FALSE,include=FALSE}
+library(tidyverse)
 ```
 
 ## SECTION 1 - The Basics
@@ -33,9 +37,16 @@ If you don't have them already installed you need to download and install R and 
 
 ## Introduction to R
 
+
+
 - R is an open source programming environment
 - It is most commonly used for statistical computing and graphics
 - The basic functionality of R can be extended with 'packages'
+    - Reusable R functions and their documentation
+    - Often times will include sample data. 
+
+
+
 
 ## Resources for R
 
@@ -58,9 +69,47 @@ If you don't have them already installed you need to download and install R and 
 - Go to <https://github.com/mseinstein/> to download the Presentions > RBootCamp > r_bootcamp_einstein_2017.R file   
 - All the code presented here is within that R file
 
+## What can you do with R {.scrollable}
+
+- Analytics
+    + Mathematics, Probability and Statistics
+    + Big Data Analytics
+    + Statistical Modeling
+    + Machine Learning 
+- Visualizations
+    + Simple but powerful graphics packages
+- Applications and Extensions
+    + Web applications (Shiny)
+    + Bioinformatics/Genomics (Bioconductor)
+- Research Friendly
+    + Reproducible Results
+    + Strong Link to Academia
+
+
+## Objectives of this Bootcamp {.scrollable}
+
+By the end of these two sessions, students should be able to  
+
+1. Identify projects and tasks suitable to R
+2. Use Rstudio as a frontend for R programming
+3. Import data from outside sources into R
+4. Manipulate data and perform basic analysis
+5. Create and export visualizations of data
+6. Modify pre-written R code for their own applications
+
+
+
+
+## Structure of This Bootcamp
+
+1. Visualization of Data
+2. Manipulation of Data
+3. Importing/cleaning of Data
+
+
+
+
 ## Running code in R
-
-
 
 
 - To run any line of code use <kbd>CTRL</kbd>+<kbd>Enter</kbd> or <kbd>Cmd</kbd>+<kbd>Enter</kbd> 
@@ -69,11 +118,12 @@ If you don't have them already installed you need to download and install R and 
 
 
 ## Installing and Loading packages
+
 - The power of R can be extended with packages
-- Tidyverse is a collection of R packages that share common philosophies and are designed to work together
-    - This is the main package we will be using 
 - You install a package with the `install.packages("Pkg Name")`, e.g., `install.packages("tidyverse")`      
     - Only needs to be done once per machine
+    - Tidyverse is a collection of R packages for data manipulation and visualization that are designed to work together
+    - This is the main package we will be using 
 - To load a package call the `library` function, e.g., `library(tidyverse)`
     - Needs to be loaded every session you want to use it (usually everytime you open R studio)
 
@@ -90,11 +140,18 @@ If you don't have them already installed you need to download and install R and 
 - `??`term
     - Searches the help documentation for the queried string
 
-## Structure of This Presentation
+## Brief Aside 1 {.scrollable}
 
-1. Visualization of Data
-2. Manipulation of Data
-3. Importing/cleaning of Data
+RXKCD  
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(RXKCD)
+aa <- getXKCD(which="random",saveImg=FALSE,display = FALSE)
+knitr::include_graphics(aa$img)
+```
+
+
 
 ## SECTION 2 - Data Visualisations 
 
@@ -104,14 +161,37 @@ If you don't have them already installed you need to download and install R and 
 
 `library(tidyverse)`
 
-## Graphics in ggplot are built in layers
+## Graphics in ggplot are built in layers {.scrollable}
 
-## mpg dataset {.scrollable}
-
-```{r, echo=FALSE,include=FALSE}
-library(tidyverse)
+```{r, echo=FALSE}
+mpg_class <- mpg %>% group_by(class) %>% summarise(hwy_mean = mean(hwy), cty_mean=mean(cty))
 ```
 
+
+```{r, message=FALSE,tidy=FALSE}
+ggplot(mpg,aes(x=hwy,y=cty)) + 
+  geom_blank()
+
+ggplot(mpg,aes(x=hwy,y=cty)) + 
+  geom_blank() +
+  geom_abline()
+
+ggplot(mpg,aes(x=hwy,y=cty)) + 
+  geom_blank() +
+  geom_abline() +
+  geom_jitter(aes(color=class))
+
+ggplot(mpg,aes(x=hwy,y=cty)) + 
+  geom_blank() +
+  geom_abline() +
+  geom_jitter(aes(color=class)) +
+  geom_point(data=mpg_class,aes(x=hwy_mean,y=cty_mean,fill=class),color="black",size=5,shape=22,show.legend = FALSE) 
+
+```
+
+
+
+## mpg dataset {.scrollable}
 
 
 ```{r}

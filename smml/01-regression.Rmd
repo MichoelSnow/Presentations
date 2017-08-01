@@ -22,7 +22,7 @@ gplot <- ggplot(tmp,aes(cel,frn2))  + geom_point() + labs(x="Temp (C)", y= "Temp
 gplot
 ```
 
-There is an obvious a linear relationship between the values on the X and Y axes, i.e., as the temperature in Celsius increases the temperature in Farenheit increases a proportional amount, and if you remember the formula to convert between the two is $F = \dfrac{9}{5}\cdot C + 32$.  Converting this formulation into our nomenclature gives the formula for simple linear regression
+There is an obvious a linear relationship between the values on the X and Y axes, i.e., as the temperature in Celsius increases the temperature in Farenheit increases a proportional amount, and if you remember the formula to convert between the two is $F = \dfrac{9}{5}\cdot C + 32$.  I can generalize this formula for simple linear regression
 
 \begin{equation} 
   Y = a_0 + a_1 \cdot X_1
