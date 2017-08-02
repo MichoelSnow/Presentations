@@ -1,5 +1,7 @@
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+library(tidyverse)
+library(lubridate)
 ```
 
 
@@ -7,11 +9,107 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 
 ## Overview
 
-Almst all supervised models relate one or more input variables, $X_1,X_2, \ldots , X_p$, to an output variable, $Y$.  The general equation for a supervised model takes the form $$Y = f(X)$$. The simplest method with which to combine the inputs $X$ is through a linear combination, namely addition.  When dealing with a numerical output, we'll deal with a different type of output in chapter **NEED CHAPTER NAME**, this problem is termed regression, hence the name linear regression.   Before tackling the general form of the model let's take a look at the example where there is only a single input variable, termed simple linear regression. Plotted in the figure below are 15 random temperature values read from an accurate celsius thermometer on the X axis and from a slightly less accurate farenheit thermometer on the Y axis.  
+Almst all supervised models relate one or more input variables, $X_1,X_2, \ldots , X_p$, to an output variable, $Y$, which can be generalized as $$Y = f(X)$$. The goal of these models is to estimate the function $f(X)$ with as much accuracy as possible.  In a **linear regression** model, the assumption is that the input variables are related to the output variables through a linear combination, i.e., addition.  The term regression refers to the fact that the output variable can take on any value.  This is in contrast to classification models in which the output variable can take on one of a limited set of values.  Classification models will be discussed in chapter **NEED CHAPTER NAME**.  When the model is estimating the function for only a single input variable, it is termed simple linear regression and takes the form
+
+\begin{equation} 
+  Y = a_0 + a_1 \cdot X_1
+  (\#eq:SimpLinReg)
+\end{equation}
+
+This equation might seem somewhat familiar to you, and by just replacing the letters used for the terms and switching around the order I end up with an equation which we all have encountered in grade school as the equation for a line
+
+\begin{equation} 
+  y = mx + b
+\end{equation}
+
+Who knew we were all doing a form of linear regression so many years ago. Even though the letters used for simple linear regression are different they have the same meaning.  $a_0$ is the intercept and $a_1$ is the slope of the line.  However, unlike in math class where the line perfectly fit the points we were given, when dealing with data points in the real world this is almost never true.  This is the reason that I keep using the word estimate.  The model might be close but there should always be the expectation that it will not prefectly fit the data.  Additionally, if you try to perfectly fit the data you run the risk of overfitting your model, a topic which will be discussed in chapter **NEED CHAPTER NAME**.  So when discussing models applied to real world data the equation for simple linear regression is often written as
+
+\begin{equation} 
+  Y \approx a_0 + a_1 \cdot X_1
+  (\#eq:SimpLinRegapprox)
+\end{equation}
+
+To understand why equation \@ref(eq:SimpLinRegapprox) is more appropriate than equation \@ref(eq:SimpLinReg), let's look at some data.  Plotted in the figure below are average temperature readings at JFK airport from January through July of 2017.   
+
+
+```{r, fig.align='center',  echo=FALSE}
+temp <- read_csv("./data/jfk_tmp.csv")
+temp <- temp %>% mutate(DATE=ymd(DATE)) %>% filter(DATE > '2017-01-01')
+temp %>% ggplot(aes(DATE,TAVG)) + geom_point() + labs(x="Date", y="Average Temperature (F)")
+```
+
+Using the least squares method described below I can estimate the linear regression coefficients and overlay the best fit line.
+
+```{r, fig.align='center',  echo=FALSE}
+fit <- lm(TAVG~DATE,data=temp)
+temp <- temp %>% mutate(tfit = predict(fit,data.frame(DATE=temp$DATE)))
+temp %>% ggplot(aes(DATE,TAVG)) + geom_point() + geom_line(aes(DATE,tfit)) + labs(x="Date", y="Average Temperature (F)")
+```
+
+You can see that there is no straight line which would hit all the points, so going back to my original assertion, even the most accurate model could only approximate the output variable given the input variables.  
+
+Taking another step back, we have to remember that linear regression is a method of estimating the efficients of equation \@ref(eq:SimpLinRegapprox), which I can represent by giving the estimated coefficients and estimate output variables tiny hats.
+
+\begin{equation} 
+  \hat{Y} = \hat{a}_0 + \hat{a}_1 \cdot X_1
+  (\#eq:SimpLinRegHat)
+\end{equation}
 
 
 
-```{r TmpPnt, fig.align='center',  echo=FALSE,message=FALSE}
+## Estimating the Coefficients
+
+### Least squares
+
+The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation \@ref(eq:SimpLinRegHat).  This difference between the calculated output variable and the actual output variable is called the **residual** which is represented by the symbol $e$. 
+
+\begin{equation}
+  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
+  (\#eq:resid)
+\end{equation}
+
+The residuals in our previous plot are the distances from the points to the fitted line.
+
+```{r, fig.align='center',  echo=FALSE}
+temp %>% ggplot(aes(DATE,TAVG)) + geom_point() + geom_line(aes(DATE,tfit)) + geom_segment(aes(x=DATE,xend=DATE,y=TAVG,yend=tfit), color='red') + labs(x="Date", y="Average Temperature (F)")
+```
+
+Each observation has its own residual, where the residual $e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i$.  If I then take the square of the difference for each observation and sum them all together I get the **residual sum of squares (RSS)**.  Minimizing the RSS is what makes this process "least squares".
+
+\begin{equation}
+  RSS = e_1^2 + e_2^2 + \ldots + e_n^2 = \sum\limits_{i=1}^n e_i^2   
+  (\#eq:RSS)
+\end{equation}  
+
+
+To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to $\hat{a}_1$, set it equal to zero and then solve for $\hat{a}_1$. Solving for $a_0$ then simply requires using $\hat{a}_1$ and the averages of the input and output variables. 
+
+\begin{equation}
+\begin{split}
+  \hat{a}_1 &= \dfrac{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)^2} \\
+  \hat{a}_0 &= \bar{Y} - \hat{a}_1\bar{X}
+\end{split}  
+(\#eq:linRegCoef)
+\end{equation}
+
+
+
+Each observation has its own residual, wherein the residual $e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i = \hat{a}_{0,i} + \hat{a}_{1,i}\cdot X_i$.  Remember that the $i$th input variable $X_i$ does not get a hat, becuase it is the actual input variable and not an estimate of the input variable.  So for a series of observations the total residual is 
+
+\begin{equation}
+  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
+  (\#eq:resid)
+\end{equation}
+
+What makes this process least squares is that you calculate the difference using the sum of the squared differences, termed the residual sum of sqaures (RSS).  Formally the residual sum of squares for the general form of linear regression in equation \@ref(eq:LinReg) can be written as :
+
+\begin{equation}
+  RSS(a) = \sum\limits_{i=1}^N\left(Y_i - \left[a_0 + \sum\limits_{j=1}^p a_j\cdot X_{i,j} \right]\right)  
+  (\#eq:RSS)
+\end{equation}
+
+
+```{r TmpPnt, fig.align='center',  echo=FALSE,message=FALSE,eval=FALSE}
 library(tidyverse)
 cel <-  sort(sample(seq(-50,100),15))
 frn <- 9/5*cel + 32 
@@ -22,21 +120,29 @@ gplot <- ggplot(tmp,aes(cel,frn2))  + geom_point() + labs(x="Temp (C)", y= "Temp
 gplot
 ```
 
-There is an obvious a linear relationship between the values on the X and Y axes, i.e., as the temperature in Celsius increases the temperature in Farenheit increases a proportional amount, and if you remember the formula to convert between the two is $F = \dfrac{9}{5}\cdot C + 32$.  I can generalize this formula for simple linear regression
+The formula to convert between the Celsius and Farenheit is $F = \dfrac{9}{5}\cdot C + 32$, which I can overlay on the previous plot.
 
-\begin{equation} 
-  Y = a_0 + a_1 \cdot X_1
-  (\#eq:SimpLinReg)
-\end{equation}
-
-Where $Y$ is the output variable, $X$ is input variable and $a_0$ and $a_1$ are the coefficients. However, this equation is not actually correct, as the Farneheit value are not precisely equation to $\dfrac{9}{5}$ times the Celsius vcalues plus 32. This is very easy to see if I overlay a line generated from the equation $F = \dfrac{9}{5}\cdot C + 32$ on top of the previous plot.
-
-
-
-```{r TmpLin, fig.align='center',  echo=FALSE,message=FALSE}
+```{r TmpLin, fig.align='center',  echo=FALSE,message=FALSE,eval=FALSE}
 
 gplot + geom_line(aes(cel,frn)) + geom_segment(aes(x=cel,xend=cel,y=frn2,yend=frn), color='red')
 ```
+
+The red lines from the points to the line represent the distance from the data to the idealized model, termed the **residuals**.  
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
 
  
 
@@ -49,7 +155,7 @@ The red bars from the points to the line represent the distance from the real va
 
 $\epsilon$ is a variable with the same number of values as $X$ and $Y$, as seen in the table below
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,eval=FALSE}
 library(knitr)
 # kable(tmp[,c('cel','frn','err')],col.names = c('Celsius', 'Farenheit', 'Error'),align='lll', booktabs = TRUE)
 kable(head(tmp),col.names = c('Celsius', 'Farenheit (actual)', 'Farenheit (recorded)', 'Error'),align='lll', digits=1)
@@ -75,30 +181,9 @@ Just as in simple linear regression, the $a$'s in front of the input variables c
 
 Going back to our original simple linear regression problem involving temperature measurments.  Since we know that the relationship between the input and output variables is not strictly goverened by the equation $F = \dfrac{9}{5}\cdot C + 32$, we need a method of determining the coefficients which actually govern the relationship between our given input and outputs.
 
-## Coefficient Calculation
 
-### Least Sqaures
 
-The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation \@ref(eq:SimpLinReg).  This difference between the calculated output variable, $\hat{Y}$, and the actual output variable, $Y$, is called the **residual** which is represented by the symbol $e$. 
 
-\begin{equation}
-  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
-  (\#eq:resid)
-\end{equation}
-
-Each observation has its own residual, wherein the residual $e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i = \hat{a}_{0,i} + \hat{a}_{1,i}\cdot X_i$.  Remember that the $i$th input variable $X_i$ does not get a hat, becuase it is the actual input variable and not an estimate of the input variable.  So for a series of observations the total residual is 
-
-\begin{equation}
-  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
-  (\#eq:resid)
-\end{equation}
-
-What makes this process least squares is that you calculate the difference using the sum of the squared differences, termed the residual sum of sqaures (RSS).  Formally the residual sum of squares for the general form of linear regression in equation \@ref(eq:LinReg) can be written as :
-
-\begin{equation}
-  RSS(a) = \sum\limits_{i=1}^N\left(Y_i - \left[a_0 + \sum\limits_{j=1}^p a_j\cdot X_{i,j} \right]\right)  
-  (\#eq:RSS)
-\end{equation}
 
 
 
@@ -122,34 +207,20 @@ The values of the input and output parameters in a linear regression model are a
 
 
 
-the difference between So to be more precise, I can rewrite  to include the fact that the output values, which in this case is the temperature in Farenheit, is actually an estimate of 
-
-
-I can rewrite the general formula for linear regression and this time include a term, $\epsilon$ by standard notation, to represent the error. 
-
-which is almost get the general formula for simple linear regression.  I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.  
-
-as applied to our data is not completely which is almost get the general formula for simple linear regression.  I am writing the relationship between the input and output variables as approxiamtely, because the readings were not completely accurate.
-
-
-Unlike our previous equation this time our equation \@ref(eq:SimpLinReg) has an equals sign is the general formula for simple linear regression.  
-
-
-
 
 
 You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
 
 Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
 
-```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
+```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center',eval=FALSE,echo=FALSE}
 par(mar = c(4, 4, .1, .1))
 plot(pressure, type = 'b', pch = 19)
 ```
 
 Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
 
-```{r nice-tab, tidy=FALSE}
+```{r nice-tab, tidy=FALSE,eval=FALSE,echo=FALSE}
 knitr::kable(
   head(iris, 20), caption = 'Here is a nice table!',
   booktabs = TRUE
