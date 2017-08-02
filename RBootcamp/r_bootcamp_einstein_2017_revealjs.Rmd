@@ -60,8 +60,23 @@ If you don't have them already installed you need to download and install R and 
 
 - R studio is an IDE within which you can write/edit code, run code, display plots/graphics and a whole host of other functions 
 
-![](RStudio-Screenshot.png)
+![](./images/rstudio_overview.jpg)
 
+- R Console
+    - Can directly write and run code here
+    - Shows the output of code you run
+    - Mostly non recollectable/reproducible 
+- R Script
+    - Here is where you write code and functions (scripts) which are run in the console
+    - Recollectable and reproducible
+- R Environment
+    - Environment tab: variables, vectors, functions
+    - History: Searchable history of all commands run in console
+    - Other tabs as necessary, such as Git or Building
+- Graphical Output
+    - Files: List files in the current directory (useful when working with projects)
+    - Plots: Displays plots and figures
+    - Help : Displays R documentation
 
 ## Getting Started 
 
@@ -632,6 +647,18 @@ iris[25:30,1]
 iris[c(25:30,17,1),c(1,4)]
 ```
 
+## Dimensions {.scrollable}
+
+- In general programming when referring to the dimensions of any matrix, the first number is the number of rows and the second is the number of columns 
+- Use length when referring to one-dimensional vectors, but if used on two or higher dimensional arrays it will return the number of columns
+    - This is because vectors are actually stored as arrays with 1 row and X number of columns, where X is the number of elements in the vector
+
+```{r}
+dim(iris)
+nrow(iris)
+ncol(iris)
+```
+
 
 ##  Trouble with Tibbles {.scrollable}
 
@@ -723,7 +750,7 @@ flights
 summary(flights)
 ```
 
-## Data Types {.scrollable}
+## Data Classes {.scrollable}
 
 - `int` integers
 - `dbl` doubles or real numbers
@@ -733,6 +760,7 @@ summary(flights)
 - `lgl` logical (TRUE or FALSE)
 - `fctr` factors (catgeorical variables with fixed possible values, e.g., dropdown list)
 - `list` like a vector but can contain different types of elements
+    - You can determine a variable's class by running `class(variable_name)`
 
 ```{r}
 flights[c("dep_time","tailnum","air_time","time_hour")]
