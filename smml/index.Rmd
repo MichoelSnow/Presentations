@@ -24,7 +24,7 @@ This book is broken up by model, ordered by computational complexity.  Every cha
 
 We are all aware of the need for precision in mathematics and computation so as not to create unintentional errors, but I feel the same is true for language, especially in the description of mathematics and computation.  For that reason I will strive to be consistent in my use of terminology, use the simplest possible accurate term and use as few terms as possible.  For the sake of those who read other books on the subject, whenever a new term is introduced I will try to give all other commonly used names for that term.   I will also bold a term whenever I give its definition.  Note that when these rules disagree with standard agreed upon nomenclature, I will defer to the standard nomenclature, but will then explicitly define the terms to avoid confusion.
 
-Mathematical modeling lies at the heart of statistical learning, machine learning and any other name dreamt up by a marketing department.  So instead of trying to define where one field ends and the other begins, or which technique is machine learning and which is statistics I am simply going to use the term model.  In this book any relationship between variables is a **model**.  A **variable** is a symbol which contains one or more known or unknown values.  When the variable can contain any number of subset variables I will use the bold typeface and capital letters to represent it, such as $\mathbf{X}$ or $\mathbf{Y}$.  Variables which contain no subset variables will be written using the regular typeface and capital letters, such as $X$ or $Y$.  Individual values of a variable known as **observations**, also referred to as samples, will be written using a regular typeface and lowercase letters, such as $x$ or $y$.  Indvidual observations for multiple variable will be written using the bold typeface and lowercase letters, such as $\mathbf{X}$ or $\mathbf{y}$.  Numbered subscripts will refer to a specific subset or observation and lettered subscripts will be used for generic subsets or observations. When referring to both individual observations and subset variables, the first subscript is the observation and the second is the variable. The generic total number of observations is $n$ and the generic total number of variables is $p$.
+Mathematical modeling lies at the heart of statistical learning, machine learning and any other name dreamt up by a marketing department.  So instead of trying to define where one field ends and the other begins, or which technique is machine learning and which is statistics I am simply going to use the term model.  In this book any relationship between variables is a **model**.  A **variable** is a symbol which contains one or more known or unknown values.  When the variable can contain any number of subset variables I will use the bold typeface and capital letters to represent it, such as $\mathbf{X}$ or $\mathbf{Y}$.  Variables which contain no subset variables will be written using the regular typeface and capital letters, such as $X$ or $Y$.  Individual values of a variable known as **observations**, also referred to as samples, will be written using a regular typeface and lowercase letters, such as $x$ or $y$.  Indvidual observations for multiple variable will be written using the bold typeface and lowercase letters, such as $\mathbf{x}$ or $\mathbf{y}$.  Numbered subscripts will refer to a specific subset or observation and lettered subscripts will be used for generic subsets or observations. When referring to both individual observations and subset variables, the first subscript is the observation and the second is the variable. The generic total number of observations is $n$ and the generic total number of variables is $p$.
 
 THis will make more sense when put together in an example.  Let us say I am building a model which takes as its first four inputs the GPA, major, minor and high school of every student in Cornell's graduating class of 1900.  $\mathbf{X}$ refers to the set of all input variables. $X_1$ refers to the GPA of all students and $X_2$ refers to their major.  $\mathbf{x}_1$ refers to all the inputs for the first student and $\mathbf{x}_i$ refers to the set of inputs for some generic $i$th student.  $x_{3,1}$ refers to the GPA for the third student.  You can also think of this as a table where the rows are the observations and the columns are the subset variables.  In matrix format this would look like:
 
@@ -63,17 +63,24 @@ In unsupervised learning the data is unlabeled, i.e., it is not split into input
 
 ### Solving Supervised Models
 
-In general, the goal of supervised models is to design a function which can predict a desired output variable $\mathbf{Y}$, given a set of input variables $\mathbf{X}$.   To this end you are often given two datasets.  The first dataset consists of inputs and their associated outputs, referred to as the **training data**.  This training data is used to build the supervised model.  This model is then used to make predictions given the second dataset, which is usually composed solely of never before seen inputs, called the **test data**.  
+In general, the goal of supervised models is to design a function which can estimate a desired output variable $\mathbf{Y}$, given a set of input variables $\mathbf{X}$, either for the puproses of predicting future outputs or for understanding the relationship between the inputs and the outputs.   All supervised models assume that there is some relationship between $\mathbf{X}$ and $\mathbf{Y}$ such that the output variable $\mathbf{Y}$ is a function of some fixed, but unknown function of $\mathbf{X}$, written as $f(\mathbf{X})$: 
 
-There is an assumption that there is some relationship between $\mathbf{X}$ and $\mathbf{Y}$ such that the output variable $\mathbf{Y}$ is a function of some fixed, but unknown function of $\mathbf{X}$, written as $f(\mathbf{X})$: 
+\begin{equation}
+  \mathbf{Y} \approx f(\mathbf{X}) 
+  (\#eq:SupModApprox)
+\end{equation}
+
+In equation \@ref(eq:SupModApprox), $\mathbf{Y}$ is only approximately equal to $f(\mathbf{X})$ because there almost always exists some random  error in data.  This is true whether we are talking about neural activity, weather patterns or economics.  Nothing behaves exaclty as expected, instead there is always some random error.  I can formalize this error by adding an error term, $\epsilon$, to equation \@ref(eq:SupModApprox).  
 
 \begin{equation}
   \mathbf{Y} = f(\mathbf{X}) + \epsilon
   (\#eq:SupMod)
 \end{equation}
 
+Where $\epsilon$ represents the inherent random error, is assumed to be indepedent and has an assumed mean of zero.  In this case independence means that the error is unaffected by the input variable (even though this is not always true).  Assuming a zero mean error implies that there is no inherent bias in the error, e.g., the error will not shift the data in one direction more than any others. The implication of $\epsilon$ is that even if we are able to perfectly estimate $f(\mathbf{X})$, we would be unable to predict $\mathbf{Y}$ with perfect accuracy due to the inherent error which is indepedent of, and so cannot be predicted by, $\mathbf{X}$.
 
-$\epsilon$ represents the inherent independent random error present in the world, which has a mean of zero.  However, the problem is that while we assume this relationship exists, we do not know what the function $f(\mathbf{X})$ is.  To that end, supervised models seek to estimate this function using the training data.  Using the estimate of the function we are able to make predictions of the output values given the input values in the test data.
+
+However, the problem is that while we assume this relationship exists, we do not know what the function $f(\mathbf{X})$ is.  To that end, supervised models seek to estimate this function using data consisting of inputs values paied with corresponding output values.  When used to estimated the parameters of a model, this dataset if often referred to as **training data**.  This is in contrast to **test data**, which as the name states, is used to test the accuracy of the model on data different than what it was trained on.  Using the estimate of the function learned from the training data we are able to make predictions of the output values given the input values in the test data.
 
 \begin{equation}
   \hat{\mathbf{Y}} = \hat{f}(\mathbf{X})
@@ -81,6 +88,20 @@ $\epsilon$ represents the inherent independent random error present in the world
 \end{equation}
 
 Note that both the function and the output variable are indicated as estimates (through their tiny hats), but the input variable is not indicated as an estimate.  This is because we know what the true inputs are we just don't know what the function that relates the inputs to the outputs truly is and following from that we do not know what the output truly is for any given input, hence the tiny hats. 
+
+The most common features which distinguish the different supervised models are as follows
+
+- The mathematical structure of $f(\mathbf{X})$  
+- The type of data that make up the output variable
+- Estimation method of $f(\mathbf{X})$
+
+
+## Assessing Model Quality of Fit
+
+### MSE
+
+
+
 
 ** START FROM HERE**
 However, note that unlike equation \@ref(eq:SupMod) When estimating the function $f()$, there are two types of errors to consider
@@ -101,7 +122,6 @@ However, note that unlike equation \@ref(eq:SupMod) When estimating the function
 
 
 
-The implied assumption of this formulation is that the output can be perfectly predicted by the uknown function as applied to the inputs.  However, due to a variety of factors there will almost always be some degree of error in the modelmost data gathered in the real world can not be perfectly fit to any model there is almost always some degree of error in most models and almost no function is perfectly accurate.  So for almost any dataset the best  fomulation is that it assumes a perfect model with no accounting for variation or error, and almost any model .  To understand why this is a problem here is 
 
 <!-- ```{r} -->
 <!-- library(ElemStatLearn) -->

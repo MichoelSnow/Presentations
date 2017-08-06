@@ -5,14 +5,14 @@ library(lubridate)
 ```
 
 
-# Linear Regression {#lin_reg}
+# Simple Linear Regression {#sim_lin_reg}
 
 ## Overview
 
 Almst all supervised models relate one or more input variables, $X_1,X_2, \ldots , X_p$, to an output variable, $Y$, which can be generalized as $$Y = f(X)$$. The goal of these models is to estimate the function $f(X)$ with as much accuracy as possible.  In a **linear regression** model, the assumption is that the input variables are related to the output variables through a linear combination, i.e., addition.  The term regression refers to the fact that the output variable can take on any value.  This is in contrast to classification models in which the output variable can take on one of a limited set of values.  Classification models will be discussed in chapter **NEED CHAPTER NAME**.  When the model is estimating the function for only a single input variable, it is termed simple linear regression and takes the form
 
 \begin{equation} 
-  Y = a_0 + a_1 \cdot X_1
+  Y = a_0 + a_1X
   (\#eq:SimpLinReg)
 \end{equation}
 
@@ -25,7 +25,7 @@ This equation might seem somewhat familiar to you, and by just replacing the let
 Who knew we were all doing a form of linear regression so many years ago. Even though the letters used for simple linear regression are different they have the same meaning.  $a_0$ is the intercept and $a_1$ is the slope of the line.  However, unlike in math class where the line perfectly fit the points we were given, when dealing with data points in the real world this is almost never true.  This is the reason that I keep using the word estimate.  The model might be close but there should always be the expectation that it will not prefectly fit the data.  Additionally, if you try to perfectly fit the data you run the risk of overfitting your model, a topic which will be discussed in chapter **NEED CHAPTER NAME**.  So when discussing models applied to real world data the equation for simple linear regression is often written as
 
 \begin{equation} 
-  Y \approx a_0 + a_1 \cdot X_1
+  Y \approx a_0 + a_1 X
   (\#eq:SimpLinRegapprox)
 \end{equation}
 
@@ -51,7 +51,7 @@ You can see that there is no straight line which would hit all the points, so go
 Taking another step back, we have to remember that linear regression is a method of estimating the efficients of equation \@ref(eq:SimpLinRegapprox), which I can represent by giving the estimated coefficients and estimate output variables tiny hats.
 
 \begin{equation} 
-  \hat{Y} = \hat{a}_0 + \hat{a}_1 \cdot X_1
+  \hat{Y} = \hat{a}_0 + \hat{a}_1 X
   (\#eq:SimpLinRegHat)
 \end{equation}
 
@@ -64,7 +64,7 @@ Taking another step back, we have to remember that linear regression is a method
 The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation \@ref(eq:SimpLinRegHat).  This difference between the calculated output variable and the actual output variable is called the **residual** which is represented by the symbol $e$. 
 
 \begin{equation}
-  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
+  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1 X\right)
   (\#eq:resid)
 \end{equation}
 
@@ -74,7 +74,7 @@ The residuals in our previous plot are the distances from the points to the fitt
 temp %>% ggplot(aes(DATE,TAVG)) + geom_point() + geom_line(aes(DATE,tfit)) + geom_segment(aes(x=DATE,xend=DATE,y=TAVG,yend=tfit), color='red') + labs(x="Date", y="Average Temperature (F)")
 ```
 
-Each observation has its own residual, where the residual $e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i$.  If I then take the square of the difference for each observation and sum them all together I get the **residual sum of squares (RSS)**.  Minimizing the RSS is what makes this process "least squares".
+If I then take the square of the residual for each observation and sum them all together I get the **residual sum of squares (RSS)**.  Minimizing the RSS is what makes this process "least squares".
 
 \begin{equation}
   RSS = e_1^2 + e_2^2 + \ldots + e_n^2 = \sum\limits_{i=1}^n e_i^2   
@@ -82,31 +82,52 @@ Each observation has its own residual, where the residual $e_i$ represents the $
 \end{equation}  
 
 
-To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to $\hat{a}_1$, set it equal to zero and then solve for $\hat{a}_1$. Solving for $a_0$ then simply requires using $\hat{a}_1$ and the averages of the input and output variables. 
+$e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i$.  There are multiple methods to solve for the minimum least squares coefficients, most dealing with variations on ordinary least squares using matrix algebra.  Here I am going to go through what I think is the most simple derivation as it requires only knowledge of partial derivatives and not, as most other methods require, linear algebra. If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest.  Thankfully, the process hasn't changed since then.  Also since there are multiple parameters of interest, i.e., $\hat{a_0}$ and $\hat{a_1}$, I will need to use partial derivatives.  First I want to rewrite equation \@ref(eq:RSS) in a slightly more derivative friendly way.
 
 \begin{equation}
-\begin{split}
-  \hat{a}_1 &= \dfrac{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)^2} \\
-  \hat{a}_0 &= \bar{Y} - \hat{a}_1\bar{X}
-\end{split}  
-(\#eq:linRegCoef)
-\end{equation}
-
-
-
-Each observation has its own residual, wherein the residual $e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i = \hat{a}_{0,i} + \hat{a}_{1,i}\cdot X_i$.  Remember that the $i$th input variable $X_i$ does not get a hat, becuase it is the actual input variable and not an estimate of the input variable.  So for a series of observations the total residual is 
-
-\begin{equation}
-  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
-  (\#eq:resid)
-\end{equation}
-
-What makes this process least squares is that you calculate the difference using the sum of the squared differences, termed the residual sum of sqaures (RSS).  Formally the residual sum of squares for the general form of linear regression in equation \@ref(eq:LinReg) can be written as :
-
-\begin{equation}
-  RSS(a) = \sum\limits_{i=1}^N\left(Y_i - \left[a_0 + \sum\limits_{j=1}^p a_j\cdot X_{i,j} \right]\right)  
+  S = \sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   
   (\#eq:RSS)
+\end{equation} 
+
+
+Starting with $\hat{a_1}$.
+
+\begin{align}
+  \frac{\partial S}{\partial \hat{a}_1}  = \frac{\partial}{\partial \hat{a}_1} &\sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   \\
+  = &\sum\limits_{i=1}^n 2x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right)  (\#eq:PartDerivA1) \\
+  &\sum\limits_{i=1}^n x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right) = 0 (\#eq:OLS1) \\ 
+\end{align}
+
+Because summation is just a linear operation I can take the derivative of what's inside the summation symbol without a problem.  I got equation \@ref(eq:PartDerivA1) through, effectively, the chain rule of derivatives.  Now I can set it equal to zero, ignoring any constants on the way, and this gives me equation \@ref(eq:OLS1), the first of my ordinary least squares equations.
+
+
+To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to $\hat{a}_1$, set it equal to zero and then solve for $\hat{a}_1$. 
+
+\begin{equation}
+  \hat{a}_1 = \dfrac{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)^2} 
+  (\#eq:SimpLinRegSlp)
 \end{equation}
+
+$\bar{X_1}$ and $\bar{Y}$ refer to the average input variable and average output variable, respectively.  Once I have solved for the coefficient $a_1$, I can use it to solve for the intercept, $a_0$ as follows
+
+
+\begin{equation}
+  \hat{a}_0 = \bar{Y} - \hat{a}_1\bar{X}
+  (\#eq:SimpLinRegInt)
+\end{equation}
+
+
+
+## Model Accuracy
+
+### Accuracy of the Coefficients
+
+While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation.  You can see from equations \@ref(eq:SimpLinRegSlp) and \@ref(eq:SimpLinRegInt) that the least squares method of linear regression will always give an estimate
+
+
+
+
+
 
 
 ```{r TmpPnt, fig.align='center',  echo=FALSE,message=FALSE,eval=FALSE}
@@ -120,14 +141,12 @@ gplot <- ggplot(tmp,aes(cel,frn2))  + geom_point() + labs(x="Temp (C)", y= "Temp
 gplot
 ```
 
-The formula to convert between the Celsius and Farenheit is $F = \dfrac{9}{5}\cdot C + 32$, which I can overlay on the previous plot.
 
 ```{r TmpLin, fig.align='center',  echo=FALSE,message=FALSE,eval=FALSE}
 
 gplot + geom_line(aes(cel,frn)) + geom_segment(aes(x=cel,xend=cel,y=frn2,yend=frn), color='red')
 ```
 
-The red lines from the points to the line represent the distance from the data to the idealized model, termed the **residuals**.  
 
 
 
@@ -146,14 +165,14 @@ The red lines from the points to the line represent the distance from the data t
 
  
 
-The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  So I can rewrite Equation \@ref(eq:SimpLinReg) in one of two ways to be accurate.  The first is to include an error term, $\epsilon$ by standard notation, whose values are the lengths of the individual red lines.  
+<!-- The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  So I can rewrite Equation \@ref(eq:SimpLinReg) in one of two ways to be accurate.  The first is to include an error term, $\epsilon$ by standard notation, whose values are the lengths of the individual red lines.   -->
 
-\begin{equation} 
-  Y = a_0 + a_1 \cdot X_1 + \epsilon
-  (\#eq:SimpLinRegErr)
-\end{equation} 
+<!-- \begin{equation}  -->
+<!--   Y = a_0 + a_1 \cdot X_1 + \epsilon -->
+<!--   (\#eq:SimpLinRegErr) -->
+<!-- \end{equation}  -->
 
-$\epsilon$ is a variable with the same number of values as $X$ and $Y$, as seen in the table below
+<!-- $\epsilon$ is a variable with the same number of values as $X$ and $Y$, as seen in the table below -->
 
 ```{r, echo=FALSE,eval=FALSE}
 library(knitr)
@@ -162,12 +181,7 @@ kable(head(tmp),col.names = c('Celsius', 'Farenheit (actual)', 'Farenheit (recor
 ```
 
 
-The other way or rewriting Equation \@ref(eq:SimpLinReg) is by admitting that the output variable, as well as the coefficients are just estimates of their true values, which I can represent by giving them tiny hats.
 
-\begin{equation} 
-  \hat{Y} = \hat{a}_0 + \hat{a}_1 \cdot X_1
-  (\#eq:SimpLinRegHat)
-\end{equation}
 
 When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form
 

@@ -61,13 +61,16 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> date: “2017-08-02”</a></li>
-<li class="chapter" data-level="2" data-path="lin-reg.html"><a href="lin-reg.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
-<li class="chapter" data-level="2.1" data-path="lin-reg.html"><a href="lin-reg.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
-<li class="chapter" data-level="2.2" data-path="lin-reg.html"><a href="lin-reg.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>2.2</b> Estimating the Coefficients</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="lin-reg.html"><a href="lin-reg.html#least-squares"><i class="fa fa-check"></i><b>2.2.1</b> Least squares</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> date: “2017-08-05”</a></li>
+<li class="chapter" data-level="2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html"><i class="fa fa-check"></i><b>2</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>2.2</b> Estimating the Coefficients</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#least-squares"><i class="fa fa-check"></i><b>2.2.1</b> Least squares</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="lin-reg.html"><a href="lin-reg.html#variable-parameters"><i class="fa fa-check"></i><b>2.3</b> Variable parameters</a></li>
+<li class="chapter" data-level="2.3" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#model-accuracy"><i class="fa fa-check"></i><b>2.3</b> Model Accuracy</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#accuracy-of-the-coefficients"><i class="fa fa-check"></i><b>2.3.1</b> Accuracy of the Coefficients</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#variable-parameters"><i class="fa fa-check"></i><b>2.4</b> Variable parameters</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>3</b> Literature</a></li>
 </ul>
@@ -87,13 +90,13 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="lin_reg" class="section level1">
-<h1><span class="header-section-number">2</span> Linear Regression</h1>
+<div id="sim_lin_reg" class="section level1">
+<h1><span class="header-section-number">2</span> Simple Linear Regression</h1>
 <div id="overview" class="section level2">
 <h2><span class="header-section-number">2.1</span> Overview</h2>
 <p>Almst all supervised models relate one or more input variables, <span class="math inline">\(X_1,X_2, \ldots , X_p\)</span>, to an output variable, <span class="math inline">\(Y\)</span>, which can be generalized as <span class="math display">\[Y = f(X)\]</span>. The goal of these models is to estimate the function <span class="math inline">\(f(X)\)</span> with as much accuracy as possible. In a <strong>linear regression</strong> model, the assumption is that the input variables are related to the output variables through a linear combination, i.e., addition. The term regression refers to the fact that the output variable can take on any value. This is in contrast to classification models in which the output variable can take on one of a limited set of values. Classification models will be discussed in chapter <strong>NEED CHAPTER NAME</strong>. When the model is estimating the function for only a single input variable, it is termed simple linear regression and takes the form</p>
 <span class="math display" id="eq:SimpLinReg">\[\begin{equation} 
-  Y = a_0 + a_1 \cdot X_1
+  Y = a_0 + a_1X
   \tag{2.1}
 \end{equation}\]</span>
 <p>This equation might seem somewhat familiar to you, and by just replacing the letters used for the terms and switching around the order I end up with an equation which we all have encountered in grade school as the equation for a line</p>
@@ -102,17 +105,17 @@
 \end{equation}\]</span>
 <p>Who knew we were all doing a form of linear regression so many years ago. Even though the letters used for simple linear regression are different they have the same meaning. <span class="math inline">\(a_0\)</span> is the intercept and <span class="math inline">\(a_1\)</span> is the slope of the line. However, unlike in math class where the line perfectly fit the points we were given, when dealing with data points in the real world this is almost never true. This is the reason that I keep using the word estimate. The model might be close but there should always be the expectation that it will not prefectly fit the data. Additionally, if you try to perfectly fit the data you run the risk of overfitting your model, a topic which will be discussed in chapter <strong>NEED CHAPTER NAME</strong>. So when discussing models applied to real world data the equation for simple linear regression is often written as</p>
 <span class="math display" id="eq:SimpLinRegapprox">\[\begin{equation} 
-  Y \approx a_0 + a_1 \cdot X_1
+  Y \approx a_0 + a_1 X
   \tag{2.2}
 \end{equation}\]</span>
-<p>To understand why equation <a href="lin-reg.html#eq:SimpLinRegapprox">(2.2)</a> is more appropriate than equation <a href="lin-reg.html#eq:SimpLinReg">(2.1)</a>, let’s look at some data. Plotted in the figure below are average temperature readings at JFK airport from January through July of 2017.</p>
+<p>To understand why equation <a href="sim-lin-reg.html#eq:SimpLinRegapprox">(2.2)</a> is more appropriate than equation <a href="sim-lin-reg.html#eq:SimpLinReg">(2.1)</a>, let’s look at some data. Plotted in the figure below are average temperature readings at JFK airport from January through July of 2017.</p>
 <p><img src="_main_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Using the least squares method described below I can estimate the linear regression coefficients and overlay the best fit line.</p>
 <p><img src="_main_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>You can see that there is no straight line which would hit all the points, so going back to my original assertion, even the most accurate model could only approximate the output variable given the input variables.</p>
-<p>Taking another step back, we have to remember that linear regression is a method of estimating the efficients of equation <a href="lin-reg.html#eq:SimpLinRegapprox">(2.2)</a>, which I can represent by giving the estimated coefficients and estimate output variables tiny hats.</p>
+<p>Taking another step back, we have to remember that linear regression is a method of estimating the efficients of equation <a href="sim-lin-reg.html#eq:SimpLinRegapprox">(2.2)</a>, which I can represent by giving the estimated coefficients and estimate output variables tiny hats.</p>
 <span class="math display" id="eq:SimpLinRegHat">\[\begin{equation} 
-  \hat{Y} = \hat{a}_0 + \hat{a}_1 \cdot X_1
+  \hat{Y} = \hat{a}_0 + \hat{a}_1 X
   \tag{2.3}
 \end{equation}\]</span>
 </div>
@@ -120,9 +123,9 @@
 <h2><span class="header-section-number">2.2</span> Estimating the Coefficients</h2>
 <div id="least-squares" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Least squares</h3>
-<p>The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation <a href="lin-reg.html#eq:SimpLinRegHat">(2.3)</a>. This difference between the calculated output variable and the actual output variable is called the <strong>residual</strong> which is represented by the symbol <span class="math inline">\(e\)</span>.</p>
+<p>The general idea of the least squares method is that you want to pick coefficents which minimize the differences between the given output and the output calculated from the right hand side of equation <a href="sim-lin-reg.html#eq:SimpLinRegHat">(2.3)</a>. This difference between the calculated output variable and the actual output variable is called the <strong>residual</strong> which is represented by the symbol <span class="math inline">\(e\)</span>.</p>
 <span class="math display" id="eq:resid">\[\begin{equation}
-  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
+  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1 X\right)
   \tag{2.4}
 \end{equation}\]</span>
 <p>The residuals in our previous plot are the distances from the points to the fitted line.</p>
@@ -132,48 +135,52 @@
   RSS = e_1^2 + e_2^2 + \ldots + e_n^2 = \sum\limits_{i=1}^n e_i^2   
   \tag{2.5}
 \end{equation}\]</span>
-<p><span class="math inline">\(e_i\)</span> represents the <span class="math inline">\(i\)</span>th residual and refers to the difference between the <span class="math inline">\(i\)</span>th actual output, <span class="math inline">\(Y_i\)</span>, and the <span class="math inline">\(i\)</span>th predicted output, <span class="math inline">\(\hat{Y}_i\)</span>. To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to <span class="math inline">\(\hat{a}_1\)</span>, set it equal to zero and then solve for <span class="math inline">\(\hat{a}_1\)</span>. Solving for <span class="math inline">\(a_0\)</span> then simply requires using <span class="math inline">\(\hat{a}_1\)</span> and the averages of the input and output variables.</p>
-<span class="math display" id="eq:linRegCoef">\[\begin{equation}
-\begin{split}
-  \hat{a}_1 &amp;= \dfrac{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)^2} \\
-  \hat{a}_0 &amp;= \bar{Y} - \hat{a}_1\bar{X}
-\end{split}  
-\tag{2.6}
-\end{equation}\]</span>
-<p>Each observation has its own residual, wherein the residual <span class="math inline">\(e_i\)</span> represents the <span class="math inline">\(i\)</span>th residual and refers to the difference between the <span class="math inline">\(i\)</span>th actual output, <span class="math inline">\(Y_i\)</span>, and the <span class="math inline">\(i\)</span>th predicted output, <span class="math inline">\(\hat{Y}_i = \hat{a}_{0,i} + \hat{a}_{1,i}\cdot X_i\)</span>. Remember that the <span class="math inline">\(i\)</span>th input variable <span class="math inline">\(X_i\)</span> does not get a hat, becuase it is the actual input variable and not an estimate of the input variable. So for a series of observations the total residual is</p>
-<span class="math display" id="eq:resid">\[\begin{equation}
-  e = Y-\hat{Y} = Y - \left(\hat{a}_0  + \hat{a}_1\cdot X_1\right)
-  \tag{2.4}
-\end{equation}\]</span>
-<p>What makes this process least squares is that you calculate the difference using the sum of the squared differences, termed the residual sum of sqaures (RSS). Formally the residual sum of squares for the general form of linear regression in equation <a href="lin-reg.html#eq:LinReg">(2.8)</a> can be written as :</p>
+<p><span class="math inline">\(e_i\)</span> represents the <span class="math inline">\(i\)</span>th residual and refers to the difference between the <span class="math inline">\(i\)</span>th actual output, <span class="math inline">\(Y_i\)</span>, and the <span class="math inline">\(i\)</span>th predicted output, <span class="math inline">\(\hat{Y}_i\)</span>. There are multiple methods to solve for the minimum least squares coefficients, most dealing with variations on ordinary least squares using matrix algebra. Here I am going to go through what I think is the most simple derivation as it requires only knowledge of partial derivatives and not, as most other methods require, linear algebra. If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest. Thankfully, the process hasn’t changed since then. Also since there are multiple parameters of interest, i.e., <span class="math inline">\(\hat{a_0}\)</span> and <span class="math inline">\(\hat{a_1}\)</span>, I will need to use partial derivatives. First I want to rewrite equation <a href="sim-lin-reg.html#eq:RSS">(2.5)</a> in a slightly more derivative friendly way.</p>
 <span class="math display" id="eq:RSS">\[\begin{equation}
-  RSS(a) = \sum\limits_{i=1}^N\left(Y_i - \left[a_0 + \sum\limits_{j=1}^p a_j\cdot X_{i,j} \right]\right)  
+  S = \sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   
   \tag{2.5}
 \end{equation}\]</span>
-<p>The formula to convert between the Celsius and Farenheit is <span class="math inline">\(F = \dfrac{9}{5}\cdot C + 32\)</span>, which I can overlay on the previous plot.</p>
-<p>The red lines from the points to the line represent the distance from the data to the idealized model, termed the <strong>residuals</strong>.</p>
-<p>The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error. So I can rewrite Equation <a href="lin-reg.html#eq:SimpLinReg">(2.1)</a> in one of two ways to be accurate. The first is to include an error term, <span class="math inline">\(\epsilon\)</span> by standard notation, whose values are the lengths of the individual red lines.</p>
-<span class="math display" id="eq:SimpLinRegErr">\[\begin{equation} 
-  Y = a_0 + a_1 \cdot X_1 + \epsilon
-  \tag{2.7}
+<p>Starting with <span class="math inline">\(\hat{a_1}\)</span>.</p>
+<span class="math display" id="eq:OLS1" id="eq:PartDerivA1">\[\begin{align}
+  \frac{\partial S}{\partial \hat{a}_1}  = \frac{\partial}{\partial \hat{a}_1} &amp;\sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   \\
+  = &amp;\sum\limits_{i=1}^n 2x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right)  \tag{2.6} \\
+  &amp;\sum\limits_{i=1}^n x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right) = 0 \tag{2.7} \\ 
+\end{align}\]</span>
+<p>Because summation is just a linear operation I can take the derivative of what’s inside the summation symbol without a problem. I got equation <a href="sim-lin-reg.html#eq:PartDerivA1">(2.6)</a> through, effectively, the chain rule of derivatives. Now I can set it equal to zero, ignoring any constants on the way, and this gives me equation <a href="sim-lin-reg.html#eq:OLS1">(2.7)</a>, the first of my ordinary least squares equations.</p>
+<p>To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to <span class="math inline">\(\hat{a}_1\)</span>, set it equal to zero and then solve for <span class="math inline">\(\hat{a}_1\)</span>.</p>
+<span class="math display" id="eq:SimpLinRegSlp">\[\begin{equation}
+  \hat{a}_1 = \dfrac{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)^2} 
+  \tag{2.8}
 \end{equation}\]</span>
-<p><span class="math inline">\(\epsilon\)</span> is a variable with the same number of values as <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>, as seen in the table below</p>
-<p>The other way or rewriting Equation <a href="lin-reg.html#eq:SimpLinReg">(2.1)</a> is by admitting that the output variable, as well as the coefficients are just estimates of their true values, which I can represent by giving them tiny hats.</p>
-<span class="math display" id="eq:SimpLinRegHat">\[\begin{equation} 
-  \hat{Y} = \hat{a}_0 + \hat{a}_1 \cdot X_1
-  \tag{2.3}
+<p><span class="math inline">\(\bar{X_1}\)</span> and <span class="math inline">\(\bar{Y}\)</span> refer to the average input variable and average output variable, respectively. Once I have solved for the coefficient <span class="math inline">\(a_1\)</span>, I can use it to solve for the intercept, <span class="math inline">\(a_0\)</span> as follows</p>
+<span class="math display" id="eq:SimpLinRegInt">\[\begin{equation}
+  \hat{a}_0 = \bar{Y} - \hat{a}_1\bar{X}
+  \tag{2.9}
 \end{equation}\]</span>
+</div>
+</div>
+<div id="model-accuracy" class="section level2">
+<h2><span class="header-section-number">2.3</span> Model Accuracy</h2>
+<div id="accuracy-of-the-coefficients" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Accuracy of the Coefficients</h3>
+<p>While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation. You can see from equations <a href="sim-lin-reg.html#eq:SimpLinRegSlp">(2.8)</a> and <a href="sim-lin-reg.html#eq:SimpLinRegInt">(2.9)</a> that the least squares method of linear regression will always give an estimate</p>
+<!-- The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  So I can rewrite Equation \@ref(eq:SimpLinReg) in one of two ways to be accurate.  The first is to include an error term, $\epsilon$ by standard notation, whose values are the lengths of the individual red lines.   -->
+<!-- \begin{equation}  -->
+<!--   Y = a_0 + a_1 \cdot X_1 + \epsilon -->
+<!--   (\#eq:SimpLinRegErr) -->
+<!-- \end{equation}  -->
+<!-- $\epsilon$ is a variable with the same number of values as $X$ and $Y$, as seen in the table below -->
 <p>When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form</p>
 <span class="math display" id="eq:LinReg">\[\begin{equation} 
   Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon = a_0 + \sum\limits_{i=1}^p(a_i\cdot X_i) + \epsilon
-  \tag{2.8}
+  \tag{2.10}
 \end{equation}\]</span>
 <p>Just as in simple linear regression, the <span class="math inline">\(a\)</span>’s in front of the input variables control the slope of the line, <span class="math inline">\(a_0\)</span> controls the intercept of the line. Taken together the <span class="math inline">\(a\)</span>’s are referred to as the coefficients. <span class="math inline">\(\epsilon\)</span> is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.</p>
 <p>Going back to our original simple linear regression problem involving temperature measurments. Since we know that the relationship between the input and output variables is not strictly goverened by the equation <span class="math inline">\(F = \dfrac{9}{5}\cdot C + 32\)</span>, we need a method of determining the coefficients which actually govern the relationship between our given input and outputs.</p>
 </div>
 </div>
 <div id="variable-parameters" class="section level2">
-<h2><span class="header-section-number">2.3</span> Variable parameters</h2>
+<h2><span class="header-section-number">2.4</span> Variable parameters</h2>
 <p>The values of the input and output parameters in a linear regression model are as follows. - Input Values can be any of the following - numerical values, also referred to as quantitative values - Dummy va</p>
 <p>You can label chapter and section titles using <code>{#label}</code> after them, e.g., we can reference Chapter <a href="#intro"><strong>??</strong></a>. If you do not manually label them, there will be automatic labels anyway, e.g., Chapter <a href="#methods"><strong>??</strong></a>.</p>
 <p>Figures and tables with captions will be placed in <code>figure</code> and <code>table</code> environments, respectively.</p>
