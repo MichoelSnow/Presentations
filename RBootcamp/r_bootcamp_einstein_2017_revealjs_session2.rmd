@@ -1,0 +1,40 @@
+---
+title: "R Bootcamp Einstein 2017 Session 2"
+author: Michoel Snow
+date: August 8 & 10, 2017
+output: 
+  revealjs::revealjs_presentation:
+    center: FALSE
+    theme: sky
+    transition: concave
+    css: r_bootcamp_einstein_2017_revealjs.css
+    highlight: tango
+    fig_height: 5
+    reveal_options:
+      width: '100%'
+      height: '100%'
+      margin: 0.1
+---
+```{r global_options, include=FALSE, warning=FALSE}
+options(width = 120)
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=120),width=120,tidy=TRUE)
+```
+
+```{r, echo=FALSE,include=FALSE}
+library(tidyverse)
+library(NHANES)
+```
+
+
+## Example presentation 1
+
+## Sexuality
+```{r}
+nh_tbl <- as_tibble(NHANES)
+# nh_tbl %>% filter(!is.na(SexOrientation)) %>% ggplot(aes(SexOrientation)) + geom_bar()
+nh_tbl %>% filter(!is.na(SexOrientation)) %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=Gender))
+nh_tbl %>% filter(!is.na(SexOrientation),SexOrientation!="Heterosexual") %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=Gender))
+nh_tbl %>% filter(!is.na(SexOrientation),SexOrientation!="Heterosexual") %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=SameSex))
+nh_tbl %>% filter(!is.na(SexOrientation),SexOrientation=="Heterosexual") %>% ggplot(aes(SameSex)) + geom_bar(aes(fill=Gender))
+```
+
