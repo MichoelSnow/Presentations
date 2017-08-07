@@ -82,7 +82,31 @@ If I then take the square of the residual for each observation and sum them all 
 \end{equation}  
 
 
-$e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i$.  There are multiple methods to solve for the minimum least squares coefficients, most dealing with variations on ordinary least squares using matrix algebra.  Here I am going to go through what I think is the most simple derivation as it requires only knowledge of partial derivatives and not, as most other methods require, linear algebra. If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest.  Thankfully, the process hasn't changed since then.  Also since there are multiple parameters of interest, i.e., $\hat{a_0}$ and $\hat{a_1}$, I will need to use partial derivatives.  First I want to rewrite equation \@ref(eq:RSS) in a slightly more derivative friendly way.
+$e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i$.  In the following section I am going to go, step by step, through two different methods of deriving the least squares coefficients.  I find derivations useful for two reaons.  The first is that they let you know where the equations come from.  If you are reading this book then you are looking to understand modeling on a level deeper than simply, "how do I apply a certain model to my data".  The second reason that I like derivations is that you see the assumptions made in the derivations.  This, in my opinion, is essential to being able to smartly use the different models, as you understand when the assumptions are valid and when they are not.
+
+There are multiple methods to solve for the minimum least squares coefficients, most dealing with variations on ordinary least squares using matrix algebra.  The first derivation, which I think is the simpler one, requires knowledge of partial derivatives and unlike the second derivation does not rely on linear algebra.
+
+#### Derivation 1 {-}
+
+Before I start working through the derivation, I want to go through a few simpler relationships which will come back later in the derivation.
+
+\begin{equation}
+\begin{split}
+  \frac{1}{N}\sum\limits_{i=1}^N y_i & = \bar{y} \Longleftrightarrow \sum\limits_{i=1}^N y_i & = N\bar{y} \\
+  \frac{1}{N}\sum\limits_{i=1}^N x_i & = \bar{x} \Longleftrightarrow \sum\limits_{i=1}^N x_i & = N\bar{x} \\
+\end{split}
+(\#eq:SumMn)
+\end{equation}
+
+Equation \@ref(eq:SumMn), which is relatively straightfoward but also allows me to introduce new notation.  The left side states that the sum of all values of variable divided by the number of samples, $N$, is equal to its mean value, as represented by a bar over the variable.  The right hand side simply moves the $N$ to the right hand side of the equation.
+
+\begin{align}
+  \sum\limits_{i=1}^N (x_i-\bar{x})(y_i - \bar{y}) &= \sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N \bar{x}y_i - \sum\limits_{i=1}^N \bar{y}x_i + \sum\limits_{i=1}^N\bar{x}\bar{y}\\
+  &=\sum\limits_{i=1}^N x_iy_i - \bar{x}\sum\limits_{i=1}^N y_i - \bar{y} \sum\limits_{i=1}^N x_i + \bar{x}\bar{y}\sum\limits_{i=1}^N 1
+\end{align}
+
+
+If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest.  Thankfully, the process hasn't changed since then.  Also since there are multiple parameters of interest, i.e., $\hat{a_0}$ and $\hat{a_1}$, I will need to use partial derivatives.  First I want to rewrite equation \@ref(eq:RSS) in a slightly more derivative friendly way.
 
 \begin{equation}
   S = \sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   

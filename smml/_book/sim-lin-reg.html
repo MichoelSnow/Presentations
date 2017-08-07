@@ -61,7 +61,7 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> date: “2017-08-05”</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> date: “2017-08-07”</a></li>
 <li class="chapter" data-level="2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html"><i class="fa fa-check"></i><b>2</b> Simple Linear Regression</a><ul>
 <li class="chapter" data-level="2.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
 <li class="chapter" data-level="2.2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>2.2</b> Estimating the Coefficients</a><ul>
@@ -135,7 +135,24 @@
   RSS = e_1^2 + e_2^2 + \ldots + e_n^2 = \sum\limits_{i=1}^n e_i^2   
   \tag{2.5}
 \end{equation}\]</span>
-<p><span class="math inline">\(e_i\)</span> represents the <span class="math inline">\(i\)</span>th residual and refers to the difference between the <span class="math inline">\(i\)</span>th actual output, <span class="math inline">\(Y_i\)</span>, and the <span class="math inline">\(i\)</span>th predicted output, <span class="math inline">\(\hat{Y}_i\)</span>. There are multiple methods to solve for the minimum least squares coefficients, most dealing with variations on ordinary least squares using matrix algebra. Here I am going to go through what I think is the most simple derivation as it requires only knowledge of partial derivatives and not, as most other methods require, linear algebra. If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest. Thankfully, the process hasn’t changed since then. Also since there are multiple parameters of interest, i.e., <span class="math inline">\(\hat{a_0}\)</span> and <span class="math inline">\(\hat{a_1}\)</span>, I will need to use partial derivatives. First I want to rewrite equation <a href="sim-lin-reg.html#eq:RSS">(2.5)</a> in a slightly more derivative friendly way.</p>
+<p><span class="math inline">\(e_i\)</span> represents the <span class="math inline">\(i\)</span>th residual and refers to the difference between the <span class="math inline">\(i\)</span>th actual output, <span class="math inline">\(Y_i\)</span>, and the <span class="math inline">\(i\)</span>th predicted output, <span class="math inline">\(\hat{Y}_i\)</span>. In the following section I am going to go, step by step, through two different methods of deriving the least squares coefficients. I find derivations useful for two reaons. The first is that they let you know where the equations come from. If you are reading this book then you are looking to understand modeling on a level deeper than simply, “how do I apply a certain model to my data”. The second reason that I like derivations is that you see the assumptions made in the derivations. This, in my opinion, is essential to being able to smartly use the different models, as you understand when the assumptions are valid and when they are not.</p>
+<p>There are multiple methods to solve for the minimum least squares coefficients, most dealing with variations on ordinary least squares using matrix algebra. The first derivation, which I think is the simpler one, requires knowledge of partial derivatives and unlike the second derivation does not rely on linear algebra.</p>
+<div id="derivation-1" class="section level4 unnumbered">
+<h4>Derivation 1</h4>
+<p>Before I start working through the derivation, I want to go through a few simpler relationships which will come back later in the derivation.</p>
+<span class="math display" id="eq:SumMn">\[\begin{equation}
+\begin{split}
+  \frac{1}{N}\sum\limits_{i=1}^N y_i &amp; = \bar{y} \Longleftrightarrow \sum\limits_{i=1}^N y_i &amp; = N\bar{y} \\
+  \frac{1}{N}\sum\limits_{i=1}^N x_i &amp; = \bar{x} \Longleftrightarrow \sum\limits_{i=1}^N x_i &amp; = N\bar{x} \\
+\end{split}
+\tag{2.6}
+\end{equation}\]</span>
+<p>Equation <a href="sim-lin-reg.html#eq:SumMn">(2.6)</a>, which is relatively straightfoward but also allows me to introduce new notation. The left side states that the sum of all values of variable divided by the number of samples, <span class="math inline">\(N\)</span>, is equal to its mean value, as represented by a bar over the variable. The right hand side simply moves the <span class="math inline">\(N\)</span> to the right hand side of the equation.</p>
+<span class="math display">\[\begin{align}
+  \sum\limits_{i=1}^N (x_i-\bar{x})(y_i - \bar{y}) &amp;= \sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N \bar{x}y_i - \sum\limits_{i=1}^N \bar{y}x_i + \sum\limits_{i=1}^N\bar{x}\bar{y}\\
+  &amp;=\sum\limits_{i=1}^N x_iy_i - \bar{x}\sum\limits_{i=1}^N y_i - \bar{y} \sum\limits_{i=1}^N x_i + \bar{x}\bar{y}\sum\limits_{i=1}^N 1
+\end{align}\]</span>
+<p>If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest. Thankfully, the process hasn’t changed since then. Also since there are multiple parameters of interest, i.e., <span class="math inline">\(\hat{a_0}\)</span> and <span class="math inline">\(\hat{a_1}\)</span>, I will need to use partial derivatives. First I want to rewrite equation <a href="sim-lin-reg.html#eq:RSS">(2.5)</a> in a slightly more derivative friendly way.</p>
 <span class="math display" id="eq:RSS">\[\begin{equation}
   S = \sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   
   \tag{2.5}
@@ -143,27 +160,28 @@
 <p>Starting with <span class="math inline">\(\hat{a_1}\)</span>.</p>
 <span class="math display" id="eq:OLS1" id="eq:PartDerivA1">\[\begin{align}
   \frac{\partial S}{\partial \hat{a}_1}  = \frac{\partial}{\partial \hat{a}_1} &amp;\sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   \\
-  = &amp;\sum\limits_{i=1}^n 2x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right)  \tag{2.6} \\
-  &amp;\sum\limits_{i=1}^n x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right) = 0 \tag{2.7} \\ 
+  = &amp;\sum\limits_{i=1}^n 2x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right)  \tag{2.7} \\
+  &amp;\sum\limits_{i=1}^n x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right) = 0 \tag{2.8} \\ 
 \end{align}\]</span>
-<p>Because summation is just a linear operation I can take the derivative of what’s inside the summation symbol without a problem. I got equation <a href="sim-lin-reg.html#eq:PartDerivA1">(2.6)</a> through, effectively, the chain rule of derivatives. Now I can set it equal to zero, ignoring any constants on the way, and this gives me equation <a href="sim-lin-reg.html#eq:OLS1">(2.7)</a>, the first of my ordinary least squares equations.</p>
+<p>Because summation is just a linear operation I can take the derivative of what’s inside the summation symbol without a problem. I got equation <a href="sim-lin-reg.html#eq:PartDerivA1">(2.7)</a> through, effectively, the chain rule of derivatives. Now I can set it equal to zero, ignoring any constants on the way, and this gives me equation <a href="sim-lin-reg.html#eq:OLS1">(2.8)</a>, the first of my ordinary least squares equations.</p>
 <p>To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to <span class="math inline">\(\hat{a}_1\)</span>, set it equal to zero and then solve for <span class="math inline">\(\hat{a}_1\)</span>.</p>
 <span class="math display" id="eq:SimpLinRegSlp">\[\begin{equation}
   \hat{a}_1 = \dfrac{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)^2} 
-  \tag{2.8}
+  \tag{2.9}
 \end{equation}\]</span>
 <p><span class="math inline">\(\bar{X_1}\)</span> and <span class="math inline">\(\bar{Y}\)</span> refer to the average input variable and average output variable, respectively. Once I have solved for the coefficient <span class="math inline">\(a_1\)</span>, I can use it to solve for the intercept, <span class="math inline">\(a_0\)</span> as follows</p>
 <span class="math display" id="eq:SimpLinRegInt">\[\begin{equation}
   \hat{a}_0 = \bar{Y} - \hat{a}_1\bar{X}
-  \tag{2.9}
+  \tag{2.10}
 \end{equation}\]</span>
+</div>
 </div>
 </div>
 <div id="model-accuracy" class="section level2">
 <h2><span class="header-section-number">2.3</span> Model Accuracy</h2>
 <div id="accuracy-of-the-coefficients" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Accuracy of the Coefficients</h3>
-<p>While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation. You can see from equations <a href="sim-lin-reg.html#eq:SimpLinRegSlp">(2.8)</a> and <a href="sim-lin-reg.html#eq:SimpLinRegInt">(2.9)</a> that the least squares method of linear regression will always give an estimate</p>
+<p>While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation. You can see from equations <a href="sim-lin-reg.html#eq:SimpLinRegSlp">(2.9)</a> and <a href="sim-lin-reg.html#eq:SimpLinRegInt">(2.10)</a> that the least squares method of linear regression will always give an estimate</p>
 <!-- The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  So I can rewrite Equation \@ref(eq:SimpLinReg) in one of two ways to be accurate.  The first is to include an error term, $\epsilon$ by standard notation, whose values are the lengths of the individual red lines.   -->
 <!-- \begin{equation}  -->
 <!--   Y = a_0 + a_1 \cdot X_1 + \epsilon -->
@@ -173,7 +191,7 @@
 <p>When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form</p>
 <span class="math display" id="eq:LinReg">\[\begin{equation} 
   Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon = a_0 + \sum\limits_{i=1}^p(a_i\cdot X_i) + \epsilon
-  \tag{2.10}
+  \tag{2.11}
 \end{equation}\]</span>
 <p>Just as in simple linear regression, the <span class="math inline">\(a\)</span>’s in front of the input variables control the slope of the line, <span class="math inline">\(a_0\)</span> controls the intercept of the line. Taken together the <span class="math inline">\(a\)</span>’s are referred to as the coefficients. <span class="math inline">\(\epsilon\)</span> is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.</p>
 <p>Going back to our original simple linear regression problem involving temperature measurments. Since we know that the relationship between the input and output variables is not strictly goverened by the equation <span class="math inline">\(F = \dfrac{9}{5}\cdot C + 32\)</span>, we need a method of determining the coefficients which actually govern the relationship between our given input and outputs.</p>
