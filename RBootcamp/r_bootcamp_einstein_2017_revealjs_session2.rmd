@@ -28,13 +28,25 @@ library(NHANES)
 
 ## Example presentation 1
 
-## Sexuality
+## NHANES Sexuality {.scrollable}
+
+Correlation does not imply causation!
+```{r, tidy =FALSE}
+nh_tbl <- as_tibble(NHANES) %>% filter(!is.na(SexOrientation))
+nh_tbl %>% ggplot(aes(SexOrientation)) + geom_bar(fill="blue")
+nh_tbl %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=Gender),position="dodge")
+nh_tbl %>% filter(SexOrientation!="Heterosexual") %>% 
+  ggplot(aes(SexOrientation,fill=Gender)) + geom_bar(position="dodge")
+nh_tbl %>% filter(SexOrientation!="Heterosexual") %>% 
+  ggplot(aes(SexOrientation,fill=SameSex)) + geom_bar(position="dodge")
+nh_tbl %>% filter(!is.na(SameSex), SexOrientation=="Heterosexual",SameSex == "Yes") %>% 
+  ggplot(aes(Gender,fill=Gender)) + geom_bar() + 
+  labs(title = "Identify as Heterosexual with Same Sex Experience") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
 ```{r}
-nh_tbl <- as_tibble(NHANES)
-# nh_tbl %>% filter(!is.na(SexOrientation)) %>% ggplot(aes(SexOrientation)) + geom_bar()
-nh_tbl %>% filter(!is.na(SexOrientation)) %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=Gender))
-nh_tbl %>% filter(!is.na(SexOrientation),SexOrientation!="Heterosexual") %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=Gender))
-nh_tbl %>% filter(!is.na(SexOrientation),SexOrientation!="Heterosexual") %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=SameSex))
-nh_tbl %>% filter(!is.na(SexOrientation),SexOrientation=="Heterosexual") %>% ggplot(aes(SameSex)) + geom_bar(aes(fill=Gender))
+
 ```
 
