@@ -23,30 +23,74 @@ knitr::opts_chunk$set(tidy.opts=list(width.cutoff=120),width=120,tidy=TRUE)
 ```{r, echo=FALSE,include=FALSE}
 library(tidyverse)
 library(NHANES)
+library(lubridate)
 ```
 
 
-## Example presentation 1
+## Example presentations
 
-## NHANES Sexuality {.scrollable}
+## NHANES Sex & Drugs {.scrollable}
 
 Correlation does not imply causation!
 ```{r, tidy =FALSE}
-nh_tbl <- as_tibble(NHANES) %>% filter(!is.na(SexOrientation))
-nh_tbl %>% ggplot(aes(SexOrientation)) + geom_bar(fill="blue")
-nh_tbl %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=Gender),position="dodge")
-nh_tbl %>% filter(SexOrientation!="Heterosexual") %>% 
+nh_tbl <- as_tibble(NHANES)
+nh_tbl_sex <- nh_tbl %>% filter(!is.na(SexOrientation))
+nh_tbl_sex %>% ggplot(aes(SexOrientation)) + geom_bar(fill="blue")
+nh_tbl_sex %>% ggplot(aes(SexOrientation)) + geom_bar(aes(fill=Gender),position="dodge")
+nh_tbl_sex %>% filter(SexOrientation!="Heterosexual") %>% 
   ggplot(aes(SexOrientation,fill=Gender)) + geom_bar(position="dodge")
-nh_tbl %>% filter(SexOrientation!="Heterosexual") %>% 
+nh_tbl_sex %>% filter(SexOrientation!="Heterosexual") %>% 
   ggplot(aes(SexOrientation,fill=SameSex)) + geom_bar(position="dodge")
-nh_tbl %>% filter(!is.na(SameSex), SexOrientation=="Heterosexual",SameSex == "Yes") %>% 
+nh_tbl_sex %>% filter(!is.na(SameSex), SexOrientation=="Heterosexual",SameSex == "Yes") %>% 
   ggplot(aes(Gender,fill=Gender)) + geom_bar() + 
   labs(title = "Identify as Heterosexual with Same Sex Experience") +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
 
-```{r}
+```{r, warning=FALSE, tidy=FALSE}
+nh_tbl_mj <- nh_tbl %>% filter(!is.na(Marijuana)) 
+nh_tbl_mj %>% ggplot(aes(Age,fill=Marijuana)) + geom_bar(position="dodge")
+nh_tbl_mj %>% ggplot(aes(Age,fill=RegularMarij)) + geom_bar(position="dodge")
+nh_tbl_mj %>% filter(!is.na(HardDrugs)) %>% filter(HardDrugs=="Yes") %>% ggplot(aes(Marijuana)) + geom_bar(fill = "Blue") + 
+  labs(title = "Participants who have tried cocaine, crack cocaine, heroin or methamphetamine") +
+  theme(plot.title = element_text(hjust = 0.5))
+nh_tbl_mj %>% filter(!is.na(HardDrugs)) %>% filter(Marijuana=="Yes") %>% ggplot(aes(HardDrugs)) + geom_bar(fill = "Blue") + 
+  labs(title = "Participants who have tried marijuana") +
+  theme(plot.title = element_text(hjust = 0.5))
 
 ```
 
+## Citibike {.scrollable}
+
+```{r}
+column_names <- c('trip_duration','start_time', 'stop_time', 'start_id', 'start_name', 'end_id', 'end_name', 'bike_id', 'user_type', 'birth_year', 'gender')
+citi_bike <- read_csv('./data/201701-citibike-tripdata.csv',col_names = column_names, skip=1)
+```
+
+```{r}
+citi_bike %>% mutate(start_hr = hour(start_time)) %>% 
+  ggplot(aes(start_hr)) + geom_histogram(bins=24,fill="blue",color="black")
+citi_bike %>% mutate(day_of_week = wday(start_time)) %>% 
+  ggplot(aes(day_of_week)) + geom_histogram(bins=7,fill="blue",color="black")
+```
+
+```{r}
+citi_bike %>% mutate(travel_time = as.double(stop_time-start_time)) %>% 
+  ggplot(aes(travel_time)) + geom_histogram(bins=30)
+citi_bike %>% mutate(travel_time = as.double(stop_time-start_time)) %>% filter(travel_time<80) %>% 
+  ggplot(aes(travel_time)) + geom_histogram(stat = "density")
+```
+
+```{r}
+citi_bike %>% mutate(travel_time = as.double(stop_time-start_time), start_min = min(start_time)) %>% filter(travel_time<80) %>% 
+  ggplot(aes(start_time,travel_time)) + geom_jitter()
+```
+
+## 
+
+aa <- read_xpt('./data/LLCP2015.XPT')
+cc <- as_tibble(aa)
+cc <- cc %>% select(-c(SEQNO,`_PSU`))
+cc <- cc %>% select(-c(DISPCODE,IDATE,CTELENUM,PVTRESD1,COLGHOUS,STATERES,CELLFON3,CTELNUM1,CELLFON2,LANDLINE,CSTATE,PVTRESD2,CCLGHOUS,RENTHOM1,NUMHHOL2,NUMPHON2,CPDEMO1,INTERNET,ARTHDIS2,ARTHSOCL,DIABEDU,PAINACT2,CAREGIV1,CRGVREL1,CRGVLNG1,CRGVHRS1,CRGVPRB1,CRGVPERS,CRGVHOUS,CRGVMST2,CRGVEXPT,SCNTMNY1,SCNTMEL1,SCNTPAID,SCNTLPAD,EMTSUPRT,LSATISFY,QSTVER,EXACTOT1,EXACTOT2,MSCODE,`_STSTR`,`_STRWT`,`_RAWRAKE`,`_WT2RAKE`,`_CLLCPWT`,`_DUALUSE`,`_DUALCOR`,`_LLCPWT`,`_RFHLTH`,`_HCVU651`,`_RFHYPE5`,`_CHOLCHK`,`_RFCHOL`,`_MICHD`,`_LTASTH1`:`_AIDTST3`))
+write_csv(cc,'./data/BRFSS.csv')
