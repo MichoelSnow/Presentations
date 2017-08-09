@@ -88,9 +88,62 @@ citi_bike %>% mutate(travel_time = as.double(stop_time-start_time), start_min = 
 ```
 
 ## 
+```{r}
+brfss <- read_csv('./data/BRFSS.csv')
+brfss <- brfss %>% rename(STATE=`_STATE`)
+brfss <- brfss %>% select(-c(POORHLTH,CHECKUP1))
+```
 
-aa <- read_xpt('./data/LLCP2015.XPT')
-cc <- as_tibble(aa)
-cc <- cc %>% select(-c(SEQNO,`_PSU`))
-cc <- cc %>% select(-c(DISPCODE,IDATE,CTELENUM,PVTRESD1,COLGHOUS,STATERES,CELLFON3,CTELNUM1,CELLFON2,LANDLINE,CSTATE,PVTRESD2,CCLGHOUS,RENTHOM1,NUMHHOL2,NUMPHON2,CPDEMO1,INTERNET,ARTHDIS2,ARTHSOCL,DIABEDU,PAINACT2,CAREGIV1,CRGVREL1,CRGVLNG1,CRGVHRS1,CRGVPRB1,CRGVPERS,CRGVHOUS,CRGVMST2,CRGVEXPT,SCNTMNY1,SCNTMEL1,SCNTPAID,SCNTLPAD,EMTSUPRT,LSATISFY,QSTVER,EXACTOT1,EXACTOT2,MSCODE,`_STSTR`,`_STRWT`,`_RAWRAKE`,`_WT2RAKE`,`_CLLCPWT`,`_DUALUSE`,`_DUALCOR`,`_LLCPWT`,`_RFHLTH`,`_HCVU651`,`_RFHYPE5`,`_CHOLCHK`,`_RFCHOL`,`_MICHD`,`_LTASTH1`:`_AIDTST3`))
-write_csv(cc,'./data/BRFSS.csv')
+```{r}
+brfss$CVDINFR4 <- recode(brfss$CVDINFR4,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$HLTHPLN1 <- recode(brfss$HLTHPLN1,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$GENHLTH <- recode(brfss$GENHLTH,`1`= 'Excellent',`2` = 'Very Good', `3` = "Good", `4` = "Fair", `5` = "Poor",.default = NA_character_)
+brfss$PERSDOC2 <- recode(brfss$PERSDOC2,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$MEDCOST <- recode(brfss$MEDCOST,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$BPHIGH4 <- recode(brfss$BPHIGH4,`1`= 'YES',`3` = 'NO', .default = NA_character_)
+brfss$BPMEDS <- recode(brfss$BPMEDS,`1`= 'YES',`3` = 'NO', .default = NA_character_)
+brfss$BLOODCHO <- recode(brfss$BLOODCHO,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$TOLDHI2 <- recode(brfss$TOLDHI2,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$CVDCRHD4 <- recode(brfss$CVDCRHD4,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$CVDSTRK3 <- recode(brfss$CVDSTRK3,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$ASTHMA3 <- recode(brfss$ASTHMA3,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$ASTHNOW <- recode(brfss$ASTHNOW,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$CHCSCNCR <- recode(brfss$CHCSCNCR,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$CHCOCNCR <- recode(brfss$CHCOCNCR,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$CHCCOPD1 <- recode(brfss$CHCCOPD1,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$HAVARTH3 <- recode(brfss$HAVARTH3,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$ADDEPEV2 <- recode(brfss$ADDEPEV2,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$CHCKIDNY <- recode(brfss$CHCKIDNY,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$DIABETE3 <- recode(brfss$DIABETE3,`1`= 'YES',`3` = 'NO', .default = NA_character_)
+brfss$DIABAGE2[brfss$DIABAGE2>=98] <- NA
+brfss$SEX <- recode(brfss$SEX,`1`= 'MALE',`2` = 'FEMALE', .default = NA_character_)
+brfss$MARITAL <- recode(brfss$MARITAL,`1`= 'MARRIED',`2` = 'DIVORCED', `3` = 'WIDOWED', `4` = 'SEPARATED', `5` = 'NEVER MARRIED', `6` = 'UNMARRIED COUPLE', .default = NA_character_)
+brfss$CHCKIDNY <- recode(brfss$CHCKIDNY,`1`= 'NO SCHOOL',`2` = 'ELEMENTARY', `3`='SOME HIGH SCHOOL'
+                         , .default = NA_character_)
+
+
+
+```
+
+
+```{r}
+brfss %>% filter(CVDINFR4==1) %>% group_by(STATE) %>% summarise(MI = sum(CVDINFR4), count = n()) %>% ggplot(aes(STATE,MI)) +
+  geom_point()
+
+```
+
+
+```{r}
+brfss %>% filter(!is.na(HLTHPLN1),!is.na(CVDINFR4)) %>% ggplot(aes(HLTHPLN1)) + 
+  geom_bar(aes(fill=CVDINFR4),position = "dodge")
+brfss %>% filter(!is.na(HLTHPLN1),!is.na(CVDINFR4)) %>% ggplot(aes(CVDINFR4,fill=HLTHPLN1)) + 
+  geom_bar(position = "dodge")
+
+```
+
+
+<!-- aa <- read_xpt('./data/LLCP2015.XPT') -->
+<!-- cc <- as_tibble(aa) -->
+<!-- cc <- cc %>% select(-c(SEQNO,`_PSU`)) -->
+<!-- cc <- cc %>% select(-c(DISPCODE,IDATE,CTELENUM,PVTRESD1,COLGHOUS,STATERES,CELLFON3,CTELNUM1,CELLFON2,LANDLINE,CSTATE,PVTRESD2,CCLGHOUS,RENTHOM1,NUMHHOL2,NUMPHON2,CPDEMO1,INTERNET,ARTHDIS2,ARTHSOCL,DIABEDU,PAINACT2,CAREGIV1,CRGVREL1,CRGVLNG1,CRGVHRS1,CRGVPRB1,CRGVPERS,CRGVHOUS,CRGVMST2,CRGVEXPT,SCNTMNY1,SCNTMEL1,SCNTPAID,SCNTLPAD,EMTSUPRT,LSATISFY,QSTVER,EXACTOT1,EXACTOT2,MSCODE,`_STSTR`,`_STRWT`,`_RAWRAKE`,`_WT2RAKE`,`_CLLCPWT`,`_DUALUSE`,`_DUALCOR`,`_LLCPWT`,`_RFHLTH`,`_HCVU651`,`_RFHYPE5`,`_CHOLCHK`,`_RFCHOL`,`_MICHD`,`_LTASTH1`:`_AIDTST3`)) -->
+<!-- write_csv(cc,'./data/BRFSS.csv') -->
