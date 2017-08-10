@@ -61,46 +61,27 @@ nh_tbl_mj %>% filter(!is.na(HardDrugs)) %>% filter(Marijuana=="Yes") %>% ggplot(
 
 ```
 
-## Citibike {.scrollable}
 
-```{r}
-column_names <- c('trip_duration','start_time', 'stop_time', 'start_id', 'start_name', 'end_id', 'end_name', 'bike_id', 'user_type', 'birth_year', 'gender')
-citi_bike <- read_csv('./data/201701-citibike-tripdata.csv',col_names = column_names, skip=1)
-```
 
-```{r}
-citi_bike %>% mutate(start_hr = hour(start_time)) %>% 
-  ggplot(aes(start_hr)) + geom_histogram(bins=24,fill="blue",color="black")
-citi_bike %>% mutate(day_of_week = wday(start_time)) %>% 
-  ggplot(aes(day_of_week)) + geom_histogram(bins=7,fill="blue",color="black")
-```
+##  BRFSS {.scrollable}
 
-```{r}
-citi_bike %>% mutate(travel_time = as.double(stop_time-start_time)) %>% 
-  ggplot(aes(travel_time)) + geom_histogram(bins=30)
-citi_bike %>% mutate(travel_time = as.double(stop_time-start_time)) %>% filter(travel_time<80) %>% 
-  ggplot(aes(travel_time)) + geom_histogram(stat = "density")
-```
+Most of the time there is a whole lot of nothing
 
-```{r}
-citi_bike %>% mutate(travel_time = as.double(stop_time-start_time), start_min = min(start_time)) %>% filter(travel_time<80) %>% 
-  ggplot(aes(start_time,travel_time)) + geom_jitter()
-```
-
-## 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE,}
 brfss <- read_csv('./data/BRFSS.csv')
 
 brfss2 <- brfss[1:1000,]
 brfss <- brfss %>% select(-c(POORHLTH,CHECKUP1,CHOLCHK,USENOW3,EXRACT11,EXEROFT1,EXERHMM1,EXRACT21,EXEROFT2,EXERHMM2,STRENGTH,LMTJOIN3,JOINPAIN,FLSHTMY2,IMFVPLAC,HIVTSTD3,WHRTST10,BLDSUGAR, FEETCHK2, FEETCHK, EYEEXAM, DIABEYE, QLMENTL2:QLHLTH2, VIDFCLT2, VIREDIF3, VIPRFVS2))
 ```
 
-```{r, eval=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 brfss$CVDINFR4 <- recode(brfss$CVDINFR4,`1`= 'YES',`2` = 'NO', .default = NA_character_)
 brfss$HLTHPLN1 <- recode(brfss$HLTHPLN1,`1`= 'YES',`2` = 'NO', .default = NA_character_)
 brfss$GENHLTH <- recode(brfss$GENHLTH,`1`= 'EXCELLENT',`2` = 'VERY GOOD', `3` = "GOOD", `4` = "FAIR", `5` = "POOR",.default = NA_character_)
 brfss$PHYSHLTH[brfss$PHYSHLTH==77 | brfss$PHYSHLTH==99] <- NA
 brfss$PHYSHLTH[brfss$PHYSHLTH==88] <- 0
+brfss$MENTHLTH[brfss$MENTHLTH==77 | brfss$MENTHLTH==99] <- NA
+brfss$MENTHLTH[brfss$MENTHLTH==88] <- 0
 brfss$PERSDOC2 <- recode(brfss$PERSDOC2,`1`= 'YES',`2` = 'YES', `3` = 'NO', .default = NA_character_)
 brfss$MEDCOST <- recode(brfss$MEDCOST,`1`= 'YES',`2` = 'NO', .default = NA_character_)
 brfss$BPHIGH4 <- recode(brfss$BPHIGH4,`1`= 'YES',`3` = 'NO', .default = NA_character_)
@@ -243,33 +224,53 @@ brfss$DOCTDIAB[brfss$DOCTDIAB > 76] <- NA
 brfss$CHKHEMO3[brfss$CHKHEMO3 == 88 & !is.na(brfss$CHKHEMO3)] <- 0
 brfss$CHKHEMO3[brfss$CHKHEMO3 > 76] <- NA
 
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+
 
 
 brfss <- brfss %>% rename(STATE=`_STATE`,WEIGHT2_LB = WEIGHT2, HEIGHT_CM = HEIGHT3)
 ```
 
 
-```{r}
-brfss %>% filter(CVDINFR4==1) %>% group_by(STATE) %>% summarise(MI = sum(CVDINFR4), count = n()) %>% ggplot(aes(STATE,MI)) +
+```{r, message=FALSE, warning=FALSE}
+brfss <- read_csv('./data/BRFSS_clean.csv')
+brfss %>% ggplot(aes(IMONTH,AVEDRNK2)) + geom_jitter()
+```
+
+
+```{r, message=FALSE, warning=FALSE, tidy=FALSE}
+brfss %>% filter(CVDINFR4=='YES') %>% 
+  group_by(STATE) %>% summarise(count = n()) %>% 
+  ggplot(aes(STATE,count)) +
+  geom_point()
+brfss %>% filter(!is.na(AVEDRNK2)) %>% 
+  group_by(STATE) %>% 
+  summarise(mean_drinks = mean(AVEDRNK2),count = n()) %>% 
+  ggplot(aes(STATE,mean_drinks)) +
+  geom_point()
+brfss %>% filter(!is.na(FRUITJU1),!is.na(WEIGHT2_LB)) %>% 
+  ggplot(aes(FRUITJU1,WEIGHT2_LB)) +
+  geom_point()
+brfss %>% filter(!is.na(FRUIT1),!is.na(WEIGHT2_LB)) %>% 
+  ggplot(aes(FRUIT1,WEIGHT2_LB)) +
+  geom_point()
+brfss %>% filter(!is.na(FRUIT1)) %>% group_by(STATE) %>% 
+  summarise(mean_fruit = mean(FRUIT1),count = n()) %>% 
+  ggplot(aes(STATE,mean_fruit)) +
+  geom_point()
+brfss %>% filter(!is.na(FRUITJU1)) %>% group_by(STATE) %>% 
+  summarise(mean_fruit_juice = mean(FRUITJU1),count = n()) %>% 
+  ggplot(aes(STATE,mean_fruit_juice)) +
   geom_point()
 
 ```
 
 
-```{r}
-brfss %>% filter(!is.na(HLTHPLN1),!is.na(CVDINFR4)) %>% ggplot(aes(HLTHPLN1)) + 
+```{r, message=FALSE, warning=FALSE, tidy=FALSE}
+brfss %>% filter(!is.na(HLTHPLN1),!is.na(CVDINFR4)) %>% 
+  ggplot(aes(HLTHPLN1)) + 
   geom_bar(aes(fill=CVDINFR4),position = "dodge")
-brfss %>% filter(!is.na(HLTHPLN1),!is.na(CVDINFR4)) %>% ggplot(aes(CVDINFR4,fill=HLTHPLN1)) + 
+brfss %>% filter(!is.na(HLTHPLN1),!is.na(CVDINFR4)) %>% 
+  ggplot(aes(CVDINFR4,fill=HLTHPLN1)) + 
   geom_bar(position = "dodge")
 
 ```
