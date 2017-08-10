@@ -88,17 +88,20 @@ citi_bike %>% mutate(travel_time = as.double(stop_time-start_time), start_min = 
 ```
 
 ## 
-```{r}
+```{r, eval=FALSE}
 brfss <- read_csv('./data/BRFSS.csv')
-brfss <- brfss %>% rename(STATE=`_STATE`)
-brfss <- brfss %>% select(-c(POORHLTH,CHECKUP1))
+
+brfss2 <- brfss[1:1000,]
+brfss <- brfss %>% select(-c(POORHLTH,CHECKUP1,CHOLCHK,USENOW3,EXRACT11,EXEROFT1,EXERHMM1,EXRACT21,EXEROFT2,EXERHMM2,STRENGTH,LMTJOIN3,JOINPAIN,FLSHTMY2,IMFVPLAC,HIVTSTD3,WHRTST10,BLDSUGAR, FEETCHK2, FEETCHK, EYEEXAM, DIABEYE, QLMENTL2:QLHLTH2, VIDFCLT2, VIREDIF3, VIPRFVS2))
 ```
 
-```{r}
+```{r, eval=FALSE}
 brfss$CVDINFR4 <- recode(brfss$CVDINFR4,`1`= 'YES',`2` = 'NO', .default = NA_character_)
 brfss$HLTHPLN1 <- recode(brfss$HLTHPLN1,`1`= 'YES',`2` = 'NO', .default = NA_character_)
-brfss$GENHLTH <- recode(brfss$GENHLTH,`1`= 'Excellent',`2` = 'Very Good', `3` = "Good", `4` = "Fair", `5` = "Poor",.default = NA_character_)
-brfss$PERSDOC2 <- recode(brfss$PERSDOC2,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$GENHLTH <- recode(brfss$GENHLTH,`1`= 'EXCELLENT',`2` = 'VERY GOOD', `3` = "GOOD", `4` = "FAIR", `5` = "POOR",.default = NA_character_)
+brfss$PHYSHLTH[brfss$PHYSHLTH==77 | brfss$PHYSHLTH==99] <- NA
+brfss$PHYSHLTH[brfss$PHYSHLTH==88] <- 0
+brfss$PERSDOC2 <- recode(brfss$PERSDOC2,`1`= 'YES',`2` = 'YES', `3` = 'NO', .default = NA_character_)
 brfss$MEDCOST <- recode(brfss$MEDCOST,`1`= 'YES',`2` = 'NO', .default = NA_character_)
 brfss$BPHIGH4 <- recode(brfss$BPHIGH4,`1`= 'YES',`3` = 'NO', .default = NA_character_)
 brfss$BPMEDS <- recode(brfss$BPMEDS,`1`= 'YES',`3` = 'NO', .default = NA_character_)
@@ -118,11 +121,141 @@ brfss$DIABETE3 <- recode(brfss$DIABETE3,`1`= 'YES',`3` = 'NO', .default = NA_cha
 brfss$DIABAGE2[brfss$DIABAGE2>=98] <- NA
 brfss$SEX <- recode(brfss$SEX,`1`= 'MALE',`2` = 'FEMALE', .default = NA_character_)
 brfss$MARITAL <- recode(brfss$MARITAL,`1`= 'MARRIED',`2` = 'DIVORCED', `3` = 'WIDOWED', `4` = 'SEPARATED', `5` = 'NEVER MARRIED', `6` = 'UNMARRIED COUPLE', .default = NA_character_)
-brfss$CHCKIDNY <- recode(brfss$CHCKIDNY,`1`= 'NO SCHOOL',`2` = 'ELEMENTARY', `3`='SOME HIGH SCHOOL'
-                         , .default = NA_character_)
+brfss$EDUCA <- recode(brfss$EDUCA,`1`= 'NO SCHOOL',`2` = 'ELEMENTARY', `3`='SOME HIGH SCHOOL',`4`='HIGH SCHOOL',`5`= 'SOME COLLEGE', `6` = 'COLLEGE', .default = NA_character_)
+brfss$VETERAN3 <- recode(brfss$VETERAN3,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$EMPLOY1 <- recode(brfss$EMPLOY1,`1`= 'YES',`2` = 'YES', `3`='NO', `4` = 'NO', `5`='HOMEMAKER', `6`='STUDENT', `7` = 'RETIRED', .default = NA_character_)
+brfss$CHILDREN[brfss$CHILDREN==99] <- NA
+brfss$CHILDREN[brfss$CHILDREN==88] <- 0
+brfss$INCOME2 <- recode(brfss$INCOME2,`1`= 'LESS THAN 10,000',`2` = 'LESS THAN 15,000',`3` = 'LESS THAN 20,000', `4` = 'LESS THAN 25,000', `5` = 'LESS THAN 35,000', `6` = 'LESS THAN 50,000', `7` = 'LESS THAN 75,000', `8` = '75,000 OR MORE', .default = NA_character_)
+brfss$WEIGHT2[brfss$WEIGHT2>=9999] <- NA
+brfss$WEIGHT2[brfss$WEIGHT2>=9000 & !is.na(brfss$WEIGHT2)] <- (brfss$WEIGHT2[brfss$WEIGHT2>=9000 & !is.na(brfss$WEIGHT2)]-9000) * 2.2
+brfss$WEIGHT2[brfss$WEIGHT2>=1000] <- NA
+
+brfss$HEIGHT3[brfss$HEIGHT3<200] <-  NA
+brfss$HEIGHT3[brfss$HEIGHT3>=200 & brfss$HEIGHT3<=711 & !is.na(brfss$HEIGHT3)] <- brfss$HEIGHT3[brfss$HEIGHT3>=200 & brfss$HEIGHT3<=711 & !is.na(brfss$HEIGHT3)] %/% 100 * 12 * 2.54 + brfss$HEIGHT3[brfss$HEIGHT3>=200 & brfss$HEIGHT3<=711 & !is.na(brfss$HEIGHT3)] %% 100 * 2.54
+brfss$HEIGHT3[brfss$HEIGHT3>=9000 & brfss$HEIGHT3<=9998 & !is.na(brfss$HEIGHT3)] <- 
+  brfss$HEIGHT3[brfss$HEIGHT3>=9000 & brfss$HEIGHT3<=9998 & !is.na(brfss$HEIGHT3)] - 9000
+brfss$HEIGHT3[brfss$HEIGHT3>=1000] <-  NA
+
+brfss$PREGNANT <- recode(brfss$PREGNANT,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$QLACTLM2 <- recode(brfss$QLACTLM2,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$USEEQUIP <- recode(brfss$USEEQUIP,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$BLIND <- recode(brfss$BLIND,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$DIFFALON <- recode(brfss$DIFFALON,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$SMOKE100 <- recode(brfss$SMOKE100,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$SMOKDAY2 <- recode(brfss$SMOKDAY2,`1`= 'EVERY DAY',`2` = 'SOME DAYS', `3` = 'NOT AT ALL', .default = NA_character_)
+brfss$STOPSMK2 <- recode(brfss$STOPSMK2,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$LASTSMK2 <- recode(brfss$LASTSMK2,`1`= 'LESS THAN 1 MONTH',`2` = '1 TO 3 MONTHS', `3` = '3 TO 6 MONTHS', `4` = '6 TO 12 MONTHS', `5` = '1 TO 5 YEARS', `6` = '5 TO 10 YEARS', `7` = '10 YEARS OR MORE', `8` = 'NEVER SMOKED REGULARLY', .default = NA_character_)
+
+brfss$ALCDAY5[brfss$ALCDAY5 > 100 & brfss$ALCDAY5< 200 & !is.na(brfss$ALCDAY5)] <- 
+  (brfss$ALCDAY5[brfss$ALCDAY5 > 100 & brfss$ALCDAY5< 200 & !is.na(brfss$ALCDAY5)]- 100)*30/7
+brfss$ALCDAY5[brfss$ALCDAY5 > 200 & brfss$ALCDAY5< 300 & !is.na(brfss$ALCDAY5)] <- 
+  brfss$ALCDAY5[brfss$ALCDAY5 > 200 & brfss$ALCDAY5< 300 & !is.na(brfss$ALCDAY5)]- 200
+brfss$ALCDAY5[brfss$ALCDAY5 > 300] <- NA
+brfss$ALCDAY5 <- brfss$ALCDAY5%/%1
+
+brfss$AVEDRNK2[brfss$AVEDRNK2 == 88 & !is.na(brfss$AVEDRNK2)] <- 0
+brfss$AVEDRNK2[brfss$AVEDRNK2 > 76] <- NA
+
+brfss$DRNK3GE5[brfss$DRNK3GE5 == 88 & !is.na(brfss$DRNK3GE5)] <- 0
+brfss$DRNK3GE5[brfss$DRNK3GE5 > 76] <- NA
+
+brfss$MAXDRNKS[brfss$MAXDRNKS > 76] <- NA
+
+brfss$FRUITJU1[brfss$FRUITJU1 > 100 & brfss$FRUITJU1< 200 & !is.na(brfss$FRUITJU1)] <- 
+  (brfss$FRUITJU1[brfss$FRUITJU1 > 100 & brfss$FRUITJU1< 200 & !is.na(brfss$FRUITJU1)]- 100)*30
+brfss$FRUITJU1[brfss$FRUITJU1 > 200 & brfss$FRUITJU1< 300 & !is.na(brfss$FRUITJU1)] <- 
+  (brfss$FRUITJU1[brfss$FRUITJU1 > 200 & brfss$FRUITJU1< 300 & !is.na(brfss$FRUITJU1)]- 200)*30/7
+brfss$FRUITJU1[brfss$FRUITJU1 > 300 & brfss$FRUITJU1< 400 & !is.na(brfss$FRUITJU1)] <- 
+  brfss$FRUITJU1[brfss$FRUITJU1 > 300 & brfss$FRUITJU1< 400 & !is.na(brfss$FRUITJU1)]- 300
+brfss$FRUITJU1[(brfss$FRUITJU1 == 300 | brfss$FRUITJU1 == 555) & is.na(brfss$FRUITJU1)] <- 0
+brfss$FRUITJU1[brfss$FRUITJU1 > 300] <- NA
+brfss$FRUITJU1 <- brfss$FRUITJU1%/%1
+
+
+brfss$FRUIT1[brfss$FRUIT1 > 100 & brfss$FRUIT1< 200 & !is.na(brfss$FRUIT1)] <- 
+  (brfss$FRUIT1[brfss$FRUIT1 > 100 & brfss$FRUIT1< 200 & !is.na(brfss$FRUIT1)]- 100)*30
+brfss$FRUIT1[brfss$FRUIT1 > 200 & brfss$FRUIT1< 300 & !is.na(brfss$FRUIT1)] <- 
+  (brfss$FRUIT1[brfss$FRUIT1 > 200 & brfss$FRUIT1< 300 & !is.na(brfss$FRUIT1)]- 200)*30/7
+brfss$FRUIT1[brfss$FRUIT1 > 300 & brfss$FRUIT1< 400 & !is.na(brfss$FRUIT1)] <- 
+  brfss$FRUIT1[brfss$FRUIT1 > 300 & brfss$FRUIT1< 400 & !is.na(brfss$FRUIT1)]- 300
+brfss$FRUIT1[(brfss$FRUIT1 == 300 | brfss$FRUIT1 == 555) & is.na(brfss$FRUIT1)] <- 0
+brfss$FRUIT1[brfss$FRUIT1 > 300] <- NA
+brfss$FRUIT1 <- brfss$FRUIT1%/%1
+
+brfss$FVBEANS[brfss$FVBEANS > 100 & brfss$FVBEANS< 200 & !is.na(brfss$FVBEANS)] <- 
+  (brfss$FVBEANS[brfss$FVBEANS > 100 & brfss$FVBEANS< 200 & !is.na(brfss$FVBEANS)]- 100)*30
+brfss$FVBEANS[brfss$FVBEANS > 200 & brfss$FVBEANS< 300 & !is.na(brfss$FVBEANS)] <- 
+  (brfss$FVBEANS[brfss$FVBEANS > 200 & brfss$FVBEANS< 300 & !is.na(brfss$FVBEANS)]- 200)*30/7
+brfss$FVBEANS[brfss$FVBEANS > 300 & brfss$FVBEANS< 400 & !is.na(brfss$FVBEANS)] <- 
+  brfss$FVBEANS[brfss$FVBEANS > 300 & brfss$FVBEANS< 400 & !is.na(brfss$FVBEANS)]- 300
+brfss$FVBEANS[(brfss$FVBEANS == 300 | brfss$FVBEANS == 555) & is.na(brfss$FVBEANS)] <- 0
+brfss$FVBEANS[brfss$FVBEANS > 300] <- NA
+brfss$FVBEANS <- brfss$FVBEANS%/%1
 
 
 
+brfss$FVGREEN[brfss$FVGREEN > 100 & brfss$FVGREEN< 200 & !is.na(brfss$FVGREEN)] <- 
+  (brfss$FVGREEN[brfss$FVGREEN > 100 & brfss$FVGREEN< 200 & !is.na(brfss$FVGREEN)]- 100)*30
+brfss$FVGREEN[brfss$FVGREEN > 200 & brfss$FVGREEN< 300 & !is.na(brfss$FVGREEN)] <- 
+  (brfss$FVGREEN[brfss$FVGREEN > 200 & brfss$FVGREEN< 300 & !is.na(brfss$FVGREEN)]- 200)*30/7
+brfss$FVGREEN[brfss$FVGREEN > 300 & brfss$FVGREEN< 400 & !is.na(brfss$FVGREEN)] <- 
+  brfss$FVGREEN[brfss$FVGREEN > 300 & brfss$FVGREEN< 400 & !is.na(brfss$FVGREEN)]- 300
+brfss$FVGREEN[(brfss$FVGREEN == 300 | brfss$FVGREEN == 555) & is.na(brfss$FVGREEN)] <- 0
+brfss$FVGREEN[brfss$FVGREEN > 300] <- NA
+brfss$FVGREEN <- brfss$FVGREEN%/%1
+
+
+brfss$FVORANG[brfss$FVORANG > 100 & brfss$FVORANG< 200 & !is.na(brfss$FVORANG)] <- 
+  (brfss$FVORANG[brfss$FVORANG > 100 & brfss$FVORANG< 200 & !is.na(brfss$FVORANG)]- 100)*30
+brfss$FVORANG[brfss$FVORANG > 200 & brfss$FVORANG< 300 & !is.na(brfss$FVORANG)] <- 
+  (brfss$FVORANG[brfss$FVORANG > 200 & brfss$FVORANG< 300 & !is.na(brfss$FVORANG)]- 200)*30/7
+brfss$FVORANG[brfss$FVORANG > 300 & brfss$FVORANG< 400 & !is.na(brfss$FVORANG)] <- 
+  brfss$FVORANG[brfss$FVORANG > 300 & brfss$FVORANG< 400 & !is.na(brfss$FVORANG)]- 300
+brfss$FVORANG[(brfss$FVORANG == 300 | brfss$FVORANG == 555) & is.na(brfss$FVORANG)] <- 0
+brfss$FVORANG[brfss$FVORANG > 300] <- NA
+brfss$FVORANG <- brfss$FVORANG%/%1
+
+brfss$VEGETAB1[brfss$VEGETAB1 > 100 & brfss$VEGETAB1< 200 & !is.na(brfss$VEGETAB1)] <- 
+  (brfss$VEGETAB1[brfss$VEGETAB1 > 100 & brfss$VEGETAB1< 200 & !is.na(brfss$VEGETAB1)]- 100)*30
+brfss$VEGETAB1[brfss$VEGETAB1 > 200 & brfss$VEGETAB1< 300 & !is.na(brfss$VEGETAB1)] <- 
+  (brfss$VEGETAB1[brfss$VEGETAB1 > 200 & brfss$VEGETAB1< 300 & !is.na(brfss$VEGETAB1)]- 200)*30/7
+brfss$VEGETAB1[brfss$VEGETAB1 > 300 & brfss$VEGETAB1< 400 & !is.na(brfss$VEGETAB1)] <- 
+  brfss$VEGETAB1[brfss$VEGETAB1 > 300 & brfss$VEGETAB1< 400 & !is.na(brfss$VEGETAB1)]- 300
+brfss$VEGETAB1[(brfss$VEGETAB1 == 300 | brfss$VEGETAB1 == 555) & is.na(brfss$VEGETAB1)] <- 0
+brfss$VEGETAB1[brfss$VEGETAB1 > 300] <- NA
+brfss$VEGETAB1 <- brfss$VEGETAB1%/%1
+
+brfss$EXERANY2 <- recode(brfss$EXERANY2,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$SEATBELT <- recode(brfss$SEATBELT,`1`= 'ALWAYS',`2` = 'NEARLY ALWAYS', `3` = "SOMETIMES", `4` = "SELDOM", `5` = "NEVER",.default = NA_character_)
+
+
+brfss$FLUSHOT6 <- recode(brfss$FLUSHOT6,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$PNEUVAC3 <- recode(brfss$PNEUVAC3,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$HIVTST6 <- recode(brfss$HIVTST6,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$PDIABTST <- recode(brfss$PDIABTST,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$PREDIAB1 <- recode(brfss$PREDIAB1,`1`= 'YES',`3` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+
+brfss$DOCTDIAB[brfss$DOCTDIAB == 88 & !is.na(brfss$DOCTDIAB)] <- 0
+brfss$DOCTDIAB[brfss$DOCTDIAB > 76] <- NA
+
+brfss$CHKHEMO3[brfss$CHKHEMO3 == 88 & !is.na(brfss$CHKHEMO3)] <- 0
+brfss$CHKHEMO3[brfss$CHKHEMO3 > 76] <- NA
+
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+brfss$INSULIN <- recode(brfss$INSULIN,`1`= 'YES',`2` = 'NO', .default = NA_character_)
+
+
+brfss <- brfss %>% rename(STATE=`_STATE`,WEIGHT2_LB = WEIGHT2, HEIGHT_CM = HEIGHT3)
 ```
 
 
