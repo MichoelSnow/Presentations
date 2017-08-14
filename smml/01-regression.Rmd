@@ -142,7 +142,7 @@ ggplot(circ1) + geom_path(aes(x1,y1)) +
 Mathematically the variance, in one dimension, is calculated as follows:
 
 \begin{equation}
-  Var(x) = \sigma^2 = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu\right)\left(x_i - \mu\right)  = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu\right)^2 
+  Var(x) = \sigma^2 = \frac{1}{n}\sum\limits_{i=1}^n \left(x_i - \mu\right)\left(x_i - \mu\right)  = \frac{1}{n}\sum\limits_{i=1}^n \left(x_i - \mu\right)^2 
   (\#eq:PopVarDisc)
 \end{equation}
 
@@ -172,7 +172,37 @@ However, there is a problem with using equation \@ref(eq:PopVarDisc), it require
   (\#eq:SmpVarDisc)
 \end{equation}
 
-where $s^2$ is the sample variance and $\bar{x}$ is the sample mean.  For a full derivation of equation \@ref(eq:SmpVarDisc) see [Population Vs. Sample Variances](#pop-vs-smp-var)
+where $s^2$ is the sample variance and $\bar{x}$ is the sample mean.  For a full derivation of equation \@ref(eq:SmpVarDisc) see [Population Vs. Sample Variances](#pop-vs-smp-var).
+
+
+Unlike the variance which is a measure of how a single variable varies with regards to itself, the **covariance** is a measure of how two variables, $\mathbf{X}$ and $\mathbf{Y}$, vary with respect to each other.  If the variables increase in value together and decrease together, i.e., when one variable increases the other variable increases as well, the covariance will be larger.  If instead one variable increases while the other decreases then the covariance will be smaller.  To actually calculate the covariance you can use the following formula:
+
+\begin{equation}
+  Var(x) = \sigma^2 = \frac{1}{n}\sum\limits_{i=1}^n \left(x_i - \mu_x\right)\left(y_i - \mu_y\right)
+  (\#eq:PopCovDisc)
+\end{equation}
+
+If equation \@ref(eq:PopCovDisc) looks suspiciously like equation \@ref(eq:PopVarDisc), that's because the formula for the variance is just a special case of the formula for the covariance when dealing with a single variable.  To get an intuitive sense of what the covariance represents here are a 
+
+
+```{r, fig.align='center',  echo=FALSE,message=FALSE}
+# var_1d <- tibble(x1=runif(30,-1,1),x2=runif(30,-2,2),x3=runif(30,-3,3),
+#        y1=rep(1,30),y2=rep(3,30),y3=rep(5,30))
+ct=30
+
+x1 <- sort(runif(ct,-10,10))
+x2 <- sort(x1,decreasing = TRUE)
+y1 <- sort(runif(ct,-10,10))
+y2 <- sort(x1,decreasing = TRUE) 
+var_2d <- tibble(x=c(x1,x2,x1,x2),
+                 y=c(y1,y1,y2,y2),
+                 Variances=c(rep("x1y1",ct),rep("x2y1",ct),rep("x1y2",ct),rep("x2y2",ct)))
+ggplot(var_2d) + geom_point(aes(x,y,color=Variances),size=2) 
+  # scale_color_discrete(labels=c(round(var(x1),2),round(var(x2),2),round(var(x3),2)))
+```
+
+
+
 
 
 ```{r, echo=FALSE, eval=FALSE}
