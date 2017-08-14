@@ -12,11 +12,21 @@ link-citations: yes
 # description: "This is a minimal example of using the bookdown package to write a book. The output format for this example is bookdown::gitbook."
 ---
 
+
 # Introduction
 
 Should I be using linear regression, logistics regression, SVM, neural networks or one of at least a dozen other statistical/machine learning algorithms when trying to model my data?  This is the fundamental question which has driven the authorship of this book.  The problem is that the answer to that question for the most part is always the same, it depends.  The answer depends not only on the data itself, but also why you are modeling in the first place, i.e., what question are you trying to answer with your model, as well as a whole host of other factors.  The purpose of this book is to help you identify the important factors for choosing a model,  given those factors which model(s) you should choose and why, and then finally how to implement that model in R or python.
 
+## Motivation for this book
+
+In undergrad I majored in bioengineering, then for grad school I started doing some basic modeling work in neuroscience. As I was only working with a few models, I really only needed to learn the inner workings of those specific models.  However, after grad school when I was interviewing for jobs, they would often follow a similar pattern.  Either I would be asked about which modeling approaches I felt comfortable with or about alternative modeling approaches for my research than the ones I used.   To say I floundered would be a kind description of my response to these questions.  It was obvious that to be competitive I needed to build a real foundation in modeling approaches.  
+
+When I started reading books and taking courses, I ran into a different set of issues.  The vast majority of these sources were written assuming that the learner was still in midst of schooling and had only recently taken courses like statistics and linear algebra.  I had taken those courses over a decade before and my current knowledge of those fields was limited to the techniques that I was using at the time, and even for the the techniques I was still using, I had long forgotten their theoretical underpinnings.  Thus this book tries to be complete in the sense that it only assumes the most basic knowledge of statistics and a bit of linear algebra, i.e., vector and matrix multiplication. That being said, I try to approach most concepts from multiple directions so even if vector and matrix operations are not your strong suit you should still come away with at least intuitive understanding of the presented topics. 
+
+
 ## How to read this book 
+
+This book is long on purpose.  I strove to make this book a one stop shop for all concepts related to the discussed topics, including multiple derivations and long winded discussions on what some might consider, simple ideas. This is intentional, and as such this book is more intended as a complete reference and I do not expect the average person to read the entire thing straight from start to finish.  I have written it so that it can be read from start to finish but I expect most people to jump around to the topics that interest them and skip those that do not.  To make this a little easier I have tried to be consistent in how material is presented.
 
 This book is broken up by model, ordered by computational complexity.  Every chapter begins with a series of dataset visualizations and associated questions which are best answered through the models described in that chapter.  Each chapter is intended to be modular and for the most part, you can read any of the chapters in any order.  When multiple models utilize statistics or statistical techniques, the technique will be discussed the first time it is mentioned and all later mentions will refer the reader to where in the book they can find an explanation of that technique. 
 

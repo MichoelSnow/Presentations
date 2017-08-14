@@ -1,15 +1,20 @@
-```{r global_options, include=FALSE}
+
+```{r, include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
 library(tidyverse)
 library(lubridate)
+BlnkGrph = theme(axis.line=element_blank(), axis.text.x=element_blank(), axis.text.y=element_blank(), axis.ticks=element_blank(), axis.title.x=element_blank(),
+                 axis.title.y=element_blank(), legend.position="none", panel.background=element_blank(), panel.border=element_blank(), panel.grid.major=element_blank(),
+                 panel.grid.minor=element_blank(), plot.background=element_blank(),plot.margin=grid::unit(c(0,0,0,0), "mm"))
 ```
 
 
-# Simple Linear Regression {#sim_lin_reg}
+
+# Simple Linear Regression {#sim-lin-reg}
 
 ## Overview
 
-Almst all supervised models relate one or more input variables, $X_1,X_2, \ldots , X_p$, to an output variable, $Y$, which can be generalized as $$Y = f(X)$$. The goal of these models is to estimate the function $f(X)$ with as much accuracy as possible.  In a **linear regression** model, the assumption is that the input variables are related to the output variables through a linear combination, i.e., addition.  The term regression refers to the fact that the output variable can take on any value.  This is in contrast to classification models in which the output variable can take on one of a limited set of values.  Classification models will be discussed in chapter **NEED CHAPTER NAME**.  When the model is estimating the function for only a single input variable, it is termed simple linear regression and takes the form
+Almst all supervised models relate one or more input variables, $X_1,X_2, \ldots , X_p$, to an output variable, $Y$, which can be generalized as $$Y = f(X)$$ The goal of these models is to estimate the function $f(X)$ with as much accuracy as possible.  In a **linear regression** model, the assumption is that the input variables are related to the output variables through a linear combination, i.e., addition.  The term regression refers to the fact that the output variable can take on any value.  This is in contrast to classification models in which the output variable can take on one of a limited set of values.  Classification models will be discussed in chapter **NEED CHAPTER NAME**.  When the model is estimating the function for only a single input variable, it is termed simple linear regression and takes the form 
 
 \begin{equation} 
   Y = a_0 + a_1X
@@ -84,11 +89,127 @@ If I then take the square of the residual for each observation and sum them all 
 
 $e_i$ represents the $i$th residual and refers to the difference between the $i$th actual output, $Y_i$, and the $i$th predicted output, $\hat{Y}_i$.  In the following section I am going to go, step by step, through two different methods of deriving the least squares coefficients.  I find derivations useful for two reaons.  The first is that they let you know where the equations come from.  If you are reading this book then you are looking to understand modeling on a level deeper than simply, "how do I apply a certain model to my data".  The second reason that I like derivations is that you see the assumptions made in the derivations.  This, in my opinion, is essential to being able to smartly use the different models, as you understand when the assumptions are valid and when they are not.
 
-There are multiple methods to solve for the minimum least squares coefficients, most dealing with variations on ordinary least squares using matrix algebra.  The first derivation, which I think is the simpler one, requires knowledge of partial derivatives and unlike the second derivation does not rely on linear algebra.
+There are multiple methods to solve for the minimum least squares coefficients, most dealing with variations on ordinary least squares using matrix algebra.  I will be using matrix algebra to solve for the coefficients when there are multiple inputs but for simple linear regression the following derivation only requires knowledge of partial derivatives.
+
+
 
 #### Derivation 1 {-}
 
-Before I start working through the derivation, I want to go through a few simpler relationships which will come back later in the derivation.
+Before I start working through the derivation, there are two concepts I want to go through variance and covariance.  The reason being that at the end of the derivation the estimate of slope, otherwise known as $a_1$ can be calculated by dividing the covariance by the variance.  When I get to that point I will discuss why this is the case, but I first wanted to make sure that you had a firm grasp on these concepts by themselves.  Also, the in depth examination of variance will inform later parts of the derivation.
+
+The **variance** is a measure of spread for a variable, i.e., the distance of each value from the sample mean value.  An intuitive example is shown below where the variance of the points on the targets increases from left to right.
+
+```{r,fig.align='center',  echo=FALSE,message=FALSE}
+circleFun <- function(center = c(0,0),diameter = 1, npoints = 100){
+    r = diameter / 2
+    tt <- seq(0,2*pi,length.out = npoints)
+    xx <- center[1] + r * cos(tt)
+    yy <- center[2] + r * sin(tt)
+    return(data.frame(x = xx, y = yy))
+}
+dat1_1 <- circleFun(c(0,0),0.5,npoints = 100)
+dat1_2 <- circleFun(c(0,0),1,npoints = 100)
+dat1_3 <- circleFun(c(0,0),1.5,npoints = 100)
+dat2_1 <- circleFun(c(2,0),0.5,npoints = 100)
+dat2_2 <- circleFun(c(2,0),1,npoints = 100)
+dat2_3 <- circleFun(c(2,0),1.5,npoints = 100)
+dat3_1 <- circleFun(c(4,0),0.5,npoints = 100)
+dat3_2 <- circleFun(c(4,0),1,npoints = 100)
+dat3_3 <- circleFun(c(4,0),1.5,npoints = 100)
+var_pt <- tibble(x1=runif(30,-0.2,0.2),y1=runif(30,-0.2,0.2),
+                 x2=runif(30,1.55,2.35),y2=runif(30,-0.4,0.4),
+                 x3=runif(30,3.4,4.6),y3=runif(30,-0.57,0.57))
+circ1 <- tibble(x1=dat1_1$x,y1=dat1_1$y,x2=dat1_2$x,y2=dat1_2$y,x3=dat1_3$x,y3=dat1_3$y,
+                x4=dat2_1$x,y4=dat2_1$y,x5=dat2_2$x,y5=dat2_2$y,x6=dat2_3$x,y6=dat2_3$y,
+                x7=dat3_1$x,y7=dat3_1$y,x8=dat3_2$x,y8=dat3_2$y,x9=dat3_3$x,y9=dat3_3$y)
+#geom_path will do open circles, geom_polygon will do filled circles
+ggplot(circ1) + geom_path(aes(x1,y1)) + 
+  geom_path(aes(x2,y2)) +
+  geom_path(aes(x3,y3)) +
+  geom_path(aes(x4,y4)) + 
+  geom_path(aes(x5,y5)) +
+  geom_path(aes(x6,y6)) +
+  geom_path(aes(x7,y7)) + 
+  geom_path(aes(x8,y8)) +
+  geom_path(aes(x9,y9)) +
+  geom_point(data=var_pt,aes(x1,y1)) + 
+  geom_point(data=var_pt,aes(x2,y2)) + 
+  geom_point(data=var_pt,aes(x3,y3)) + 
+  BlnkGrph + coord_fixed()
+  
+```
+
+Mathematically the variance, in one dimension, is calculated as follows:
+
+\begin{equation}
+  Var(x) = \sigma^2 = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu\right)\left(x_i - \mu\right)  = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu\right)^2 
+  (\#eq:PopVarDisc)
+\end{equation}
+
+Where $\mu_x$ is the notation for the population mean value of x, which is discussed in the next paragraph.  Squaring the difference serves two functions, the first is to equally weight positive and negative contributions to the variance.  Without the square if a variable was evenly  distributed around zero, regardless of its spread it would have a variance of zero.  The second consequence is that as the distances increase the variance increases exponentially, as seen in the following graph:
+
+
+
+```{r, fig.align='center',  echo=FALSE,message=FALSE}
+# var_1d <- tibble(x1=runif(30,-1,1),x2=runif(30,-2,2),x3=runif(30,-3,3),
+#        y1=rep(1,30),y2=rep(3,30),y3=rep(5,30))
+ct=30
+x1 <- runif(ct,-2,2)
+x2 <- runif(ct,-4,4)
+x3 <- runif(ct,-8,8)
+var_1d <- tibble(x=c(x1,x2,x3),
+                 y=c(rep(5,ct),rep(3,ct),rep(1,ct)),
+                 Variances=c(rep("x1",ct),rep("x2",ct),rep("x3",ct)))
+ggplot(var_1d) + geom_point(aes(x,y,color=Variances),size=2) +
+  scale_color_discrete(labels=c(round(var(x1),2),round(var(x2),2),round(var(x3),2)))
+```
+
+However, there is a problem with using equation \@ref(eq:PopVarDisc), it requires that I already know the population mean.  The **population mean** is the mean value given a set of numbers or values.  The issue is that most of the time with data we are dealing with a small subsample of data and not the full set of data.  For example, if I wanted to calculate the average rainfall in New York City yesterday, I would need to measure the rainfall in every location throughout the city.  This is obviously impossible, which is why some people refer to the population mean as the omniscient mean.  Instead, what I can do is measure the rainfall at certain points throughout the city and estimate the population mean using the **sample mean**, which is simply the mean calculated from the population sample collected.  The difference between population mean and sample mean, might seem like simply a matter of semantics, but it has important ramifications and necessitates corrections.  The variance using the sample mean, termed the sample variance, very similar to 
+
+
+\begin{equation}
+  Var(\bar{x}) = s^2 = \frac{1}{n-1}\sum\limits_{i=1}^n \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{n}\sum\limits_{i=1}^n \left(x_i - \bar{x}\right)^2 
+  (\#eq:SmpVarDisc)
+\end{equation}
+
+where $s^2$ is the sample variance and $\bar{x}$ is the sample mean.  For a full derivation of equation \@ref(eq:SmpVarDisc) see [Population Vs. Sample Variances](#pop-vs-smp-var)
+
+
+```{r, echo=FALSE, eval=FALSE}
+# true_ct <- 10^3
+smp_ct <- 10^1
+# true_rain <- runif(true_ct,0,10)
+true_rain <- seq(0,10,0.001)
+true_ct <- length(true_rain)
+smp_rain <- sample(true_rain,smp_ct)
+true_var <- 1/true_ct*sum((true_rain-mean(true_rain))^2)
+smp_var <- 1/smp_ct*sum((smp_rain-mean(smp_rain))^2)
+unb_var <- var(smp_rain)
+```
+
+
+
+
+
+\begin{equation}
+  var(x) = \sigma^2 = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 
+  (\#eq:Var)
+\end{equation}
+
+Where $\bar{x}$ is the notation for the mean value of x.  The reason why the variances is the sum of squares divided by $N-1$ and not $N$ is because, I am calculating the variance based on the sample mean and not the population mean.   
+
+
+The **covariance** is a measure of the joint variability between two variables.  If they tend to grow and shrink together, the covariance is positive, and if one grows as the other shrinks then the covariance is negative.  The equation for the covariance is very similar to that for variance, as variance is just a special case of covariance with a single variable: 
+
+
+\begin{equation}
+  var(x) = \sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(y_i - \bar{y}\right)  
+  (\#eq:Covar)
+\end{equation}
+
+In order to get an intuitive understanding of covariance I think it is 
+
+I want to go through a few simpler relationships which will come back later in the derivation.
 
 \begin{equation}
 \begin{split}
@@ -101,11 +222,35 @@ Before I start working through the derivation, I want to go through a few simple
 Equation \@ref(eq:SumMn), which is relatively straightfoward but also allows me to introduce new notation.  The left side states that the sum of all values of variable divided by the number of samples, $N$, is equal to its mean value, as represented by a bar over the variable.  The right hand side simply moves the $N$ to the right hand side of the equation.
 
 \begin{align}
-  \sum\limits_{i=1}^N (x_i-\bar{x})(y_i - \bar{y}) &= \sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N \bar{x}y_i - \sum\limits_{i=1}^N \bar{y}x_i + \sum\limits_{i=1}^N\bar{x}\bar{y}\\
-  &=\sum\limits_{i=1}^N x_iy_i - \bar{x}\sum\limits_{i=1}^N y_i - \bar{y} \sum\limits_{i=1}^N x_i + \bar{x}\bar{y}\sum\limits_{i=1}^N 1
+  \sum\limits_{i=1}^N (x_i-\bar{x})(x_i - \bar{x}) &= \sum\limits_{i=1}^N x_i^2 - 2\sum\limits_{i=1}^N \bar{x}x_i + \sum\limits_{i=1}^N \bar{x}^2 \\
+  &= \sum\limits_{i=1}^N x_i^2 - 2N\bar{x}^2 + N\bar{x}^2 \\
+  &= \sum\limits_{i=1}^N x_i^2 - \sum\limits_{i=1}^N  \bar{x}x_i = \sum\limits_{i=1}^N x_i\left(x_i-\bar{x}\right) (\#eq:VarEq)
 \end{align}
 
+If you are not familiar with it, the initial equation is the equation for the variance of a variable.  The variance is a measure of spread for a single variable, i.e., the distance of each value from the average value.  You are most probably familiar with variance when discussing normal or Gaussian distributions, where the variance gives the 
 
+```{r, echo=FALSE}
+norm_smp <- tibble(a = rnorm(10^6),b=rnorm(10^6,sd=2)) 
+
+norm_smp %>% ggplot() + geom_density(aes(b,..scaled..),color="blue",fill="blue",alpha=0.1) + 
+  geom_density(aes(a,..scaled..),color="red",fill="red",alpha=0.2)
+
+```
+
+
+
+If instead of using the same variable in both halves of the initial equation there were different variables, this would be the equation for the covariance.  I can do similar manipulation with the covariance as follows:
+
+\begin{align}
+  \sum\limits_{i=1}^N (x_i-\bar{x})(y_i - \bar{y}) &= \sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N \bar{x}y_i - \sum\limits_{i=1}^N \bar{y}x_i + \sum\limits_{i=1}^N\bar{x}\bar{y}\\
+  &=\sum\limits_{i=1}^N x_iy_i - \bar{x}\sum\limits_{i=1}^N y_i - \bar{y} \sum\limits_{i=1}^N x_i + \bar{x}\bar{y}\sum\limits_{i=1}^N 1 \\
+  &=\sum\limits_{i=1}^N x_iy_i -N\bar{x}\bar{y} - N\bar{x}\bar{y} + N\bar{x}\bar{y} \\
+  &=\sum\limits_{i=1}^N x_iy_i - N\bar{x}\bar{y} \\
+  &=\sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N \bar{y}x_i = \sum\limits_{i=1}^N x_i\left(y_i - \bar{y}\right) (\#eq:CovEq1)\\
+  &= \sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N \bar{x}y_i = \sum\limits_{i=1}^N y_i\left(x_i - \bar{x}\right) (\#eq:CovEq2)\\
+\end{align}
+
+This series of equations is simply going back and forth between equivalent values using the relationships established in equation \@ref(eq:SumMn).  I can split and rejoin summations because the operations are all linear.  At the end of the above series I end up with two relationships which will be needed later.  If you are not familiar with it, the initial equation is the equation for the covariance 
 If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest.  Thankfully, the process hasn't changed since then.  Also since there are multiple parameters of interest, i.e., $\hat{a_0}$ and $\hat{a_1}$, I will need to use partial derivatives.  First I want to rewrite equation \@ref(eq:RSS) in a slightly more derivative friendly way.
 
 \begin{equation}

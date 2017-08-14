@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Statistics, Models and Machine Learning</title>
+  <meta name="description" content="Statistics, Models and Machine Learning">
+  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Statistics, Models and Machine Learning" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Statistics, Models and Machine Learning" />
+  
+  
+  
+
+<meta name="author" content="Michoel Snow">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="sim-lin-reg.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#motivation-for-this-book"><i class="fa fa-check"></i><b>1.1</b> Motivation for this book</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#how-to-read-this-book"><i class="fa fa-check"></i><b>1.2</b> How to read this book</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#notation-and-nomeclature-used-in-this-book"><i class="fa fa-check"></i><b>1.3</b> Notation and nomeclature used in this book</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#supervised-vs-unsupervised-models"><i class="fa fa-check"></i><b>1.4</b> Supervised vs Unsupervised Models</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="index.html"><a href="index.html#solving-supervised-models"><i class="fa fa-check"></i><b>1.4.1</b> Solving Supervised Models</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#assessing-model-quality-of-fit"><i class="fa fa-check"></i><b>1.5</b> Assessing Model Quality of Fit</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="index.html"><a href="index.html#mse"><i class="fa fa-check"></i><b>1.5.1</b> MSE</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html"><i class="fa fa-check"></i><b>2</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>2.2</b> Estimating the Coefficients</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#least-squares"><i class="fa fa-check"></i><b>2.2.1</b> Least squares</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#model-accuracy"><i class="fa fa-check"></i><b>2.3</b> Model Accuracy</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#accuracy-of-the-coefficients"><i class="fa fa-check"></i><b>2.3.1</b> Accuracy of the Coefficients</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#variable-parameters"><i class="fa fa-check"></i><b>2.4</b> Variable parameters</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="statistics.html"><a href="statistics.html"><i class="fa fa-check"></i><b>A</b> Statistics</a><ul>
+<li class="chapter" data-level="A.1" data-path="statistics.html"><a href="statistics.html#pop-vs-smp-var"><i class="fa fa-check"></i><b>A.1</b> Population Vs. Sample Variances</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Statistics, Models and Machine Learning</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="statistics" class="section level1">
+<h1><span class="header-section-number">A</span> Statistics</h1>
+<div id="pop-vs-smp-var" class="section level2">
+<h2><span class="header-section-number">A.1</span> Population Vs. Sample Variances</h2>
+<p>The variance given in equation <a href="sim-lin-reg.html#eq:PopVarDisc">(2.6)</a> is referring to the case where <span class="math inline">\(x\)</span> is a discrete random variable. <strong>Discrete</strong> in this context means that the variable can take on only a certain number of values as opposed to a continuous random variable, which can take on any value. Almost all data used in modeling, and in fact almost all recorded data is a discrete variable, due to how we record and log data. To understand why this is true, consider recording the amount of rainfall anywhere in the world at any time. In theory this can take on any possible value, and the exact amount of rainfall is a continuous variable, but when we record the rainfall we tend to only record to a certain degree of accuracy, such as millimiters. Even though we might have tens of thousands of different possible values, they are still a finite amount, and thus this variable would be discrete. Getting back to equation <a href="sim-lin-reg.html#eq:PopVarDisc">(2.6)</a>, the general form from which it is derived is as follows:</p>
+<span class="math display" id="eq:PopVar">\[\begin{equation}
+  Var(\mathbf{X}) = E\left[\left(\mathbf{X}-\mu\right)^2\right] 
+  \tag{A.1}
+\end{equation}\]</span>
+<p>What equation <a href="statistics.html#eq:PopVar">(A.1)</a> is saying is that the variance of <span class="math inline">\(\mathbf{X}\)</span> is equal to the expected value, <span class="math inline">\(E\)</span>, of the squared deviation of <span class="math inline">\(\mathbf{X}\)</span> from its mean, <span class="math inline">\(\mu\)</span>. The <strong>expected value</strong> in probability is a mathematical short hand for the average value of the variable over many repititions over many calculations of that variable. For example, if you were to keep rolling a perfectly balanced six-sided die the average value over time would get closer and closer to 3.5. If this sounds like the mean, you wouldn’t be wrong, as the mean is just a specialized case of expected value where all probabilites are equal. In a discrete case, where variable <span class="math inline">\(\mathbf{X}\)</span> can take on any one of a possible <span class="math inline">\(n\)</span> values, then the expected value of $, can be formulated as :</p>
+<span class="math display" id="eq:ExpValFnt">\[\begin{equation}
+  E\left[\mathbf{X}\right] = x_1p_1 + x_2p_2 + \ldots + x_np_n = \sum\limits_{i=1}^n x_ip_i
+  \tag{A.2}
+\end{equation}\]</span>
+<p>Where the expected value is equal to the sum of all possible cases <span class="math inline">\(x_1\)</span> through <span class="math inline">\(x_n\)</span> multiplied by the probability of each case occuring, <span class="math inline">\(p_1\)</span> through <span class="math inline">\(p_n\)</span>. When calculating the mean you are just assuming that all probabilites are equal, i.e., <span class="math inline">\(p_1 = p_2 = p_n\)</span>. Which reduces equation <a href="statistics.html#eq:ExpValFnt">(A.2)</a> to the form we are more familiar with:</p>
+<span class="math display" id="eq:ExpValFntEql">\[\begin{align}
+  E\left[\mathbf{X}\right] &amp;= \sum\limits_{i=1}^n x_ip \\ 
+  &amp;= \sum\limits_{i=1}^n x_i \frac{1}{n} \\
+  &amp;= \frac{1}{n} \sum\limits_{i=1}^n x_i
+  \tag{A.3}
+\end{align}\]</span>
+<p>This same reduction for the mean can be applied to the expected value of the variance as well, assuming that <span class="math inline">\(\mathbf{X}\)</span> is a discrete variable with each value having equal probability of occuring:</p>
+<span class="math display" id="eq:ExpValVarEql">\[\begin{align}
+  E\left[\left(\mathbf{X}-\mu\right)^2\right] &amp;= \left(x_1 - \mu\right)^2p + \left(x_2 - \mu\right)^2p + \ldots + \left(x_n - \mu\right)^2p \\
+  &amp;= \left(x_1 - \mu\right)^2\frac{1}{n} + \left(x_2 - \mu\right)^2\frac{1}{n} + \ldots + \left(x_n - \mu\right)^2\frac{1}{n} \\
+  &amp;= \sum\limits_{i=1}^n \left(x_i - \mu\right)^2\frac{1}{n} \\
+  &amp;= \frac{1}{n} \sum\limits_{i=1}^n \left(x_i - \mu\right)^2 
+  \tag{A.4}
+\end{align}\]</span>
+<p>Now that you have an understanding of expected value, I can ask the question, how does the expected value of the variance calculated from the sample mean, termed the sample variance, relate to the variance calculated from the population mean, termed the population variance.</p>
+<span class="math display">\[\begin{equation}
+  E\left[s^2\right] = E\left[\frac{\sum\limits_{i=1}^n\left(x_i - \bar{x}\right)^2}{n} \right] \Longleftarrow ? \Longrightarrow \sigma^2
+\end{equation}\]</span>
+<p>Where <span class="math inline">\(s^2\)</span> is the sample variance and <span class="math inline">\(\bar{x}\)</span> is the notation for the sample mean value of <span class="math inline">\(x\)</span>. Before I can answer this questions I need to provide a few more mathematical identities which are necessary for the equations that follow. The first few deal with the properties of expected values and variances, also for the sake of readability I am removing the limits from the <span class="math inline">\(\sum\limits_{i=1}^n\)</span> terms.</p>
+<span class="math display" id="eq:ExpValVarIdentConst">\[\begin{equation}
+\begin{split}
+  &amp;E\left[c\mathbf{X}\right] = cE\left[\mathbf{X}\right] \\
+  &amp;Var\left(c\mathbf{X}\right) = c^2\left(\mathbf{X}\right) \\
+\end{split}
+  \tag{A.5}
+\end{equation}\]</span>
+<p>Constants in expected values are just themselves, while for variances they get squared since the variance is a square function.</p>
+<span class="math display" id="eq:ExpValVarIdentSer">\[\begin{equation}
+\begin{split}
+  E\left[\sum\mathbf{X}\right] &amp;= E\left[x_1 + x_2 + \ldots + x_n \right]\\
+  &amp;= E\left[x_1\right] + E\left[x_2\right] + \ldots + E\left[x_n\right] \\
+  &amp;= \sum E\left[\mathbf{X}\right]\\
+  Var\left(\sum\mathbf{X}\right) &amp;= Var\left(x_1 + x_2 + \ldots + x_n \right) \\
+  &amp;= Var\left(x_1\right) + Var\left(x_2\right) + \ldots + Var\left(x_n\right) \\
+  &amp;= \sum Var\left(\mathbf{X}\right)\\
+\end{split}
+  \tag{A.6}
+\end{equation}\]</span>
+<p>For series, expected values and variances operate the same way</p>
+<span class="math display" id="eq:ExpValVarIdentExp">\[\begin{equation}
+  E\left[E\left[\mathbf{X}\right]\right] = E\left[\mathbf{X}\right] 
+  \tag{A.7}
+\end{equation}\]</span>
+<p>The logic behind equation <a href="statistics.html#eq:ExpValVarIdentExp">(A.7)</a> is that the expected value of any variable is a constant, and the expected value of a constant is that same constant. So multiple stacked expected values reduce to a single one. I can then use these equations for the population and sample variables.</p>
+<span class="math display" id="eq:ExpValVarIdent2">\[\begin{equation}
+\begin{split}
+  &amp;E\left[\mathbf{X}\right] = E\left[x_i\right] = \mu \\
+  &amp;Var\left(\mathbf{X}\right) = Var\left(x_i\right) = \sigma^2 \\
+  &amp;E\left[\sum x_i\right] = \sum \left[x_i\right] = n\mu \\
+  &amp;Var\left(\sum x_i\right) = \sum Var\left(x_i\right) = n\sigma^2 \\
+  &amp;E\left[\bar{x}\right] = E\left[\frac{1}{n} \sum x_i \right] = \frac{1}{n} \sum E\left[x_i\right] = \mu \\
+  &amp;Var\left(\bar{x}\right) = Var\left(\frac{1}{n} \sum x_i \right) = \frac{1}{n} \sum Var\left(x_i\right) = \frac{\sigma^2}{n} \\
+\end{split}
+  \tag{A.8}
+\end{equation}\]</span>
+<p>Using the preiovus identities I can now rearrange the population variance in equation <a href="statistics.html#eq:PopVar">(A.1)</a> into a slightly different form.</p>
+<span class="math display" id="eq:ExpValVarExpand">\[\begin{align}
+  Var(\mathbf{X}) &amp;= E\left[\left(\mathbf{X}-\mu\right)^2\right] \\
+  &amp;= E\left[\left(\mathbf{X}-E\left[\mathbf{X}\right]\right)^2\right] \\
+  &amp;= E\left[\mathbf{X}^2-2\mathbf{X}E\left[\mathbf{X}\right] + E\left[\mathbf{X}\right]^2\right] \\
+  &amp;= E\left[\mathbf{X}^2\right] - E\left[2\mathbf{X}E\left[\mathbf{X}\right]\right] + E\left[E\left[\mathbf{X}\right]^2\right] \\
+  &amp;= E\left[\mathbf{X}^2\right] - 2E\left[\mathbf{X}\right]^2 + E\left[\mathbf{X}\right]^2 \\
+  &amp;= E\left[\mathbf{X}^2\right] - E\left[\mathbf{X}\right]^2 
+  \tag{A.9}
+\end{align}\]</span>
+<p>Now we are finally ready to tackle the question of relating the sample variance to the population variance. Although I am going to cheat a little and move the <span class="math inline">\(n\)</span> from the divisor to the left hand side of the equation.</p>
+<span class="math display" id="eq:smpPopVar">\[\begin{align}
+  n E\left[s^2\right] &amp;= E\left[\sum\left(x_i - \bar{x}\right)^2\right] \\
+  &amp;= E\left[\sum\left(x_i\right)^2 - 2 \bar{x} \sum \left(x_i\right) + \bar{x}^2\sum\left(1\right)\right] \\
+  &amp;= E\left[\sum\left(x_i\right)^2 - 2 n\bar{x}^2 + n\bar{x}^2\right] \\
+  &amp;= E\left[\sum\left(x_i\right)^2 - n\bar{x}^2 \right] \\
+  &amp;= \sum E\left[\left(x_i\right)^2\right] - nE\left[\bar{x}^2 \right] \\
+  &amp;= n E\left[\left(x_i\right)^2\right] - nE\left[\bar{x}^2 \right] \\
+  &amp;= n\left(Var\left(x_i\right) + E\left[x_i\right]^2\right) - n\left(Var\left(\bar{x}\right) + E\left[\bar{x}\right]^2\right) \\
+  &amp;= n\left(\sigma^2 - \mu^2\right) - n\left(\frac{1}{n}\sigma^2 + \mu^2\right) \\
+  &amp;= n\sigma^2 - n\mu^2 - \sigma^2 + n\mu^2 \\
+  &amp;= (n-1)\sigma^2 \\
+  \tag{A.10}
+\end{align}\]</span>
+<p>What this means is that to calculate the population variance using the sample mean you need to divide by <span class="math inline">\(n-1\)</span> instead of just <span class="math inline">\(n\)</span>. In fact this is what most programming languages and software do when you calculate the variance of a data set. Using R as an example</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span>-<span class="dv">3</span>:<span class="dv">3</span>
+<span class="kw">var</span>(x)</code></pre></div>
+<pre><code>## [1] 4.666667</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>((x-<span class="kw">mean</span>(x))^<span class="dv">2</span>)/(<span class="kw">length</span>(x)-<span class="dv">1</span>)</code></pre></div>
+<pre><code>## [1] 4.666667</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="sim-lin-reg.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

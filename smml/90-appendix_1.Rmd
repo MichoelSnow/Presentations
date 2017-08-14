@@ -1,0 +1,141 @@
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+library(tidyverse)
+library(lubridate)
+BlnkGrph = theme(axis.line=element_blank(), axis.text.x=element_blank(), axis.text.y=element_blank(), axis.ticks=element_blank(), axis.title.x=element_blank(),
+                 axis.title.y=element_blank(), legend.position="none", panel.background=element_blank(), panel.border=element_blank(), panel.grid.major=element_blank(),
+                 panel.grid.minor=element_blank(), plot.background=element_blank(),plot.margin=grid::unit(c(0,0,0,0), "mm"))
+```
+
+
+# (APPENDIX) Appendix {-}
+
+# Statistics
+
+## Population Vs. Sample Variances {#pop-vs-smp-var}
+
+The variance given in equation \@ref(eq:PopVarDisc) is referring to the case where $x$ is a discrete random variable.  **Discrete** in this context means that the variable can take on only a certain number of values as opposed to a continuous random variable, which can take on any value.  Almost all data used in modeling, and in fact almost all recorded data is a discrete variable, due to how we record and log data.  To understand why this is true, consider recording the amount of rainfall anywhere in the world at any time.  In theory this can take on any possible value, and the exact amount of rainfall is a continuous variable, but when we record the rainfall we tend to only record to a certain degree of accuracy, such as millimiters.  Even though we might have tens of thousands of different possible values, they are still a finite amount, and thus this variable would be discrete.  Getting back to equation \@ref(eq:PopVarDisc), the general form from which it is derived is as follows:
+
+\begin{equation}
+  Var(\mathbf{X}) = E\left[\left(\mathbf{X}-\mu\right)^2\right] 
+  (\#eq:PopVar)
+\end{equation}
+
+What equation \@ref(eq:PopVar) is saying is that the variance of $\mathbf{X}$ is equal to the expected value, $E$, of the squared deviation of $\mathbf{X}$ from its mean, $\mu$.  The **expected value** in probability is a mathematical short hand for the average value of the variable over many repititions over many calculations of that variable.  For example, if you were to keep rolling a perfectly balanced six-sided die the average value over time would get closer and closer to 3.5.  If this sounds like the mean, you wouldn't be wrong, as the mean is just a specialized case of expected value where all probabilites are equal.  In a discrete case, where variable $\mathbf{X}$ can take on any one of a possible $n$ values, then the expected value of $\mathbf{X}, can be formulated as :
+
+\begin{equation}
+  E\left[\mathbf{X}\right] = x_1p_1 + x_2p_2 + \ldots + x_np_n = \sum\limits_{i=1}^n x_ip_i
+  (\#eq:ExpValFnt)
+\end{equation}
+
+Where the expected value is equal to the sum of all possible cases $x_1$ through $x_n$ multiplied by the probability of each case occuring, $p_1$ through $p_n$.  When calculating the mean you are just assuming that all probabilites are equal, i.e., $p_1 = p_2 = p_n$.  Which reduces equation \@ref(eq:ExpValFnt) to the form we are more familiar with:
+
+\begin{align}
+  E\left[\mathbf{X}\right] &= \sum\limits_{i=1}^n x_ip \\ 
+  &= \sum\limits_{i=1}^n x_i \frac{1}{n} \\
+  &= \frac{1}{n} \sum\limits_{i=1}^n x_i
+  (\#eq:ExpValFntEql)
+\end{align}
+
+This same reduction for the mean can be applied to the expected value of the variance as well, assuming that $\mathbf{X}$ is a discrete  variable with each value having equal probability of occuring:
+
+\begin{align}
+  E\left[\left(\mathbf{X}-\mu\right)^2\right] &= \left(x_1 - \mu\right)^2p + \left(x_2 - \mu\right)^2p + \ldots + \left(x_n - \mu\right)^2p \\
+  &= \left(x_1 - \mu\right)^2\frac{1}{n} + \left(x_2 - \mu\right)^2\frac{1}{n} + \ldots + \left(x_n - \mu\right)^2\frac{1}{n} \\
+  &= \sum\limits_{i=1}^n \left(x_i - \mu\right)^2\frac{1}{n} \\
+  &= \frac{1}{n} \sum\limits_{i=1}^n \left(x_i - \mu\right)^2 
+  (\#eq:ExpValVarEql)
+\end{align}
+
+Now that you have an understanding of expected value, I can ask the question, how does the expected value of the variance calculated from the sample mean, termed the sample variance, relate to the variance calculated from the population mean, termed the population variance.
+
+\begin{equation}
+  E\left[s^2\right] = E\left[\frac{\sum\limits_{i=1}^n\left(x_i - \bar{x}\right)^2}{n} \right] \Longleftarrow ? \Longrightarrow \sigma^2
+\end{equation}
+
+Where $s^2$ is the sample variance and $\bar{x}$ is the notation for the sample mean value of $x$. Before I can answer this questions I need to provide a few more mathematical identities which are necessary for the equations that follow.  The first few deal with the properties of expected values and variances, also for the sake of readability I am removing the limits from the $\sum\limits_{i=1}^n$ terms. 
+
+\begin{equation}
+\begin{split}
+  &E\left[c\mathbf{X}\right] = cE\left[\mathbf{X}\right] \\
+  &Var\left(c\mathbf{X}\right) = c^2\left(\mathbf{X}\right) \\
+\end{split}
+  (\#eq:ExpValVarIdentConst)
+\end{equation}
+
+Constants in expected values are just themselves, while for variances they get squared since the variance is a square function.
+
+\begin{equation}
+\begin{split}
+  E\left[\sum\mathbf{X}\right] &= E\left[x_1 + x_2 + \ldots + x_n \right]\\
+  &= E\left[x_1\right] + E\left[x_2\right] + \ldots + E\left[x_n\right] \\
+  &= \sum E\left[\mathbf{X}\right]\\
+  Var\left(\sum\mathbf{X}\right) &= Var\left(x_1 + x_2 + \ldots + x_n \right) \\
+  &= Var\left(x_1\right) + Var\left(x_2\right) + \ldots + Var\left(x_n\right) \\
+  &= \sum Var\left(\mathbf{X}\right)\\
+\end{split}
+  (\#eq:ExpValVarIdentSer)
+\end{equation}
+
+For series, expected values and variances operate the same way
+
+
+
+\begin{equation}
+  E\left[E\left[\mathbf{X}\right]\right] = E\left[\mathbf{X}\right] 
+  (\#eq:ExpValVarIdentExp)
+\end{equation}
+
+The logic behind equation \@ref(eq:ExpValVarIdentExp) is that the expected value of any variable is a constant, and the expected value of a constant is that same constant.  So multiple stacked expected values reduce to a single one.  I can then use these equations for the population and sample variables.
+
+\begin{equation}
+\begin{split}
+  &E\left[\mathbf{X}\right] = E\left[x_i\right] = \mu \\
+  &Var\left(\mathbf{X}\right) = Var\left(x_i\right) = \sigma^2 \\
+  &E\left[\sum x_i\right] = \sum \left[x_i\right] = n\mu \\
+  &Var\left(\sum x_i\right) = \sum Var\left(x_i\right) = n\sigma^2 \\
+  &E\left[\bar{x}\right] = E\left[\frac{1}{n} \sum x_i \right] = \frac{1}{n} \sum E\left[x_i\right] = \mu \\
+  &Var\left(\bar{x}\right) = Var\left(\frac{1}{n} \sum x_i \right) = \frac{1}{n} \sum Var\left(x_i\right) = \frac{\sigma^2}{n} \\
+\end{split}
+  (\#eq:ExpValVarIdent2)
+\end{equation}
+
+  
+Using the preiovus identities I can now rearrange the population variance in equation \@ref(eq:PopVar) into a slightly different form.
+
+\begin{align}
+  Var(\mathbf{X}) &= E\left[\left(\mathbf{X}-\mu\right)^2\right] \\
+  &= E\left[\left(\mathbf{X}-E\left[\mathbf{X}\right]\right)^2\right] \\
+  &= E\left[\mathbf{X}^2-2\mathbf{X}E\left[\mathbf{X}\right] + E\left[\mathbf{X}\right]^2\right] \\
+  &= E\left[\mathbf{X}^2\right] - E\left[2\mathbf{X}E\left[\mathbf{X}\right]\right] + E\left[E\left[\mathbf{X}\right]^2\right] \\
+  &= E\left[\mathbf{X}^2\right] - 2E\left[\mathbf{X}\right]^2 + E\left[\mathbf{X}\right]^2 \\
+  &= E\left[\mathbf{X}^2\right] - E\left[\mathbf{X}\right]^2 
+  (\#eq:ExpValVarExpand)
+\end{align}
+
+
+Now we are finally ready to tackle the question of relating the sample variance to the population variance.  Although I am going to cheat a little and move the $n$ from the divisor to the left hand side of the equation.
+
+\begin{align}
+  n E\left[s^2\right] &= E\left[\sum\left(x_i - \bar{x}\right)^2\right] \\
+  &= E\left[\sum\left(x_i\right)^2 - 2 \bar{x} \sum \left(x_i\right) + \bar{x}^2\sum\left(1\right)\right] \\
+  &= E\left[\sum\left(x_i\right)^2 - 2 n\bar{x}^2 + n\bar{x}^2\right] \\
+  &= E\left[\sum\left(x_i\right)^2 - n\bar{x}^2 \right] \\
+  &= \sum E\left[\left(x_i\right)^2\right] - nE\left[\bar{x}^2 \right] \\
+  &= n E\left[\left(x_i\right)^2\right] - nE\left[\bar{x}^2 \right] \\
+  &= n\left(Var\left(x_i\right) + E\left[x_i\right]^2\right) - n\left(Var\left(\bar{x}\right) + E\left[\bar{x}\right]^2\right) \\
+  &= n\left(\sigma^2 - \mu^2\right) - n\left(\frac{1}{n}\sigma^2 + \mu^2\right) \\
+  &= n\sigma^2 - n\mu^2 - \sigma^2 + n\mu^2 \\
+  &= (n-1)\sigma^2 \\
+  (\#eq:smpPopVar)
+\end{align}
+
+
+What this means is that to calculate the population variance using the sample mean you need to divide by $n-1$ instead of just $n$. In fact this is what most programming languages and software do when you calculate the variance of a data set.  Using R as an example
+
+```{r, echo=TRUE}
+x <- -3:3
+var(x)
+sum((x-mean(x))^2)/(length(x)-1)
+```
+
