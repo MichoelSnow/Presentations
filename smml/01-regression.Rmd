@@ -252,8 +252,8 @@ This series of equations is simply going back and forth between equivalent value
 Now with all these tools, let's attack this derivation.  If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest.  Thankfully, the process hasn't changed since then.  Also, since there are multiple parameters of interest, i.e., $\hat{a_0}$ and $\hat{a_1}$, I will need to use partial derivatives.  First I want to rewrite equation \@ref(eq:RSS) in a slightly more derivative friendly way.
 
 \begin{equation}
-  S = \sum\limits_{i=1}^N y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   
-  (\#eq:RSS)
+  S = \sum\limits_{i=1}^N \left(y_i - \hat{a}_0  + \hat{a}_1 x_i \right)^2   
+  (\#eq:RSSDer)
 \end{equation} 
 
 Starting with $\hat{a_0}$
@@ -267,33 +267,65 @@ Starting with $\hat{a_0}$
   & \hat{a}_0 = \bar{y} - \hat{a_1}\bar{x}  (\#eq:a0Deriv)
 \end{align}
 
-The outcome all these steps is something that seems relatively simple, that the estimate of the intercept is just based on the estimated slope and the average 
+The outcome all these steps is something that seems relatively simple, that the estimate of the intercept is just based on the estimated slope and the average input and output values.  That being said it does make sense, as the intercept serves to horizontally shift the line.  Once we have estimated the slope we want an intercept which positions the resulting line to go through the center of data as calculated by the average position.  Now that I have estimated $\hat{a}_0$, I can estimate $\hat{a}_1$
 
-Starting with $\hat{a_1}$.
+
 
 \begin{align}
-  \frac{\partial S}{\partial \hat{a}_1}  = \frac{\partial}{\partial \hat{a}_1} &\sum\limits_{i=1}^N y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   \\
-  = &\sum\limits_{i=1}^N 2x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right)  (\#eq:PartDerivA1) \\
-  &\sum\limits_{i=1}^N x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right) = 0 (\#eq:OLS1) \\ 
+  \frac{\partial S}{\partial \hat{a}_1} = -2 &\sum\limits_{i=1}^N x_i \left(y_i - \hat{a}_0 - \hat{a_1}x_i\right)\\
+  &\sum\limits_{i=1}^N x_i \left(y_i - \hat{a}_0 - \hat{a_1}x_i\right) = 0 \\
+  &\sum\limits_{i=1}^N x_iy_i - \hat{a}_0 \sum\limits_{i=1}^N x_i - \hat{a_1} \sum\limits_{i=1}^N x_i^2 = 0 \\
+  &\sum\limits_{i=1}^N x_iy_i = \hat{a}_0 \sum\limits_{i=1}^N x_i + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &\sum\limits_{i=1}^N x_iy_i = N\hat{a}_0 \bar{x} + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &\sum\limits_{i=1}^N x_iy_i = N\left(\bar{y} - \hat{a_1}\bar{x}\right)\bar{x} + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &\sum\limits_{i=1}^N x_iy_i = N\bar{y}\bar{x} - N\hat{a_1}\bar{x}^2 + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &\sum\limits_{i=1}^N x_iy_i = \sum\limits_{i=1}^N y_i \bar{x} - \hat{a_1}\sum\limits_{i=1}^N x_i \bar{x} + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &\sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N y_i \bar{x} =  \hat{a_1} \sum\limits_{i=1}^N x_i^2 - \hat{a_1}\sum\limits_{i=1}^N x_i \bar{x} \\
+  &\sum\limits_{i=1}^N y_i\left(x_i - \bar{x}\right) = \hat{a_1}\sum\limits_{i=1}^N x_i \left(x_i - \bar{x}\right) \\
+  &\sum\limits_{i=1}^N \left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) = \hat{a_1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 \\
+  &\hat{a_1} = \frac{\sum\limits_{i=1}^N \left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)}{\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2} \\
+  &\hat{a_1} = \frac{Cov\left(\mathbf{X},\mathbf{Y}\right)}{Var\left(\mathbf{X}\right)} (\#eq:a1Deriv)
 \end{align}
 
-Because summation is just a linear operation I can take the derivative of what's inside the summation symbol without a problem.  I got equation \@ref(eq:PartDerivA1) through, effectively, the chain rule of derivatives.  Now I can set it equal to zero, ignoring any constants on the way, and this gives me equation \@ref(eq:OLS1), the first of my ordinary least squares equations.
+The fact that the estimate of $\hat{a}_1$ is the covariance divided by the variance seems like a very interesting result, but why is that the case?  If the covariance is the degree to which two variables vary with each other and the variance is the degree to which a single varialbe varies than the ratio of the covariance to the variance is the degree to which two variables vary reduced by the degree to which the input variable varies within itself.  If you think back to our discussion of covariance, as the slop increases the covariance decreases, because there is less variation within the input variable, but if we divide by the variance of the input variable this should correct for that diminishing covariance.  The following graph calculates the covariance, variance and their ratio for three sets of data points.
 
 
-To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to $\hat{a}_1$, set it equal to zero and then solve for $\hat{a}_1$. 
+```{r, fig.align='center',  echo=FALSE,message=FALSE}
 
-\begin{equation}
-  \hat{a}_1 = \dfrac{\sum\limits_{i=1}^N\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^N\left(x_{1,i}-\bar{X_1}\right)^2} 
-  (\#eq:SimpLinRegSlp)
-\end{equation}
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+n = 3
+cols = gg_color_hue(n)
+ct=100
 
-$\bar{X_1}$ and $\bar{Y}$ refer to the average input variable and average output variable, respectively.  Once I have solved for the coefficient $a_1$, I can use it to solve for the intercept, $a_0$ as follows
+x1 <- sort(runif(ct,-20,-5))
+y1 <- sort(runif(ct,-10,10))
+x2 <- sort(runif(ct,-20,10))
+y2 <- sort(runif(ct,-10,10))
+x3 <- sort(runif(ct,-20,50))
+y3 <- sort(runif(ct,-10,10))
+var_2d <- tibble(x=c(x1,x2,x3),
+                 y=c(y1,y2,y3),
+                 Covariances=c(rep("x1y1",ct),rep("x2y2",ct),rep("x3y3",ct)))
+ggplot(var_2d) + geom_point(aes(x,y,color=Covariances),size=2) +
+  theme(legend.position="none") +
+  # scale_color_discrete(labels=c(round(cov(x1,y1),2),round(cov(x2,y2),2))) +
+  annotate("text", x = c(-18,-12), y = c(10,10), label =  c("paste(Cov, \" =  \")" , round(cov(x1,y1),2)), parse = TRUE ,color=cols[1]) +
+  annotate("text", x = c(-18,-12), y = c(8.5,8.5), label =  c("paste(Var, \" =  \")" , round(var(x1),2)), parse = TRUE ,color=cols[1]) +
+  annotate("text", x = c(-18,-12), y = c(7,7), label =  c("paste(Cov/Var, \" =  \")" , round(cov(x1,y1)/var(x1),2)), parse = TRUE ,color=cols[1]) +
+  annotate("text", x = c(12,18), y = c(8,8), label =  c("paste(Cov, \" =  \")" , round(cov(x2,y2),2)), parse = TRUE ,color=cols[2]) +
+  annotate("text", x = c(12,18), y = c(6.5,6.5), label =  c("paste(Var, \" =  \")" , round(var(x2),2)), parse = TRUE ,color=cols[2]) +
+  annotate("text", x = c(12,18), y = c(5,5), label =  c("paste(Cov/Var, \" =  \")" , round(cov(x2,y2)/var(x2),2)), parse = TRUE ,color=cols[2]) +
+  annotate("text", x = c(14,20), y = c(-4,-4), label =  c("paste(Cov, \" =  \")" , round(cov(x3,y3),2)), parse = TRUE ,color=cols[3]) +
+  annotate("text", x = c(14,20), y = c(-5.5,-5.5), label =  c("paste(Var, \" =  \")" , round(var(x3),2)), parse = TRUE ,color=cols[3]) +
+  annotate("text", x = c(14,20), y = c(-7,-7), label =  c("paste(Cov/Var, \" =  \")" , round(cov(x3,y3)/var(x3),2)), parse = TRUE ,color=cols[3]) 
+```
+
+You can see that as the slop decreases both the covariance and variance increase, but since the covariance is only increasing linearly, while the variance is increasing exponentially, the overall ratio decreases.
 
 
-\begin{equation}
-  \hat{a}_0 = \bar{Y} - \hat{a}_1\bar{X}
-  (\#eq:SimpLinRegInt)
-\end{equation}
 
 
 

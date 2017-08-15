@@ -61,7 +61,7 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> date: “2017-08-14”</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> date: “2017-08-15”</a></li>
 <li class="chapter" data-level="2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html"><i class="fa fa-check"></i><b>2</b> Simple Linear Regression</a><ul>
 <li class="chapter" data-level="2.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
 <li class="chapter" data-level="2.2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>2.2</b> Estimating the Coefficients</a><ul>
@@ -194,9 +194,9 @@
 \end{align}\]</span>
 <p>This series of equations is simply going back and forth between equivalent values using the relationships established in equation <a href="sim-lin-reg.html#eq:SumMn">(2.10)</a>. I can split and rejoin summations because the operations are all linear. At the end of the above series I end up with two relationships which will be needed later.</p>
 <p>Now with all these tools, let’s attack this derivation. If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest. Thankfully, the process hasn’t changed since then. Also, since there are multiple parameters of interest, i.e., <span class="math inline">\(\hat{a_0}\)</span> and <span class="math inline">\(\hat{a_1}\)</span>, I will need to use partial derivatives. First I want to rewrite equation <a href="sim-lin-reg.html#eq:RSS">(2.5)</a> in a slightly more derivative friendly way.</p>
-<span class="math display" id="eq:RSS">\[\begin{equation}
-  S = \sum\limits_{i=1}^N y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   
-  \tag{2.5}
+<span class="math display" id="eq:RSSDer">\[\begin{equation}
+  S = \sum\limits_{i=1}^N \left(y_i - \hat{a}_0  + \hat{a}_1 x_i \right)^2   
+  \tag{2.14}
 \end{equation}\]</span>
 <p>Starting with <span class="math inline">\(\hat{a_0}\)</span></p>
 <span class="math display" id="eq:a0Deriv">\[\begin{align}
@@ -205,26 +205,27 @@
   &amp;\sum\limits_{i=1}^N y_i - \hat{a}_0 \sum\limits_{i=1}^N 1 - \hat{a_1} \sum\limits_{i=1}^N x_i = 0 \\
   &amp; N\bar{y} - N\hat{a}_0  - N\hat{a_1}\bar{x}  = 0 \\
   &amp; \bar{y} - \hat{a}_0  - \hat{a_1}\bar{x}  = 0 \\
-  &amp; \hat{a}_0 = \bar{y} - \hat{a_1}\bar{x}  \tag{2.14}
+  &amp; \hat{a}_0 = \bar{y} - \hat{a_1}\bar{x}  \tag{2.15}
 \end{align}\]</span>
-<p>The outcome all these steps is something that seems relatively simple, that the estimate of the intercept is just based on the estimated slope and the average</p>
-<p>Starting with <span class="math inline">\(\hat{a_1}\)</span>.</p>
-<span class="math display" id="eq:OLS1" id="eq:PartDerivA1">\[\begin{align}
-  \frac{\partial S}{\partial \hat{a}_1}  = \frac{\partial}{\partial \hat{a}_1} &amp;\sum\limits_{i=1}^N y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   \\
-  = &amp;\sum\limits_{i=1}^N 2x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right)  \tag{2.15} \\
-  &amp;\sum\limits_{i=1}^N x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right) = 0 \tag{2.16} \\ 
+<p>The outcome all these steps is something that seems relatively simple, that the estimate of the intercept is just based on the estimated slope and the average input and output values. That being said it does make sense, as the intercept serves to horizontally shift the line. Once we have estimated the slope we want an intercept which positions the resulting line to go through the center of data as calculated by the average position. Now that I have estimated <span class="math inline">\(\hat{a}_0\)</span>, I can estimate <span class="math inline">\(\hat{a}_1\)</span></p>
+<span class="math display" id="eq:a1Deriv">\[\begin{align}
+  \frac{\partial S}{\partial \hat{a}_1} = -2 &amp;\sum\limits_{i=1}^N x_i \left(y_i - \hat{a}_0 - \hat{a_1}x_i\right)\\
+  &amp;\sum\limits_{i=1}^N x_i \left(y_i - \hat{a}_0 - \hat{a_1}x_i\right) = 0 \\
+  &amp;\sum\limits_{i=1}^N x_iy_i - \hat{a}_0 \sum\limits_{i=1}^N x_i - \hat{a_1} \sum\limits_{i=1}^N x_i^2 = 0 \\
+  &amp;\sum\limits_{i=1}^N x_iy_i = \hat{a}_0 \sum\limits_{i=1}^N x_i + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &amp;\sum\limits_{i=1}^N x_iy_i = N\hat{a}_0 \bar{x} + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &amp;\sum\limits_{i=1}^N x_iy_i = N\left(\bar{y} - \hat{a_1}\bar{x}\right)\bar{x} + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &amp;\sum\limits_{i=1}^N x_iy_i = N\bar{y}\bar{x} - N\hat{a_1}\bar{x}^2 + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &amp;\sum\limits_{i=1}^N x_iy_i = \sum\limits_{i=1}^N y_i \bar{x} - \hat{a_1}\sum\limits_{i=1}^N x_i \bar{x} + \hat{a_1} \sum\limits_{i=1}^N x_i^2 \\
+  &amp;\sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N y_i \bar{x} =  \hat{a_1} \sum\limits_{i=1}^N x_i^2 - \hat{a_1}\sum\limits_{i=1}^N x_i \bar{x} \\
+  &amp;\sum\limits_{i=1}^N y_i\left(x_i - \bar{x}\right) = \hat{a_1}\sum\limits_{i=1}^N x_i \left(x_i - \bar{x}\right) \\
+  &amp;\sum\limits_{i=1}^N \left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right) = \hat{a_1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 \\
+  &amp;\hat{a_1} = \frac{\sum\limits_{i=1}^N \left(x_i-\bar{x}\right)\left(y_i-\bar{y}\right)}{\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2} \\
+  &amp;\hat{a_1} = \frac{Cov\left(\mathbf{X},\mathbf{Y}\right)}{Var\left(\mathbf{X}\right)} \tag{2.16}
 \end{align}\]</span>
-<p>Because summation is just a linear operation I can take the derivative of what’s inside the summation symbol without a problem. I got equation <a href="sim-lin-reg.html#eq:PartDerivA1">(2.15)</a> through, effectively, the chain rule of derivatives. Now I can set it equal to zero, ignoring any constants on the way, and this gives me equation <a href="sim-lin-reg.html#eq:OLS1">(2.16)</a>, the first of my ordinary least squares equations.</p>
-<p>To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to <span class="math inline">\(\hat{a}_1\)</span>, set it equal to zero and then solve for <span class="math inline">\(\hat{a}_1\)</span>.</p>
-<span class="math display" id="eq:SimpLinRegSlp">\[\begin{equation}
-  \hat{a}_1 = \dfrac{\sum\limits_{i=1}^N\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^N\left(x_{1,i}-\bar{X_1}\right)^2} 
-  \tag{2.17}
-\end{equation}\]</span>
-<p><span class="math inline">\(\bar{X_1}\)</span> and <span class="math inline">\(\bar{Y}\)</span> refer to the average input variable and average output variable, respectively. Once I have solved for the coefficient <span class="math inline">\(a_1\)</span>, I can use it to solve for the intercept, <span class="math inline">\(a_0\)</span> as follows</p>
-<span class="math display" id="eq:SimpLinRegInt">\[\begin{equation}
-  \hat{a}_0 = \bar{Y} - \hat{a}_1\bar{X}
-  \tag{2.18}
-\end{equation}\]</span>
+<p>The fact that the estimate of <span class="math inline">\(\hat{a}_1\)</span> is the covariance divided by the variance seems like a very interesting result, but why is that the case? If the covariance is the degree to which two variables vary with each other and the variance is the degree to which a single varialbe varies than the ratio of the covariance to the variance is the degree to which two variables vary reduced by the degree to which the input variable varies within itself. If you think back to our discussion of covariance, as the slop increases the covariance decreases, because there is less variation within the input variable, but if we divide by the variance of the input variable this should correct for that diminishing covariance. The following graph calculates the covariance, variance and their ratio for three sets of data points.</p>
+<p><img src="_main_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>You can see that as the slop decreases both the covariance and variance increase, but since the covariance is only increasing linearly, while the variance is increasing exponentially, the overall ratio decreases.</p>
 </div>
 </div>
 </div>
@@ -232,7 +233,7 @@
 <h2><span class="header-section-number">2.3</span> Model Accuracy</h2>
 <div id="accuracy-of-the-coefficients" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Accuracy of the Coefficients</h3>
-<p>While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation. You can see from equations <a href="sim-lin-reg.html#eq:SimpLinRegSlp">(2.17)</a> and <a href="sim-lin-reg.html#eq:SimpLinRegInt">(2.18)</a> that the least squares method of linear regression will always give an estimate</p>
+<p>While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation. You can see from equations <a href="#eq:SimpLinRegSlp">(<strong>??</strong>)</a> and <a href="#eq:SimpLinRegInt">(<strong>??</strong>)</a> that the least squares method of linear regression will always give an estimate</p>
 <!-- The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  So I can rewrite Equation \@ref(eq:SimpLinReg) in one of two ways to be accurate.  The first is to include an error term, $\epsilon$ by standard notation, whose values are the lengths of the individual red lines.   -->
 <!-- \begin{equation}  -->
 <!--   Y = a_0 + a_1 \cdot X_1 + \epsilon -->
@@ -242,7 +243,7 @@
 <p>When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form</p>
 <span class="math display" id="eq:LinReg">\[\begin{equation} 
   Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon = a_0 + \sum\limits_{i=1}^p(a_i\cdot X_i) + \epsilon
-  \tag{2.19}
+  \tag{2.17}
 \end{equation}\]</span>
 <p>Just as in simple linear regression, the <span class="math inline">\(a\)</span>’s in front of the input variables control the slope of the line, <span class="math inline">\(a_0\)</span> controls the intercept of the line. Taken together the <span class="math inline">\(a\)</span>’s are referred to as the coefficients. <span class="math inline">\(\epsilon\)</span> is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.</p>
 <p>Going back to our original simple linear regression problem involving temperature measurments. Since we know that the relationship between the input and output variables is not strictly goverened by the equation <span class="math inline">\(F = \dfrac{9}{5}\cdot C + 32\)</span>, we need a method of determining the coefficients which actually govern the relationship between our given input and outputs.</p>
