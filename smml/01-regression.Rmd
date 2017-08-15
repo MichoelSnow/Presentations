@@ -82,7 +82,7 @@ temp %>% ggplot(aes(DATE,TAVG)) + geom_point() + geom_line(aes(DATE,tfit)) + geo
 If I then take the square of the residual for each observation and sum them all together I get the **residual sum of squares (RSS)**.  Minimizing the RSS is what makes this process "least squares".
 
 \begin{equation}
-  RSS = e_1^2 + e_2^2 + \ldots + e_n^2 = \sum\limits_{i=1}^n e_i^2   
+  RSS = e_1^2 + e_2^2 + \ldots + e_n^2 = \sum\limits_{i=1}^N e_i^2   
   (\#eq:RSS)
 \end{equation}  
 
@@ -142,7 +142,7 @@ ggplot(circ1) + geom_path(aes(x1,y1)) +
 Mathematically the variance, in one dimension, is calculated as follows:
 
 \begin{equation}
-  Var(x) = \sigma^2 = \frac{1}{n}\sum\limits_{i=1}^n \left(x_i - \mu\right)\left(x_i - \mu\right)  = \frac{1}{n}\sum\limits_{i=1}^n \left(x_i - \mu\right)^2 
+  Var(x) = \sigma^2 = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu\right)\left(x_i - \mu\right)  = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu\right)^2 
   (\#eq:PopVarDisc)
 \end{equation}
 
@@ -168,7 +168,7 @@ However, there is a problem with using equation \@ref(eq:PopVarDisc), it require
 
 
 \begin{equation}
-  Var(\bar{x}) = s^2 = \frac{1}{n-1}\sum\limits_{i=1}^n \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{n}\sum\limits_{i=1}^n \left(x_i - \bar{x}\right)^2 
+  Var(\bar{x}) = s^2 = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 
   (\#eq:SmpVarDisc)
 \end{equation}
 
@@ -178,68 +178,45 @@ where $s^2$ is the sample variance and $\bar{x}$ is the sample mean.  For a full
 Unlike the variance which is a measure of how a single variable varies with regards to itself, the **covariance** is a measure of how two variables, $\mathbf{X}$ and $\mathbf{Y}$, vary with respect to each other.  If the variables increase in value together and decrease together, i.e., when one variable increases the other variable increases as well, the covariance will be larger.  If instead one variable increases while the other decreases then the covariance will be smaller.  To actually calculate the covariance you can use the following formula:
 
 \begin{equation}
-  Var(x) = \sigma^2 = \frac{1}{n}\sum\limits_{i=1}^n \left(x_i - \mu_x\right)\left(y_i - \mu_y\right)
+  Cov(x) = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu_x\right)\left(y_i - \mu_y\right)
   (\#eq:PopCovDisc)
 \end{equation}
 
-If equation \@ref(eq:PopCovDisc) looks suspiciously like equation \@ref(eq:PopVarDisc), that's because the formula for the variance is just a special case of the formula for the covariance when dealing with a single variable.  To get an intuitive sense of what the covariance represents here are a 
-
+If equation \@ref(eq:PopCovDisc) looks suspiciously like equation \@ref(eq:PopVarDisc), that's because the formula for the variance is just a special case of the formula for the covariance when dealing with a single variable.  To get an intuitive sense of what the covariance represents here are the covariances for a few different series of points.
 
 ```{r, fig.align='center',  echo=FALSE,message=FALSE}
 # var_1d <- tibble(x1=runif(30,-1,1),x2=runif(30,-2,2),x3=runif(30,-3,3),
 #        y1=rep(1,30),y2=rep(3,30),y3=rep(5,30))
-ct=30
+ct=50
 
-x1 <- sort(runif(ct,-10,10))
-x2 <- sort(x1,decreasing = TRUE)
+x1 <- sort(runif(ct,-20,10))
+x2 <- sort(runif(ct,20,35))
+x3 <- sort(runif(ct,45,48))
+x4 <- sort(runif(ct,58,89),decreasing = TRUE)
 y1 <- sort(runif(ct,-10,10))
-y2 <- sort(x1,decreasing = TRUE) 
-var_2d <- tibble(x=c(x1,x2,x1,x2),
-                 y=c(y1,y1,y2,y2),
-                 Variances=c(rep("x1y1",ct),rep("x2y1",ct),rep("x1y2",ct),rep("x2y2",ct)))
-ggplot(var_2d) + geom_point(aes(x,y,color=Variances),size=2) 
-  # scale_color_discrete(labels=c(round(var(x1),2),round(var(x2),2),round(var(x3),2)))
+y2 <- sort(runif(ct,-10,10))
+y3 <- sort(runif(ct,-10,10))
+y4 <- sort(runif(ct,-10,10))
+var_2d <- tibble(x=c(x1,x2,x3,x4),
+                 y=c(y1,y2,y2,y4),
+                 Covariances=c(rep("x1y1",ct),rep("x2y2",ct),rep("x3y3",ct),rep("x4y4",ct)))
+ggplot(var_2d) + geom_point(aes(x,y,color=Covariances),size=2) +
+  scale_color_discrete(labels=c(round(cov(x1,y1),2),round(cov(x2,y2),2),round(cov(x3,y3),2),round(cov(x4,y4),2)))
 ```
 
+As you can see, as the slope of the line increases from the red to the green to the blue points, the covariance decreases. This is because for the red points, a change in $y$ value of 5 roughly corresponds to a change in $x$ value of 7 or 8, but for the green points, the same change in $y$ of 5 corresponds to a change in $x$ of only about 3 or 4.  What this means is that for an increased slope the $x$ values are changing at a slower rate and so this decreases their term in the covariance formulation.  The purple points on the right show what happens to the covariance when the tyhe two variables move in opposite direction. The magnitutde is the same for the purple and red points, but while the red covariance is positive the purple is negative.  This is because, with respect to each variable's mean value, while $x$ is positive, $y$ is negative and vice versa. 
 
-
-
-
-```{r, echo=FALSE, eval=FALSE}
-# true_ct <- 10^3
-smp_ct <- 10^1
-# true_rain <- runif(true_ct,0,10)
-true_rain <- seq(0,10,0.001)
-true_ct <- length(true_rain)
-smp_rain <- sample(true_rain,smp_ct)
-true_var <- 1/true_ct*sum((true_rain-mean(true_rain))^2)
-smp_var <- 1/smp_ct*sum((smp_rain-mean(smp_rain))^2)
-unb_var <- var(smp_rain)
-```
-
-
-
+Just like with the variance, I have to distinguish between the population covariance, equation \@ref(eq:PopCovDisc), and the sample covariance:
 
 
 \begin{equation}
-  var(x) = \sigma^2 = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 
-  (\#eq:Var)
+  Cov(x) = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(y_i - \bar{y}\right)
+  (\#eq:SmpCovDisc)
 \end{equation}
 
-Where $\bar{x}$ is the notation for the mean value of x.  The reason why the variances is the sum of squares divided by $N-1$ and not $N$ is because, I am calculating the variance based on the sample mean and not the population mean.   
+The main difference once again is the replacement of $n-1$ in the denominator in lieu of $n$, for the same reason as the variance.
 
-
-The **covariance** is a measure of the joint variability between two variables.  If they tend to grow and shrink together, the covariance is positive, and if one grows as the other shrinks then the covariance is negative.  The equation for the covariance is very similar to that for variance, as variance is just a special case of covariance with a single variable: 
-
-
-\begin{equation}
-  var(x) = \sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(y_i - \bar{y}\right)  
-  (\#eq:Covar)
-\end{equation}
-
-In order to get an intuitive understanding of covariance I think it is 
-
-I want to go through a few simpler relationships which will come back later in the derivation.
+Now that I have gone over the concepts of variance and covariance, I just need to go over some quick identities before I derive the least squares coefficients.
 
 \begin{equation}
 \begin{split}
@@ -249,7 +226,8 @@ I want to go through a few simpler relationships which will come back later in t
 (\#eq:SumMn)
 \end{equation}
 
-Equation \@ref(eq:SumMn), which is relatively straightfoward but also allows me to introduce new notation.  The left side states that the sum of all values of variable divided by the number of samples, $N$, is equal to its mean value, as represented by a bar over the variable.  The right hand side simply moves the $N$ to the right hand side of the equation.
+Equation \@ref(eq:SumMn) is just a simple variation on the definition of $\bar{X}$.  The next two sets of identities are expansions of the variance and covariance equations and the equivalent ways they appear.  I am going to be removing the denominator for the sake of simplicity, also because as you will soon see it will be divided out in the final derivation.
+
 
 \begin{align}
   \sum\limits_{i=1}^N (x_i-\bar{x})(x_i - \bar{x}) &= \sum\limits_{i=1}^N x_i^2 - 2\sum\limits_{i=1}^N \bar{x}x_i + \sum\limits_{i=1}^N \bar{x}^2 \\
@@ -257,19 +235,8 @@ Equation \@ref(eq:SumMn), which is relatively straightfoward but also allows me 
   &= \sum\limits_{i=1}^N x_i^2 - \sum\limits_{i=1}^N  \bar{x}x_i = \sum\limits_{i=1}^N x_i\left(x_i-\bar{x}\right) (\#eq:VarEq)
 \end{align}
 
-If you are not familiar with it, the initial equation is the equation for the variance of a variable.  The variance is a measure of spread for a single variable, i.e., the distance of each value from the average value.  You are most probably familiar with variance when discussing normal or Gaussian distributions, where the variance gives the 
+Now repeating the process for the covariance:
 
-```{r, echo=FALSE}
-norm_smp <- tibble(a = rnorm(10^6),b=rnorm(10^6,sd=2)) 
-
-norm_smp %>% ggplot() + geom_density(aes(b,..scaled..),color="blue",fill="blue",alpha=0.1) + 
-  geom_density(aes(a,..scaled..),color="red",fill="red",alpha=0.2)
-
-```
-
-
-
-If instead of using the same variable in both halves of the initial equation there were different variables, this would be the equation for the covariance.  I can do similar manipulation with the covariance as follows:
 
 \begin{align}
   \sum\limits_{i=1}^N (x_i-\bar{x})(y_i - \bar{y}) &= \sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N \bar{x}y_i - \sum\limits_{i=1}^N \bar{y}x_i + \sum\limits_{i=1}^N\bar{x}\bar{y}\\
@@ -280,21 +247,34 @@ If instead of using the same variable in both halves of the initial equation the
   &= \sum\limits_{i=1}^N x_iy_i - \sum\limits_{i=1}^N \bar{x}y_i = \sum\limits_{i=1}^N y_i\left(x_i - \bar{x}\right) (\#eq:CovEq2)\\
 \end{align}
 
-This series of equations is simply going back and forth between equivalent values using the relationships established in equation \@ref(eq:SumMn).  I can split and rejoin summations because the operations are all linear.  At the end of the above series I end up with two relationships which will be needed later.  If you are not familiar with it, the initial equation is the equation for the covariance 
-If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest.  Thankfully, the process hasn't changed since then.  Also since there are multiple parameters of interest, i.e., $\hat{a_0}$ and $\hat{a_1}$, I will need to use partial derivatives.  First I want to rewrite equation \@ref(eq:RSS) in a slightly more derivative friendly way.
+This series of equations is simply going back and forth between equivalent values using the relationships established in equation \@ref(eq:SumMn).  I can split and rejoin summations because the operations are all linear.  At the end of the above series I end up with two relationships which will be needed later.  
+
+Now with all these tools, let's attack this derivation.  If you remember back from your high school and college math classes, when we are trying to find the minimum value of a function we take the derivative, set it equal to zero and solve for the parameter(s) of interest.  Thankfully, the process hasn't changed since then.  Also, since there are multiple parameters of interest, i.e., $\hat{a_0}$ and $\hat{a_1}$, I will need to use partial derivatives.  First I want to rewrite equation \@ref(eq:RSS) in a slightly more derivative friendly way.
 
 \begin{equation}
-  S = \sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   
+  S = \sum\limits_{i=1}^N y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   
   (\#eq:RSS)
 \end{equation} 
 
+Starting with $\hat{a_0}$
+
+\begin{align}
+  \frac{\partial S}{\partial \hat{a}_0} = -2 &\sum\limits_{i=1}^N \left(y_i - \hat{a}_0 - \hat{a_1}x_i\right)\\
+  &\sum\limits_{i=1}^N \left(y_i - \hat{a}_0 - \hat{a_1}x_i\right) = 0 \\
+  &\sum\limits_{i=1}^N y_i - \hat{a}_0 \sum\limits_{i=1}^N 1 - \hat{a_1} \sum\limits_{i=1}^N x_i = 0 \\
+  & N\bar{y} - N\hat{a}_0  - N\hat{a_1}\bar{x}  = 0 \\
+  & \bar{y} - \hat{a}_0  - \hat{a_1}\bar{x}  = 0 \\
+  & \hat{a}_0 = \bar{y} - \hat{a_1}\bar{x}  (\#eq:a0Deriv)
+\end{align}
+
+The outcome all these steps is something that seems relatively simple, that the estimate of the intercept is just based on the estimated slope and the average 
 
 Starting with $\hat{a_1}$.
 
 \begin{align}
-  \frac{\partial S}{\partial \hat{a}_1}  = \frac{\partial}{\partial \hat{a}_1} &\sum\limits_{i=1}^n y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   \\
-  = &\sum\limits_{i=1}^n 2x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right)  (\#eq:PartDerivA1) \\
-  &\sum\limits_{i=1}^n x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right) = 0 (\#eq:OLS1) \\ 
+  \frac{\partial S}{\partial \hat{a}_1}  = \frac{\partial}{\partial \hat{a}_1} &\sum\limits_{i=1}^N y_i - \left(\hat{a}_0  + \hat{a}_1 x_i \right)^2   \\
+  = &\sum\limits_{i=1}^N 2x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right)  (\#eq:PartDerivA1) \\
+  &\sum\limits_{i=1}^N x_i\left(\hat{a}_0  + \hat{a}_1 x_i \right) = 0 (\#eq:OLS1) \\ 
 \end{align}
 
 Because summation is just a linear operation I can take the derivative of what's inside the summation symbol without a problem.  I got equation \@ref(eq:PartDerivA1) through, effectively, the chain rule of derivatives.  Now I can set it equal to zero, ignoring any constants on the way, and this gives me equation \@ref(eq:OLS1), the first of my ordinary least squares equations.
@@ -303,7 +283,7 @@ Because summation is just a linear operation I can take the derivative of what's
 To acutally estimate the coefficients I can take the partial derivative of the RSS with respect to $\hat{a}_1$, set it equal to zero and then solve for $\hat{a}_1$. 
 
 \begin{equation}
-  \hat{a}_1 = \dfrac{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^n\left(x_{1,i}-\bar{X_1}\right)^2} 
+  \hat{a}_1 = \dfrac{\sum\limits_{i=1}^N\left(x_{1,i}-\bar{X_1}\right)\left(y_{i}-\bar{Y}\right)}{\sum\limits_{i=1}^N\left(x_{1,i}-\bar{X_1}\right)^2} 
   (\#eq:SimpLinRegSlp)
 \end{equation}
 
