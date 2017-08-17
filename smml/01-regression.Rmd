@@ -168,7 +168,7 @@ However, there is a problem with using equation \@ref(eq:PopVarDisc), it require
 
 
 \begin{equation}
-  Var(\bar{x}) = s^2 = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 
+  Var(\bar{x}) = s^2 = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 
   (\#eq:SmpVarDisc)
 \end{equation}
 
@@ -359,9 +359,94 @@ ggplot(var_2d,aes(x,y,color=Covariances)) + geom_point() +
 
 ### Accuracy of the Coefficients
 
-While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation given the data points.  You can see from equations \@ref(eq:a0Deriv) and \@ref(eq:a1Deriv) that the least squares method of linear regression will always give an estimate, but with what confidence can we rely on that estimate? One metric commonly used is the **standard error**, which is the standard deviation of the sampling distribution.  This is not the regular standard deviation which you might be used to.  The **standard deviation** is the degree to which sample vary about the mean and mathematically is the square root of the variance.  The standard error is the variation of the sample mean from the population mean, in other words, how close the sample mean is to the true population mean.  To get an intuitive understanding of what I mean by variation of the sample mean, I am going to calculate the mean of a sample of one hundred points, drawn from a population of one thousand, ten thousand and one hundred thousand points. 
+While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation given the data points.  You can see from equations \@ref(eq:a0Deriv) and \@ref(eq:a1Deriv) that the least squares method of linear regression will always give an estimate, but with what confidence can we rely on that estimate? One metric commonly used is the **standard error**, which is the standard deviation of the sampling distribution.  This is not the regular standard deviation which you might be used to.  The **standard deviation** is the degree to which sample vary about the mean and mathematically is the square root of the variance.  The standard error is the variation of the sample mean from the population mean, in other words, how close the sample mean is to the true population mean.  To get an intuitive understanding of what I mean by variation of the sample mean, I am going to calculate the mean of different size samples drawn from a population of one hundred thousand points. 
 
-```{r, eval=false,echo=FALSE}
+
+
+```{r, eval=FALSE,echo=FALSE, fig.align='center'}
+hun_thou <- runif(10^5,-10,10)
+
+x1 <- c()
+x2 <- c()
+x3 <- c()
+rpts = 20
+for(i in 1:rpts){
+  x1 <- c(x1,mean(sample(hun_thou,100)))
+  x2 <- c(x2,mean(sample(hun_thou,1000)))
+  x3 <- c(x3,mean(sample(hun_thou,10000)))
+}
+
+smpl_mn <- tibble(x = c(x3,x2,x1),
+                  y=c(rep(1,rpts),rep(2,rpts),rep(3,rpts)),
+                  PointCount=c(rep("10%",rpts),rep("1%",rpts),rep("0.1%",rpts)))
+ggplot(smpl_mn,aes(x,y,color=PointCount)) + geom_point(size=2) +
+  guides(color=guide_legend(title="Sample Size"))
+
+```
+
+
+The standard error, in this case specifically the standard error of the mean, is the standard deviation of each set of colored points.  Given a population of one hundred thousand data points you can see that the sample size has a large impact on the standard deviation of the sample mean.  The greater percentage of points from the population that are used in the sample, the narrower the range of sample means.  Just like the standard deviation is the square root of the population variance of the population, so too the standard error is the square root of the sample variance.
+
+\begin{align}
+  SE(\bar{x})  &= \sqrt{Var(\bar{x})} = \sqrt{s^2} \\
+  &= \sqrt{\frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2} 
+  (\#eq:StdErrMn)
+\end{align}
+
+<!-- \begin{align} -->
+<!--   SE(\bar{x}) &= \sqrt{Var(\bar{x})} \\ -->
+<!--   &= \sqrt{Var\left(\frac{x_1 + x_2 + \ldots + x_n}{n}\right)} \\ -->
+<!--   &= \sqrt{\frac{1}{n^2}\left(Var(x_1) + Var(x_2) + \ldots + Var(x_n)\right)} \\ -->
+<!--   &= \sqrt{\frac{1}{n^2}\left(\sigma^2 + \sigma^2 + \ldots + \sigma^2\right)} \\ -->
+<!--   &= \sqrt{\frac{1}{n^2}n\sigma^2} \\ -->
+<!--   &= \sqrt{\frac{\sigma^2}{n}} \\ -->
+<!--   &= \frac{\sigma}{\sqrt{n}} (\#eq:StdErrMn) -->
+<!-- \end{align} -->
+
+As matches the graphical intuition, the larger the sample size the smaller the standard error of the sample mean. Given that sampling and sample size affects the mean, we can expect that they should affect our coefficient estimates.  Similar to the previous graph, I can estimates the coefficients of multiple sample sets all drawn from a single linear distribution.
+
+```{r,fig.align='center',  echo=FALSE,message=FALSE}
+
+pop_sz <- 300
+x2 <- sort(runif(pop_sz,-50,50))
+y2 <- x2+rnorm(pop_sz,sd=10)
+pop_var <- tibble(x=x2,y=y2)
+fit <- lm(y2~x2)
+pop_fit <- tibble(slp_pop = coef(summary(fit))["x2","Estimate"],
+                  int_pop = coef(summary(fit))["(Intercept)","Estimate"])
+
+rpts <- 7
+smp_sz <- 5
+slp_coef <- c()
+int_coef <- c()
+for(i in 1:rpts){
+  smp_pos <- sample(pop_sz,smp_sz)
+  x3 <- x2[smp_pos]
+  y3 <- y2[smp_pos]
+  fit <- lm(y3~x3)
+  slp_coef <- c(slp_coef,coef(summary(fit))["x3","Estimate"])
+  int_coef <- c(int_coef,coef(summary(fit))["(Intercept)","Estimate"])
+}  
+  smp_fit <- tibble(slp_coef,int_coef)
+
+
+ggplot(pop_var,aes(x,y)) + 
+  geom_point() +
+  geom_abline(data=smp_fit,aes(slope=slp_coef,intercept=int_coef),color="blue") +
+  geom_abline(data=pop_fit,aes(slope=slp_pop,intercept=int_pop),color="red",size=2) 
+  
+```
+
+
+
+
+
+
+How can we use this information to estimate the standard error
+
+
+
+```{r, eval=FALSE,echo=FALSE}
 one_thou <- runif(10^3,-10,10)
 ten_thou <- runif(10^4,-10,10)
 hun_thou <- runif(10^5,-10,10)
@@ -384,7 +469,7 @@ ggplot(smpl_mn,aes(x,y,color=PointCount)) + geom_point(size=2)
 ```
 
 
-```{r, fig.align='center',  echo=FALSE,message=FALSE}
+```{r, fig.align='center',  echo=FALSE,message=FALSE,eval=FALSE}
 
 ten_thou <- runif(10^4,-10,10)
 x1 <- c()

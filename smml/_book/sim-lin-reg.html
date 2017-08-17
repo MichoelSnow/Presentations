@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="index.html">
-
+<link rel="next" href="statistics.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -48,6 +48,43 @@
 
 
 
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 
 </head>
 
@@ -61,7 +98,17 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> date: “2017-08-15”</a></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#motivation-for-this-book"><i class="fa fa-check"></i><b>1.1</b> Motivation for this book</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#how-to-read-this-book"><i class="fa fa-check"></i><b>1.2</b> How to read this book</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#notation-and-nomeclature-used-in-this-book"><i class="fa fa-check"></i><b>1.3</b> Notation and nomeclature used in this book</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#supervised-vs-unsupervised-models"><i class="fa fa-check"></i><b>1.4</b> Supervised vs Unsupervised Models</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="index.html"><a href="index.html#solving-supervised-models"><i class="fa fa-check"></i><b>1.4.1</b> Solving Supervised Models</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#assessing-model-quality-of-fit"><i class="fa fa-check"></i><b>1.5</b> Assessing Model Quality of Fit</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="index.html"><a href="index.html#mse"><i class="fa fa-check"></i><b>1.5.1</b> MSE</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html"><i class="fa fa-check"></i><b>2</b> Simple Linear Regression</a><ul>
 <li class="chapter" data-level="2.1" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#overview"><i class="fa fa-check"></i><b>2.1</b> Overview</a></li>
 <li class="chapter" data-level="2.2" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#estimating-the-coefficients"><i class="fa fa-check"></i><b>2.2</b> Estimating the Coefficients</a><ul>
@@ -73,6 +120,9 @@
 <li class="chapter" data-level="2.4" data-path="sim-lin-reg.html"><a href="sim-lin-reg.html#variable-parameters"><i class="fa fa-check"></i><b>2.4</b> Variable parameters</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="statistics.html"><a href="statistics.html"><i class="fa fa-check"></i><b>A</b> Statistics</a><ul>
+<li class="chapter" data-level="A.1" data-path="statistics.html"><a href="statistics.html#pop-vs-smp-var"><i class="fa fa-check"></i><b>A.1</b> Population Vs. Sample Variances</a></li>
+</ul></li>
 </ul>
 
       </nav>
@@ -109,9 +159,9 @@
   \tag{2.2}
 \end{equation}\]</span>
 <p>To understand why equation <a href="sim-lin-reg.html#eq:SimpLinRegapprox">(2.2)</a> is more appropriate than equation <a href="sim-lin-reg.html#eq:SimpLinReg">(2.1)</a>, let’s look at some data. Plotted in the figure below are average temperature readings at JFK airport from January through July of 2017.</p>
-<p><img src="_main_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Using the least squares method described below I can estimate the linear regression coefficients and overlay the best fit line.</p>
 <p><img src="_main_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Using the least squares method described below I can estimate the linear regression coefficients and overlay the best fit line.</p>
+<p><img src="_main_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>You can see that there is no straight line which would hit all the points, so going back to my original assertion, even the most accurate model could only approximate the output variable given the input variables.</p>
 <p>Taking another step back, we have to remember that linear regression is a method of estimating the efficients of equation <a href="sim-lin-reg.html#eq:SimpLinRegapprox">(2.2)</a>, which I can represent by giving the estimated coefficients and estimate output variables tiny hats.</p>
 <span class="math display" id="eq:SimpLinRegHat">\[\begin{equation} 
@@ -129,7 +179,7 @@
   \tag{2.4}
 \end{equation}\]</span>
 <p>The residuals in our previous plot are the distances from the points to the fitted line.</p>
-<p><img src="_main_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>If I then take the square of the residual for each observation and sum them all together I get the <strong>residual sum of squares (RSS)</strong>. Minimizing the RSS is what makes this process “least squares”.</p>
 <span class="math display" id="eq:RSS">\[\begin{equation}
   RSS = e_1^2 + e_2^2 + \ldots + e_n^2 = \sum\limits_{i=1}^N e_i^2   
@@ -141,27 +191,27 @@
 <h4>Derivation 1</h4>
 <p>Before I start working through the derivation, there are two concepts I want to go through variance and covariance. The reason being that at the end of the derivation the estimate of slope, otherwise known as <span class="math inline">\(a_1\)</span> can be calculated by dividing the covariance by the variance. When I get to that point I will discuss why this is the case, but I first wanted to make sure that you had a firm grasp on these concepts by themselves. Also, the in depth examination of variance will inform later parts of the derivation.</p>
 <p>The <strong>variance</strong> is a measure of spread for a variable, i.e., the distance of each value from the sample mean value. An intuitive example is shown below where the variance of the points on the targets increases from left to right.</p>
-<p><img src="_main_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Mathematically the variance, in one dimension, is calculated as follows:</p>
 <span class="math display" id="eq:PopVarDisc">\[\begin{equation}
   Var(x) = \sigma^2 = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu\right)\left(x_i - \mu\right)  = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu\right)^2 
   \tag{2.6}
 \end{equation}\]</span>
 <p>Where <span class="math inline">\(\mu_x\)</span> is the notation for the population mean value of x, which is discussed in the next paragraph. Squaring the difference serves two functions, the first is to equally weight positive and negative contributions to the variance. Without the square if a variable was evenly distributed around zero, regardless of its spread it would have a variance of zero. The second consequence is that as the distances increase the variance increases exponentially, as seen in the following graph:</p>
-<p><img src="_main_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>However, there is a problem with using equation <a href="sim-lin-reg.html#eq:PopVarDisc">(2.6)</a>, it requires that I already know the population mean. The <strong>population mean</strong> is the mean value given a set of numbers or values. The issue is that most of the time with data we are dealing with a small subsample of data and not the full set of data. For example, if I wanted to calculate the average rainfall in New York City yesterday, I would need to measure the rainfall in every location throughout the city. This is obviously impossible, which is why some people refer to the population mean as the omniscient mean. Instead, what I can do is measure the rainfall at certain points throughout the city and estimate the population mean using the <strong>sample mean</strong>, which is simply the mean calculated from the population sample collected. The difference between population mean and sample mean, might seem like simply a matter of semantics, but it has important ramifications and necessitates corrections. The variance using the sample mean, termed the sample variance, very similar to</p>
 <span class="math display" id="eq:SmpVarDisc">\[\begin{equation}
-  Var(\bar{x}) = s^2 = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 
+  Var(\bar{x}) = s^2 = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)\left(x_i - \bar{x}\right)  = \frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2 
   \tag{2.7}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(s^2\)</span> is the sample variance and <span class="math inline">\(\bar{x}\)</span> is the sample mean. For a full derivation of equation <a href="sim-lin-reg.html#eq:SmpVarDisc">(2.7)</a> see <a href="#pop-vs-smp-var">Population Vs. Sample Variances</a>.</p>
+<p>where <span class="math inline">\(s^2\)</span> is the sample variance and <span class="math inline">\(\bar{x}\)</span> is the sample mean. For a full derivation of equation <a href="sim-lin-reg.html#eq:SmpVarDisc">(2.7)</a> see <a href="statistics.html#pop-vs-smp-var">Population Vs. Sample Variances</a>.</p>
 <p>Unlike the variance which is a measure of how a single variable varies with regards to itself, the <strong>covariance</strong> is a measure of how two variables, <span class="math inline">\(\mathbf{X}\)</span> and <span class="math inline">\(\mathbf{Y}\)</span>, vary with respect to each other. If the variables increase in value together and decrease together, i.e., when one variable increases the other variable increases as well, the covariance will be larger. If instead one variable increases while the other decreases then the covariance will be smaller. To actually calculate the covariance you can use the following formula:</p>
 <span class="math display" id="eq:PopCovDisc">\[\begin{equation}
   Cov(x) = \frac{1}{N}\sum\limits_{i=1}^N \left(x_i - \mu_x\right)\left(y_i - \mu_y\right)
   \tag{2.8}
 \end{equation}\]</span>
 <p>If equation <a href="sim-lin-reg.html#eq:PopCovDisc">(2.8)</a> looks suspiciously like equation <a href="sim-lin-reg.html#eq:PopVarDisc">(2.6)</a>, that’s because the formula for the variance is just a special case of the formula for the covariance when dealing with a single variable. To get an intuitive sense of what the covariance represents here are the covariances for a few different series of points.</p>
-<p><img src="_main_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>As you can see, as the slope of the line increases from the red to the green to the blue points, the covariance decreases. This is because for the red points, a change in <span class="math inline">\(y\)</span> value of 5 roughly corresponds to a change in <span class="math inline">\(x\)</span> value of 7 or 8, but for the green points, the same change in <span class="math inline">\(y\)</span> of 5 corresponds to a change in <span class="math inline">\(x\)</span> of only about 3 or 4. What this means is that for an increased slope the <span class="math inline">\(x\)</span> values are changing at a slower rate and so this decreases their term in the covariance formulation. The purple points on the right show what happens to the covariance when the tyhe two variables move in opposite direction. The magnitutde is the same for the purple and red points, but while the red covariance is positive the purple is negative. This is because, with respect to each variable’s mean value, while <span class="math inline">\(x\)</span> is positive, <span class="math inline">\(y\)</span> is negative and vice versa.</p>
 <p>Just like with the variance, I have to distinguish between the population covariance, equation <a href="sim-lin-reg.html#eq:PopCovDisc">(2.8)</a>, and the sample covariance:</p>
 <span class="math display" id="eq:SmpCovDisc">\[\begin{equation}
@@ -224,8 +274,10 @@
   &amp;\hat{a_1} = \frac{Cov\left(\mathbf{X},\mathbf{Y}\right)}{Var\left(\mathbf{X}\right)} \tag{2.16}
 \end{align}\]</span>
 <p>The fact that the estimate of <span class="math inline">\(\hat{a}_1\)</span> is the covariance divided by the variance seems like a very interesting result, but why is that the case? If the covariance is the degree to which two variables vary with each other and the variance is the degree to which a single varialbe varies than the ratio of the covariance to the variance is the degree to which two variables vary reduced by the degree to which the input variable varies within itself. If you think back to our discussion of covariance, as the slop increases the covariance decreases, because there is less variation within the input variable, but if we divide by the variance of the input variable this should correct for that diminishing covariance. The following graph calculates the covariance, variance and their ratio for three sets of data points.</p>
-<p><img src="_main_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>You can see that as the slop decreases both the covariance and variance increase, but since the covariance is only increasing linearly, while the variance is increasing exponentially, the overall ratio decreases.</p>
+<p>Putting these two estimates together I can now perform the least squares estimation of simple linear regression. The following plot demonstrates the least squares fit for three sets of points. The code to run this model is discussed below in the section <strong>NEED SECTION NAME</strong></p>
+<p><img src="_main_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 </div>
@@ -233,7 +285,25 @@
 <h2><span class="header-section-number">2.3</span> Model Accuracy</h2>
 <div id="accuracy-of-the-coefficients" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Accuracy of the Coefficients</h3>
-<p>While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation. You can see from equations <a href="#eq:SimpLinRegSlp">(<strong>??</strong>)</a> and <a href="#eq:SimpLinRegInt">(<strong>??</strong>)</a> that the least squares method of linear regression will always give an estimate</p>
+<p>While the ability to estimate the coefficients is very powerful, the question is how accurate is the estimation given the data points. You can see from equations <a href="sim-lin-reg.html#eq:a0Deriv">(2.15)</a> and <a href="sim-lin-reg.html#eq:a1Deriv">(2.16)</a> that the least squares method of linear regression will always give an estimate, but with what confidence can we rely on that estimate? One metric commonly used is the <strong>standard error</strong>, which is the standard deviation of the sampling distribution. This is not the regular standard deviation which you might be used to. The <strong>standard deviation</strong> is the degree to which sample vary about the mean and mathematically is the square root of the variance. The standard error is the variation of the sample mean from the population mean, in other words, how close the sample mean is to the true population mean. To get an intuitive understanding of what I mean by variation of the sample mean, I am going to calculate the mean of different size samples drawn from a population of one hundred thousand points.</p>
+<p>The standard error, in this case specifically the standard error of the mean, is the standard deviation of each set of colored points. Given a population of one hundred thousand data points you can see that the sample size has a large impact on the standard deviation of the sample mean. The greater percentage of points from the population that are used in the sample, the narrower the range of sample means. Just like the standard deviation is the square root of the population variance of the population, so too the standard error is the square root of the sample variance.</p>
+<span class="math display" id="eq:StdErrMn">\[\begin{align}
+  SE(\bar{x})  &amp;= \sqrt{Var(\bar{x})} = \sqrt{s^2} \\
+  &amp;= \sqrt{\frac{1}{N-1}\sum\limits_{i=1}^N \left(x_i - \bar{x}\right)^2} 
+  \tag{2.17}
+\end{align}\]</span>
+<!-- \begin{align} -->
+<!--   SE(\bar{x}) &= \sqrt{Var(\bar{x})} \\ -->
+<!--   &= \sqrt{Var\left(\frac{x_1 + x_2 + \ldots + x_n}{n}\right)} \\ -->
+<!--   &= \sqrt{\frac{1}{n^2}\left(Var(x_1) + Var(x_2) + \ldots + Var(x_n)\right)} \\ -->
+<!--   &= \sqrt{\frac{1}{n^2}\left(\sigma^2 + \sigma^2 + \ldots + \sigma^2\right)} \\ -->
+<!--   &= \sqrt{\frac{1}{n^2}n\sigma^2} \\ -->
+<!--   &= \sqrt{\frac{\sigma^2}{n}} \\ -->
+<!--   &= \frac{\sigma}{\sqrt{n}} (\#eq:StdErrMn) -->
+<!-- \end{align} -->
+<p>As matches the graphical intuition, the larger the sample size the smaller the standard error of the sample mean. Given that sampling and sample size affects the mean, we can expect that they should affect our coefficient estimates. Similar to the previous graph, I can estimates the coefficients of multiple sample sets all drawn from a single linear distribution.</p>
+<p><img src="_main_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>How can we use this information to estimate the standard error</p>
 <!-- The red bars from the points to the line represent the distance from the real values to the measured values, also know as the error.  So I can rewrite Equation \@ref(eq:SimpLinReg) in one of two ways to be accurate.  The first is to include an error term, $\epsilon$ by standard notation, whose values are the lengths of the individual red lines.   -->
 <!-- \begin{equation}  -->
 <!--   Y = a_0 + a_1 \cdot X_1 + \epsilon -->
@@ -243,7 +313,7 @@
 <p>When more input variables are added the simple part of the term is dropped and it is referred to as general regression and takes the form</p>
 <span class="math display" id="eq:LinReg">\[\begin{equation} 
   Y = a_0 + a_1\cdot X_1 + a_2\cdot X_2 + \ldots a_p\cdot X_p + \epsilon = a_0 + \sum\limits_{i=1}^p(a_i\cdot X_i) + \epsilon
-  \tag{2.17}
+  \tag{2.18}
 \end{equation}\]</span>
 <p>Just as in simple linear regression, the <span class="math inline">\(a\)</span>’s in front of the input variables control the slope of the line, <span class="math inline">\(a_0\)</span> controls the intercept of the line. Taken together the <span class="math inline">\(a\)</span>’s are referred to as the coefficients. <span class="math inline">\(\epsilon\)</span> is the error as measured by the distance from the points on the right hand side to the true values on the left hand side of the equation.</p>
 <p>Going back to our original simple linear regression problem involving temperature measurments. Since we know that the relationship between the input and output variables is not strictly goverened by the equation <span class="math inline">\(F = \dfrac{9}{5}\cdot C + 32\)</span>, we need a method of determining the coefficients which actually govern the relationship between our given input and outputs.</p>
@@ -262,14 +332,13 @@
 
 
 
-</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="statistics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
